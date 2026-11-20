@@ -1,0 +1,12 @@
+{
+  "id": "./",
+  "name": "Дневник тренировок · ОФП",
+  "short_name": "Дневник ОФП",
+  "description": "Планы тренировок, круги, подходы и история в календаре",
+  "lang": "ru",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f2f2f7",
+  "theme_color": "#f2f2f7"
+}
