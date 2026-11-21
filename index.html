@@ -1,796 +1,789 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="manifest" href="./manifest.webmanifest">
-<title>Дневник тренировок · ОФП</title>
-<style>
-  :root {
-    color-scheme: light dark;
-    --bg:#f2f2f7; --card:#fff; --ink:#1c1c1e; --muted:#636366;
-    --line:#d1d1d6; --field:#f2f2f7; --accent:#826100;
-    --yellow:#ffd60a; --danger:#b42318;
-  }
-  @media (prefers-color-scheme:dark) {
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#dff3ff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <title>Дневник тренировок · ОФП</title>
+  <style>
     :root {
-      --bg:#000; --card:#1c1c1e; --ink:#f5f5f7; --muted:#aeaeb2;
-      --line:#3a3a3c; --field:#2c2c2e; --accent:#ffd60a; --danger:#ff6961;
+      color-scheme: light;
+      --ink: #082d56;
+      --muted: #396285;
+      --blue: #075bb0;
+      --line: #b9dcef;
+      --card: #f8fcfff2;
+      --brush: polygon(0 15%, 10% 9%, 5% 5%, 38% 3%, 71% 1%,
+        97% 6%, 94% 14%, 100% 20%, 96% 34%, 100% 44%, 97% 57%,
+        100% 70%, 94% 77%, 98% 85%, 88% 92%, 90% 97%, 61% 95%,
+        38% 100%, 15% 96%, 3% 98%, 7% 87%, 0 81%, 4% 69%,
+        1% 57%, 5% 45%, 0 34%, 6% 23%);
     }
-  }
-  * { box-sizing:border-box; }
-  body { margin:0; background:var(--bg); color:var(--ink); font:16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
-  main { max-width:720px; margin:auto; padding:20px 14px calc(32px + env(safe-area-inset-bottom)); }
-  h1 { margin:8px 0 18px; font-size:34px; letter-spacing:-.025em; }
-  h2 { font-size:22px; margin:22px 0 10px; }
-  h3 { font-size:17px; margin:0 0 8px; }
-  h1,h2,h3,p { overflow-wrap:anywhere; }
-  p { margin:8px 0; }
-  button,input,select { font:inherit; min-height:44px; border:0; border-radius:10px; }
-  button { padding:8px 10px; color:var(--accent); background:transparent; font-weight:600; cursor:pointer; }
-  button.primary { background:var(--yellow); color:#1c1c1e; padding-inline:16px; }
-  button.danger { color:var(--danger); }
-  button:disabled { opacity:.45; cursor:default; }
-  input,select { width:100%; min-width:0; padding:8px 10px; background:var(--field); color:var(--ink); }
-  input::placeholder { color:var(--muted); }
-  :focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
-  label { display:block; margin:10px 0; }
-  label > input,label > select { display:block; margin-top:4px; }
-  .card { margin:10px 0; padding:12px 14px; border-radius:13px; background:var(--card); }
-  .row { display:flex; flex-wrap:wrap; align-items:center; gap:4px 8px; }
-  .muted { color:var(--muted); }
-  .set { border-top:1px solid var(--line); padding-top:10px; margin-top:10px; }
-  .clock { font-size:30px; font-weight:700; font-variant-numeric:tabular-nums; }
-  .scroll { margin:12px 0 16px; overflow-x:auto; border-radius:13px; background:var(--card); }
-  table { width:100%; border-spacing:0; font-variant-numeric:tabular-nums; }
-  th,td { padding:7px 8px; text-align:center; vertical-align:middle; border-bottom:1px solid var(--line); }
-  th { font-size:14px; }
-  td,thead th { min-width:82px; }
-  .circuit th:first-child {
-    position:sticky; left:0; z-index:1; width:36%; min-width:124px;
-    max-width:185px; background:var(--card); border-right:1px solid var(--line);
-    text-align:left; overflow-wrap:anywhere;
-  }
-  th small { display:block; margin-top:4px; font-weight:400; }
-  table input,table button { min-width:56px; padding:4px; text-align:center; }
-  table button { width:100%; background:var(--field); }
-  .rest th,.rest td { border-bottom:0; font-weight:600; }
-  dialog { width:min(90vw,360px); padding:18px; border:1px solid var(--line); border-radius:16px; background:var(--card); color:var(--ink); }
-  dialog::backdrop { background:rgb(0 0 0 / 45%); }
-  .calendar-head { display:grid; grid-template-columns:44px 1fr 44px; align-items:center; text-align:center; }
-  .calendar-head button { font-size:24px; }
-  .calendar-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:3px; text-align:center; margin:6px 0; }
-  .calendar-grid > span { padding:5px 0; color:var(--muted); font-size:13px; }
-  .calendar-day { position:relative; padding:4px 0 9px; color:var(--ink); font-variant-numeric:tabular-nums; }
-  .calendar-day[aria-current="date"] { box-shadow:inset 0 0 0 1px var(--accent); }
-  .calendar-day[aria-pressed="true"] { background:var(--yellow); color:#1c1c1e; }
-  .calendar-dot { position:absolute; left:50%; bottom:5px; width:5px; height:5px; border-radius:50%; background:currentColor; transform:translateX(-50%); }
-</style>
+
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font: 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(ellipse at 0 0, #76c7ff80, transparent 32rem),
+        radial-gradient(ellipse at 100% 15%, #a7e1ff, transparent 26rem),
+        repeating-linear-gradient(135deg, #fff6 0 1px, transparent 1px 23px),
+        linear-gradient(160deg, #dff3ff, #f6fcff 54%, #d4edff);
+    }
+
+    main {
+      width: min(100%, 700px);
+      margin: auto;
+      padding: calc(16px + env(safe-area-inset-top))
+        max(14px, env(safe-area-inset-right))
+        calc(130px + env(safe-area-inset-bottom))
+        max(14px, env(safe-area-inset-left));
+    }
+
+    h1, h2, h3, p { margin: 0 0 10px; }
+    h1 { font-size: clamp(26px, 7vw, 39px); line-height: 1.05; }
+    h2 { font-size: 20px; }
+    h3 { font-size: 17px; }
+    .muted, small { color: var(--muted); }
+    .brush {
+      position: relative;
+      isolation: isolate;
+      display: inline-block;
+      padding: 10px 19px 12px;
+      color: #fff;
+      font-style: italic;
+    }
+    .brush::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      clip-path: var(--brush);
+      background:
+        repeating-linear-gradient(-5deg, transparent 0 6px, #fff1 6px 7px),
+        linear-gradient(110deg, #062e60, #0759ae 68%, #0e7dd1);
+    }
+
+    .card {
+      margin: 0 0 10px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: var(--card);
+      box-shadow: 0 4px 14px #0b427b0e;
+    }
+    .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .between { justify-content: space-between; }
+    .stack { display: grid; gap: 8px; }
+    .stack > label { min-width: 0; }
+    label { display: grid; gap: 4px; }
+    button, input, select { font: inherit; }
+    button {
+      min-height: 44px;
+      padding: 7px 11px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #e8f6ff;
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 650;
+    }
+    button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 2px solid #0875cc;
+      outline-offset: 2px;
+    }
+    button.primary { border-color: transparent; background: transparent; }
+    button.danger { color: #9e2342; background: #fff1f4; border-color: #efc8d2; }
+    .full { width: 100%; }
+    input, select {
+      width: 100%;
+      min-width: 0;
+      min-height: 44px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
+      color: var(--ink);
+      font-size: 16px;
+    }
+
+    .calendar { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; }
+    .weekday { text-align: center; font-size: 12px; color: var(--muted); }
+    .day { padding: 2px; border-color: transparent; background: transparent; }
+    .day[aria-pressed="true"] { color: #fff; background: var(--blue); }
+    .day[aria-current="date"] { border-color: #1382d2; }
+    .dot { display: block; height: 5px; font-size: 13px; line-height: 4px; }
+    .entry { width: 100%; text-align: left; border-left: 4px solid #3291d8; }
+    .entry small { display: block; }
+    .fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .set {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 44px;
+      align-items: end;
+      gap: 6px;
+      margin-bottom: 7px;
+    }
+    .set button { padding: 0; }
+    .timer { font-size: 30px; font-variant-numeric: tabular-nums; }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .summary strong {
+      display: block;
+      font-size: clamp(18px, 5vw, 25px);
+      overflow-wrap: anywhere;
+    }
+    .chart {
+      display: grid;
+      grid-template-columns: repeat(var(--days), minmax(0, 1fr));
+      gap: 2px;
+      margin-top: 12px;
+    }
+    .chart-track {
+      height: 105px;
+      display: flex;
+      align-items: end;
+      background: repeating-linear-gradient(to top, var(--line) 0 1px, transparent 1px 26px);
+    }
+    .chart-bar {
+      width: 100%;
+      height: var(--value);
+      border-radius: 4px 4px 0 0;
+      background: linear-gradient(#1c93e8, #084d96);
+    }
+    .tick { font-size: 9px; text-align: center; min-height: 15px; }
+
+    .mountains {
+      position: fixed;
+      pointer-events: none;
+      width: min(100%, 700px);
+      height: 78px;
+      bottom: calc(55px + env(safe-area-inset-bottom));
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: -1;
+    }
+    .dock {
+      position: fixed;
+      z-index: 2;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(100%, 700px);
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 3px;
+      padding: 4px max(6px, env(safe-area-inset-right))
+        calc(4px + env(safe-area-inset-bottom))
+        max(6px, env(safe-area-inset-left));
+      border: 1px solid var(--line);
+      border-radius: 16px 16px 0 0;
+      background: #f7fcff;
+      box-shadow: 0 -4px 16px #073c7018;
+    }
+    .dock button {
+      display: grid;
+      justify-items: center;
+      align-content: center;
+      gap: 2px;
+      min-height: 47px;
+      padding: 2px;
+      border: 0;
+      background: transparent;
+      font-size: 11px;
+    }
+    .dock button[aria-current="page"] { color: #064e97; background: #dcefff; }
+    .dock svg {
+      width: 21px;
+      height: 21px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    #notice { color: #9e2342; }
+    #notice:empty { display: none; }
+  </style>
 </head>
 <body>
-<main>
-  <h1>Дневник тренировок · ОФП</h1>
-  <div id="app"></div>
-  <input id="backup" type="file" accept=".json,application/json" hidden>
-  <dialog id="timer" aria-labelledby="timer-title"></dialog>
-</main>
-<script>
-'use strict';
+  <svg class="mountains" viewBox="0 0 700 85" preserveAspectRatio="none" aria-hidden="true">
+    <path fill="#b4e5ff" d="M0 76 65 36l35 24 77-52 81 52 61-27 37 22 66-42 82 48 67-34 40 27 45-35 44 38v28H0z"/>
+    <path fill="#3d97d4" d="M0 80l61-29 36 21 80-64 18 38 58 35 64-38 43 30 63-60 78 61 67-38 44 33 44-50 44 42v24H0z"/>
+    <path fill="#0a4f95" d="m0 85 62-20 28 14 87-71-16 37 19-12 32 31 44 17 61-26 44 24 62-66-11 42 16-14 37 26 36 14 68-35 43 34 44-61-9 35 15-11 38 34v8z"/>
+    <path fill="#f8fdff" d="m145 35 32-27 28 34-21-10-7 10-6-9-18 12zm252 4 26-26 27 23-16-4-7 8-7-9-16 13zm235 8 24-28 22 22-13-5-7 9-5-8-13 13z"/>
+  </svg>
 
-const KEY = 'training-diary-v1';
-const app = document.querySelector('#app');
-const backup = document.querySelector('#backup');
-const dialog = document.querySelector('#timer');
-const types = { reps:'На повторения', time:'На время', grip:'На время с весом' };
-const statuses = { plan:'План', active:'В процессе', done:'Завершена' };
-const names = [
-  'Подтягивания', 'Подтягивания на кольцах',
-  'Тяга гантели одной рукой в наклоне',
-  'Сгибание кисти с гантелью ладонью вверх и вниз',
-  'Подъём корпуса лёжа на полу', 'Ножницы', 'Планка', 'Книжка',
-  'Повороты с мячом 5 кг и толчки', 'Подъём ног к перекладине',
-  'TRX — ноги к себе', 'Приседания', 'Болгарские выпады',
-  'Приседания с широкой постановкой ног', 'Боковые выпады с весом',
-  'Зашагивания', 'Ягодичный мостик на одной ноге', 'Подъём на носки стоя',
-  'Монетки', 'Стульчик', 'Гиперэкстензия', 'Отжимания',
-  'Отжимания — руки вдоль тела', 'Отжимания на брусьях',
-  'Разведения прямых рук в стороны с гантелями',
-  'Разгибания рук из-за головы с весом', 'Удержание веса щипком'
-];
+  <main>
+    <p id="notice" role="status"></p>
+    <div id="app"></div>
+  </main>
+  <nav id="dock" class="dock" aria-label="Навигация"></nav>
+  <input id="backup-file" type="file" accept=".json,application/json" hidden>
 
-const own = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key);
-const text = (v, max) => typeof v === 'string' && v.length <= max;
-const short = v => text(v, 16);
-const dateOK = v => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v);
-const exerciseOK = e => e && text(e.name, 120) && e.name.trim() && own(types, e.type);
-const freshSet = () => ({ result:'', started:null, restPlan:'', restActual:'' });
-const freshRest = (restPlan = '') => ({ restPlan, restActual:null });
+  <script>
+    'use strict';
 
-function initialData() {
-  return {
-    version:1,
-    catalog:names.map(name => ({
-      name, type:name === 'Удержание веса щипком' ? 'grip'
-        : ['Планка','Стульчик'].includes(name) ? 'time' : 'reps'
-    })),
-    workouts:[]
-  };
-}
+    const KEY = 'ofp-diary.ice.v1';
+    const app = document.querySelector('#app');
+    const dock = document.querySelector('#dock');
+    const notice = document.querySelector('#notice');
+    const fileInput = document.querySelector('#backup-file');
+    const monthLabel = new Intl.DateTimeFormat('ru-RU', { month: 'long', year: 'numeric' });
+    const dayLabel = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long' });
+    const number = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 });
 
-function validData(d) {
-  if (!d || d.version !== 1 || !Array.isArray(d.catalog) ||
-      !d.catalog.every(exerciseOK) || !Array.isArray(d.workouts)) return false;
-  const ids = new Set();
-  for (const w of d.workouts) {
-    if (!w || typeof w.id !== 'string' || !/^[a-z0-9-]{1,80}$/.test(w.id) ||
-        ids.has(w.id) || !dateOK(w.date) || !text(w.note,1000) ||
-        !own(statuses,w.status) || !Array.isArray(w.items)) return false;
-    ids.add(w.id);
-    if (w.circuit !== undefined && (!Array.isArray(w.circuit) ||
-        w.circuit.length < 1 || w.circuit.length > 50 ||
-        !w.circuit.every(r => r && short(r.restPlan) &&
-          (r.restActual === null || short(r.restActual))))) return false;
-    for (const e of w.items) {
-      if (!exerciseOK(e) || !short(e.weight) || !short(e.target) ||
-          (e.after !== undefined && (e.after !== true || !w.circuit)) ||
-          !Array.isArray(e.sets) || e.sets.length < 1 || e.sets.length > 50 ||
-          (w.circuit && !e.after && e.sets.length !== w.circuit.length) ||
-          !e.sets.every(s => s && short(s.result) && short(s.restPlan) &&
-            short(s.restActual) && (s.started === null ||
-              (Number.isSafeInteger(s.started) && s.started > 0)))) return false;
+    const pad = n => String(n).padStart(2, '0');
+    const dateKey = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    const today = () => dateKey(new Date());
+    const localDate = key => new Date(`${key}T12:00:00`);
+    const validDate = key => /^\d{4}-\d{2}-\d{2}$/.test(key) &&
+      Number.isFinite(localDate(key).getTime()) && dateKey(localDate(key)) === key;
+    const uid = () => crypto.randomUUID?.() ??
+      `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const text = value => typeof value === 'string' || typeof value === 'number'
+      ? String(value) : '';
+    const esc = value => String(value).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+    const button = (label, action, attrs = '') =>
+      `<button type="button" data-action="${action}" ${attrs}>${label}</button>`;
+    const heading = label => `<h1 class="brush">${esc(label)}</h1>`;
+    const primary = (label, action) =>
+      button(label, action, 'class="brush primary full"');
+
+    let workouts = [];
+    let screen = 'diary';
+    let activeId = null;
+    let selectedDay = today();
+    let diaryMonth = selectedDay.slice(0, 7);
+    let statsMonth = diaryMonth;
+    let timerStart = null;
+    let timerElapsed = 0;
+
+    function normalizeBackup(raw) {
+      const source = Array.isArray(raw) ? raw : raw?.workouts;
+      if (!Array.isArray(source)) throw new Error('В файле не найден список тренировок.');
+
+      return source.map((w, i) => {
+        if (!w || !validDate(text(w.date)) || !Array.isArray(w.items)) {
+          throw new Error(`Тренировка №${i + 1}: нужна корректная дата и список упражнений.`);
+        }
+        return {
+          id: uid(),
+          title: text(w.title || w.name).trim() || 'Тренировка',
+          date: w.date,
+          status: w.status === 'done' ? 'done' : 'plan',
+          items: w.items.map((e, j) => {
+            if (!e || !Array.isArray(e.sets)) {
+              throw new Error(`Тренировка №${i + 1}, упражнение №${j + 1}: не найдены подходы.`);
+            }
+            const round = Number(e.round ?? e.circle);
+            return {
+              name: text(e.name || e.title).trim() || 'Упражнение',
+              type: e.type === 'time' ? 'time' : 'reps',
+              round: Number.isSafeInteger(round) && round > 0 ? round : 1,
+              weight: text(e.weight),
+              sets: e.sets.map(s => {
+                if (s == null || typeof s !== 'object') {
+                  return { result: text(s), weight: text(e.weight) };
+                }
+                return { result: text(s.result), weight: text(s.weight ?? e.weight) };
+              })
+            };
+          })
+        };
+      });
     }
-  }
-  return true;
-}
 
-const pad = n => String(n).padStart(2,'0');
-function today() {
-  const d = new Date();
-  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-}
-const prettyDate = d => d.split('-').reverse().join('.');
-const esc = v => String(v).replace(/[&<>"']/g,c =>
-  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
-
-let data, loadFailed = false, warned = false;
-let selected = null, showCatalog = false, timerCell = null;
-let historyDay = today(), historyMonth = historyDay.slice(0,7);
-try {
-  const raw = localStorage.getItem(KEY);
-  data = raw === null ? initialData() : JSON.parse(raw);
-  if (!validData(data)) throw new Error('Неверный формат');
-} catch {
-  loadFailed = true;
-}
-
-const current = () => data?.workouts.find(w => w.id === selected);
-const groups = (w, after) => w.items.map((e,i) => ({e,i})).filter(x => Boolean(x.e.after) === after);
-const restValue = r => r.restActual ?? r.restPlan;
-const unit = (w,e) => w.circuit && !e.after ? 'круг' : 'подход';
-
-function save() {
-  try {
-    localStorage.setItem(KEY,JSON.stringify(data));
-    warned = false;
-    return true;
-  } catch {
-    if (!warned) {
-      warned = true;
-      alert('Не удалось сохранить данные на устройстве. Не закрывай дневник: сначала скачай резервную копию с экрана истории.');
+    try {
+      const stored = localStorage.getItem(KEY);
+      if (stored !== null) workouts = normalizeBackup(JSON.parse(stored));
+    } catch {
+      notice.textContent = 'Не удалось прочитать записи в браузере. Можно восстановить их из резервной копии.';
     }
-    return false;
-  }
-}
 
-function duration(v) {
-  v = v.trim();
-  if (/^\d{1,6}$/.test(v)) return Number(v);
-  if (/^\d{1,6}:[0-5]\d$/.test(v)) {
-    const [m,s] = v.split(':').map(Number);
-    return m*60+s;
-  }
-  return NaN;
-}
-const fmt = s => `${Math.floor(s/60)}:${pad(s%60)}`;
-const elapsed = started => Math.max(0,Math.floor((Date.now()-started)/1000));
-const shown = v => Number.isFinite(duration(v)) ? fmt(duration(v)) : v.trim() || '—';
-const btn = (label,action,attrs='') =>
-  `<button type="button" data-action="${action}" ${attrs}>${label}</button>`;
-
-function field(label,value,path,mode='text',placeholder='',max=16,type='text') {
-  return `<label>${label}<input type="${type}" data-field="${path}"
-    value="${esc(value)}" inputmode="${mode}" maxlength="${max}"
-    placeholder="${esc(placeholder)}"></label>`;
-}
-
-function newWorkout(source,inPlace=false) {
-  const count = source?.circuit?.length ??
-    (source?.items.length ? Math.max(1,...source.items.map(e => e.sets.length)) : 3);
-  const w = {
-    id:inPlace ? source.id : (globalThis.crypto?.randomUUID?.() ??
-      `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`),
-    date:inPlace ? source.date : today(),
-    note:inPlace ? source.note : '',
-    status:'plan',
-    circuit:Array.from({length:count},(_,j) => freshRest(source?.circuit?.[j]?.restPlan)),
-    items:(source?.items ?? []).map(e => ({
-      name:e.name, type:e.type, weight:e.weight, target:e.target,
-      ...(e.after ? {after:true} : {}),
-      sets:Array.from({length:e.after ? e.sets.length : count},freshSet)
-    }))
-  };
-  if (inPlace) data.workouts[data.workouts.indexOf(source)] = w;
-  else data.workouts.unshift(w);
-  selected = w.id;
-  showCatalog = false;
-  if (!inPlace) selectHistoryDate(w.date);
-  save();
-  render(false);
-}
-
-function selectHistoryDate(date) {
-  historyDay = date;
-  historyMonth = date.slice(0,7);
-}
-
-const monthLabel = new Intl.DateTimeFormat('ru-RU',{month:'long',year:'numeric'});
-const dayLabel = new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'long',year:'numeric'});
-
-function moveMonth(delta) {
-  const [y,m] = historyMonth.split('-').map(Number);
-  const d = new Date(y,m-1+delta,1);
-  historyMonth = `${d.getFullYear()}-${pad(d.getMonth()+1)}`;
-  const now = today();
-  historyDay = now.startsWith(`${historyMonth}-`) ? now : `${historyMonth}-01`;
-}
-
-function historyCard(w) {
-  const info = w.circuit ? [
-    groups(w,false).length ? `Кругов: ${w.circuit.length}` : '',
-    groups(w,true).length ? 'Есть упражнения после кругов' : ''
-  ].filter(Boolean).join(' · ') : 'Тренировка по подходам';
-  return `<article class="card">
-    <strong>${statuses[w.status]}</strong>
-    ${info ? `<p class="muted">${info}</p>` : ''}
-    <p>${w.items.length ? esc(w.items.map(e => e.name).join(', ')) : 'Нет упражнений'}</p>
-    <div class="row">
-      ${btn('Открыть','open',`data-id="${w.id}"`)}
-      ${btn('Повторить план','copy',`data-id="${w.id}"`)}
-    </div>
-  </article>`;
-}
-
-function history() {
-  const [y,m] = historyMonth.split('-').map(Number);
-  const first = new Date(y,m-1,1);
-  const offset = (first.getDay()+6)%7;
-  const days = new Date(y,m,0).getDate();
-  const now = today(), byDay = new Map();
-  for (const w of data.workouts) {
-    if (!w.date.startsWith(`${historyMonth}-`)) continue;
-    if (!byDay.has(w.date)) byDay.set(w.date,[]);
-    byDay.get(w.date).push(w);
-  }
-  const cells = Array.from({length:days},(_,i) => {
-    const d = i+1, key = `${historyMonth}-${pad(d)}`;
-    const count = byDay.get(key)?.length ?? 0;
-    const label = `${dayLabel.format(new Date(y,m-1,d))}, записей: ${count}`;
-    return btn(`${d}${count ? '<span class="calendar-dot" aria-hidden="true"></span>' : ''}`,
-      'history-day',`class="calendar-day" data-date="${key}" aria-label="${esc(label)}"
-      aria-pressed="${key === historyDay}" ${key === now ? 'aria-current="date"' : ''}`);
-  }).join('');
-  const entries = byDay.get(historyDay) ?? [];
-  return `<div class="row">
-    ${btn('Новый план','new','class="primary"')}
-    ${btn(showCatalog ? 'Скрыть форму' : 'Добавить в справочник','catalog')}
-  </div>
-  ${showCatalog ? catalogForm() : ''}
-  <h2>История</h2>
-  <section class="card" aria-label="Календарь тренировок">
-    <div class="calendar-head">
-      ${btn('‹','history-prev','aria-label="Предыдущий месяц"')}
-      <strong>${esc(monthLabel.format(first))}</strong>
-      ${btn('›','history-next','aria-label="Следующий месяц"')}
-    </div>
-    <div class="calendar-grid">
-      ${['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map(d => `<span>${d}</span>`).join('')}
-      ${'<span aria-hidden="true"></span>'.repeat(offset)}${cells}
-    </div>
-    ${btn('Сегодня','history-today')}
-  </section>
-  <section aria-label="Записи за выбранный день">
-    <h3>${prettyDate(historyDay)}</h3>
-    ${entries.length ? entries.map(historyCard).join('') : '<p class="muted">На этот день записей нет.</p>'}
-  </section>
-  <h2>Резервная копия</h2>
-  <p class="muted">Записи хранятся на этом устройстве и не синхронизируются.</p>
-  <div class="row">${btn('Скачать копию','export')}${btn('Восстановить из файла','import')}</div>`;
-}
-
-function catalogForm() {
-  return `<form id="catalog-form" class="card">
-    <h3>Новое упражнение</h3>
-    <label>Название<input name="name" required maxlength="120"></label>
-    <label>Тип<select name="type">
-      <option value="reps">На повторения · вес необязателен</option>
-      <option value="time">На время · без веса</option>
-      <option value="grip">На время · вес обязателен</option>
-    </select></label>
-    <button class="primary">Сохранить</button>${btn('Отмена','catalog')}
-  </form>`;
-}
-
-function pickForm() {
-  const disabled = data.catalog.length ? '' : 'disabled';
-  return `<form id="pick-form" class="card">
-    <label>Упражнение из справочника<select name="exercise">
-      ${data.catalog.map((e,i) => `<option value="${i}">${esc(e.name)} · ${types[e.type]}</option>`).join('')}
-    </select></label>
-    <div class="row">
-      <button type="submit" value="circle" class="primary" ${disabled}>+ В круг</button>
-      <button type="submit" value="after" ${disabled}>+ После кругов</button>
-      ${btn('Новое упражнение','catalog')}
-    </div>
-  </form>${showCatalog ? catalogForm() : ''}`;
-}
-
-function planItem(e,i,position,count) {
-  return `<article class="card" data-item="${i}">
-    <h3>${position+1}. ${esc(e.name)}</h3>
-    ${e.type === 'time' ? '' : field(
-      e.type === 'grip' ? 'Вес, кг (обязательно)' : 'Вес, кг (необязательно)',
-      e.weight,`${i}.weight`,'decimal','0,0')}
-    ${e.type === 'reps' ? '' : field(
-      e.after ? 'Целевое время на подход' : 'Целевое время на круг',
-      e.target,`${i}.target`,'text','45 или 1:30')}
-    ${e.after ? `<div class="row">
-      <strong>Подходы: ${e.sets.length}</strong>
-      ${btn('−','after-less',`aria-label="Убрать подход" ${e.sets.length <= 1 ? 'disabled' : ''}`)}
-      ${btn('+','after-more',`aria-label="Добавить подход" ${e.sets.length >= 50 ? 'disabled' : ''}`)}
-    </div>` : ''}
-    <div class="row">
-      ${btn('↑ Выше','up',position === 0 ? 'disabled' : '')}
-      ${btn('↓ Ниже','down',position === count-1 ? 'disabled' : '')}
-      ${btn(e.after ? 'Перенести в круг' : 'Перенести после кругов','move')}
-      ${btn('Убрать','remove')}
-    </div>
-  </article>`;
-}
-
-function planSection(w,after) {
-  const items = groups(w,after);
-  if (!items.length) return '';
-  return `<h3>${after ? 'После кругов' : 'В круге'}</h3>
-    ${items.map(({e,i},p) => planItem(e,i,p,items.length)).join('')}`;
-}
-
-function details(e) {
-  return [e.weight.trim() ? `${e.weight} кг` : '',
-    e.type !== 'reps' ? `Цель: ${shown(e.target)}` : ''].filter(Boolean).join(' · ');
-}
-
-function resultCell(w,e,s,i,j) {
-  const value = e.type === 'reps' ? s.result.trim() || '—' : shown(s.result);
-  if (w.status === 'done') return esc(value);
-  const label = esc(`${e.name}, ${unit(w,e)} ${j+1}`);
-  if (e.type === 'reps') return `<input type="text" inputmode="numeric" maxlength="16"
-    placeholder="—" aria-label="${label}, повторы"
-    data-field="${i}.${j}.result" value="${esc(s.result)}">`;
-  const face = s.started === null ? esc(value)
-    : `<span data-clock="${s.started}">${fmt(elapsed(s.started))}</span>`;
-  return btn(face,'timer-open',`data-i="${i}" data-j="${j}" aria-label="${label}, секундомер"`);
-}
-
-function restCell(w,r,j) {
-  const v = w.status === 'plan' ? r.restPlan : restValue(r);
-  if (w.status === 'done') return esc(shown(v));
-  const display = Number.isFinite(duration(v)) ? fmt(duration(v)) : v;
-  return `<input type="text" maxlength="16" placeholder="—"
-    aria-label="Отдых после круга ${j+1}" data-rest="${j}" value="${esc(display)}">`;
-}
-
-function circuitTable(w) {
-  return `<div class="scroll" data-scroll="circuit" tabindex="0" aria-label="Таблица кругов">
-    <table class="circuit">
-      <thead><tr><th scope="col">${w.status === 'plan' ? 'План' : 'Упражнение'}</th>
-        ${w.circuit.map((_,j) => `<th scope="col">Круг ${j+1}</th>`).join('')}
-      </tr></thead>
-      <tbody>
-        ${w.status === 'plan' ? '' : groups(w,false).map(({e,i},p) => `<tr>
-          <th scope="row">${p+1}. ${esc(e.name)}
-            ${details(e) ? `<small class="muted">${esc(details(e))}</small>` : ''}</th>
-          ${e.sets.map((s,j) => `<td>${resultCell(w,e,s,i,j)}</td>`).join('')}
-        </tr>`).join('')}
-        <tr class="rest"><th scope="row">Отдых</th>
-          ${w.circuit.map((r,j) => `<td>${restCell(w,r,j)}</td>`).join('')}
-        </tr>
-      </tbody>
-    </table>
-  </div>`;
-}
-
-function afterSection(w) {
-  const items = groups(w,true);
-  if (!items.length) return '';
-  return `<h3>После кругов</h3>
-    ${items.map(({e,i}) => `<article class="card">
-      <h3>${esc(e.name)}</h3>
-      ${details(e) ? `<p class="muted">${esc(details(e))}</p>` : ''}
-      <div class="scroll" data-scroll="after-${i}" tabindex="0" aria-label="${esc(e.name)}: подходы">
-        <table>
-          <thead><tr>${e.sets.map((_,j) => `<th scope="col">Подход ${j+1}</th>`).join('')}</tr></thead>
-          <tbody><tr>${e.sets.map((s,j) => `<td>${resultCell(w,e,s,i,j)}</td>`).join('')}</tr></tbody>
-        </table>
-      </div>
-    </article>`).join('')}`;
-}
-
-function legacyBody(w) {
-  if (w.status === 'plan') return `
-    <p class="muted">Этот план создан в старом формате. При преобразовании отдых между подходами не перенесётся.</p>
-    ${w.items.map(e => `<article class="card">
-      <h3>${esc(e.name)}</h3>
-      <p>${e.sets.length} подх.${details(e) ? ` · ${esc(details(e))}` : ''}</p>
-      ${e.sets.some(s => s.restPlan.trim()) ? `<p class="muted">Отдых: ${e.sets.map(s => esc(shown(s.restPlan))).join(' · ')}</p>` : ''}
-    </article>`).join('')}
-    ${btn('Преобразовать в круговой план','convert','class="primary"')}`;
-  return `<p class="muted">Старый формат: по подходам.</p>
-    ${w.items.map((e,i) => `<article class="card">
-      <h3>${i+1}. ${esc(e.name)}</h3>
-      ${details(e) ? `<p class="muted">${esc(details(e))}</p>` : ''}
-      ${e.sets.map((s,j) => `<div class="set">
-        <strong>Подход ${j+1}</strong>
-        ${w.status === 'active' ? (e.type === 'reps'
-          ? field('Повторы',s.result,`${i}.${j}.result`,'numeric')
-          : resultCell(w,e,s,i,j))
-          : `<p>${e.type === 'reps' ? 'Повторы' : 'Время'}: ${resultCell(w,e,s,i,j)}</p>`}
-        <p class="muted">Отдых по плану: ${esc(shown(s.restPlan))}</p>
-        ${w.status === 'active' ? field('Отдых по факту',s.restActual,`${i}.${j}.restActual`,'text','1:30')
-          : `<p>Отдых по факту: ${esc(shown(s.restActual))}</p>`}
-      </div>`).join('')}
-    </article>`).join('')}`;
-}
-
-function render(keepScroll=true) {
-  if (loadFailed) {
-    app.innerHTML = `<p>Не удалось открыть локальные данные. Дневник не будет перезаписывать их автоматически.</p>
-      ${btn('Восстановить из файла','import')}`;
-    return;
-  }
-  const offsets = new Map();
-  if (keepScroll) for (const el of app.querySelectorAll('[data-scroll]')) offsets.set(el.dataset.scroll,el.scrollLeft);
-  const w = current();
-  if (!w) { app.innerHTML = history(); return; }
-  const plan = w.status === 'plan', done = w.status === 'done';
-  const hasCircle = Boolean(w.circuit && groups(w,false).length);
-  let body;
-  if (!w.circuit) body = legacyBody(w);
-  else if (plan) body = `${pickForm()}${planSection(w,false)}
-    ${hasCircle ? `<div class="card row"><strong>Круги: ${w.circuit.length}</strong>
-      ${btn('−','less',`aria-label="Убрать круг" ${w.circuit.length <= 1 ? 'disabled' : ''}`)}
-      ${btn('+','more',`aria-label="Добавить круг" ${w.circuit.length >= 50 ? 'disabled' : ''}`)}
-    </div>
-    <p class="muted">Отдых после круга: секунды или формат 1:30.</p>
-    ${circuitTable(w)}` : ''}${planSection(w,true)}`;
-  else body = `${!done ? '<p class="muted">Для замера времени нажми на ячейку упражнения.</p>' : ''}
-    ${hasCircle ? circuitTable(w) : ''}${afterSection(w)}`;
-  app.innerHTML = `
-    ${btn('← История','back')}
-    <h2 id="workout-title">${statuses[w.status]} · ${prettyDate(w.date)}</h2>
-    ${done ? (w.note ? `<p>${esc(w.note)}</p>` : '') : `<div class="card">
-      ${field('Дата',w.date,'date','none','',10,'date')}
-      ${field('Заметка',w.note,'note','text','',1000)}
-    </div>`}
-    ${body}
-    <div class="row">
-      ${plan ? (w.circuit ? btn('Начать тренировку','start','class="primary"') : '')
-        : done ? btn('Исправить результаты','edit')
-        : btn('Завершить тренировку','done','class="primary"')}
-      ${btn('Повторить план','copy',`data-id="${w.id}"`)}
-      ${btn('Удалить','delete','class="danger"')}
-    </div>`;
-  for (const el of app.querySelectorAll('[data-scroll]')) el.scrollLeft = offsets.get(el.dataset.scroll) ?? 0;
-}
-
-function checkRest(w,planning) {
-  if (!w.circuit || !groups(w,false).length) return '';
-  for (const [j,r] of w.circuit.entries()) {
-    const value = planning ? r.restPlan : restValue(r);
-    if (value.trim() && !Number.isFinite(duration(value)))
-      return `Круг ${j+1}: укажи отдых в секундах или в формате 1:30.`;
-  }
-  return '';
-}
-
-function checkPlan(w) {
-  if (!w.items.length) return 'Добавь хотя бы одно упражнение.';
-  for (const e of w.items) {
-    const weight = e.weight.trim().replace(',','.');
-    if (weight && !/^\d+(\.\d+)?$/.test(weight))
-      return `${e.name}: укажи вес числом, например 12,5.`;
-    if (e.type === 'grip' && !(Number(weight)>0))
-      return `${e.name}: укажи вес больше нуля.`;
-    if (e.type !== 'reps' && !(duration(e.target)>0))
-      return `${e.name}: укажи целевое время, например 45 или 1:30.`;
-  }
-  return checkRest(w,true);
-}
-
-function checkResults(w) {
-  for (const e of w.items) {
-    for (const [j,s] of e.sets.entries()) {
-      const at = `${e.name}, ${unit(w,e)} ${j+1}`;
-      if (s.started !== null) return `${at}: сначала останови секундомер.`;
-      if (s.result.trim() && (e.type === 'reps'
-          ? !/^\d+$/.test(s.result.trim()) : !Number.isFinite(duration(s.result))))
-        return `${at}: проверь результат.`;
-      if (!w.circuit && s.restActual.trim() && !Number.isFinite(duration(s.restActual)))
-        return `${at}: проверь отдых.`;
-    }
-  }
-  return checkRest(w,false);
-}
-
-function handleInput(event) {
-  const el = event.target, w = current();
-  if (!w || w.status === 'done') return;
-  if (el.dataset.rest !== undefined) {
-    const r = w.circuit?.[Number(el.dataset.rest)];
-    if (!r) return;
-    r[w.status === 'plan' ? 'restPlan' : 'restActual'] = el.value;
-  } else {
-    const path = el.dataset.field;
-    if (!path) return;
-    if (path === 'date') {
-      if (!dateOK(el.value)) return;
-      if (historyDay === w.date) selectHistoryDate(el.value);
-      w.date = el.value;
-      app.querySelector('#workout-title').textContent = `${statuses[w.status]} · ${prettyDate(w.date)}`;
-    } else if (path === 'note') w.note = el.value;
-    else {
-      const [i,j,key] = path.split('.');
-      if (key) w.items[i].sets[j][key] = el.value;
-      else w.items[i][j] = el.value;
-    }
-  }
-  save();
-}
-app.addEventListener('input',handleInput);
-dialog.addEventListener('input',handleInput);
-
-app.addEventListener('submit',event => {
-  event.preventDefault();
-  if (loadFailed) return;
-  const form = event.target, values = new FormData(form), w = current();
-  if (form.id === 'catalog-form') {
-    const name = String(values.get('name')).trim(), type = values.get('type');
-    if (!name || !own(types,type)) return;
-    if (data.catalog.some(e => e.name.toLowerCase() === name.toLowerCase()))
-      return alert('Такое упражнение уже есть в справочнике.');
-    data.catalog.push({name,type});
-    showCatalog = false;
-    save();
-    render();
-    const select = app.querySelector('#pick-form select');
-    if (select) select.value = String(data.catalog.length-1);
-  } else if (form.id === 'pick-form' && w?.status === 'plan' && w.circuit) {
-    const index = values.get('exercise');
-    if (index === null) return;
-    const e = data.catalog[Number(index)];
-    if (!e) return;
-    const after = event.submitter?.value === 'after';
-    w.items.push({
-      name:e.name, type:e.type, weight:'', target:'',
-      ...(after ? {after:true} : {}),
-      sets:Array.from({length:after ? 1 : w.circuit.length},freshSet)
-    });
-    save();
-    render();
-    app.querySelector('#pick-form select').value = index;
-  }
-});
-
-function paintTimer() {
-  const w = current();
-  if (!w || !timerCell) return;
-  const {i,j} = timerCell, e = w.items[i], s = e.sets[j];
-  dialog.innerHTML = `
-    <h3 id="timer-title">${esc(e.name)} · ${unit(w,e)} ${j+1}</h3>
-    <p class="clock" ${s.started === null ? '' : `data-clock="${s.started}"`}>${
-      s.started === null ? esc(shown(s.result)) : fmt(elapsed(s.started))}</p>
-    ${field('Фактическое время',s.result,`${i}.${j}.result`,'text','45 или 1:30')}
-    <div class="row">
-      ${btn(s.started === null ? 'Старт' : 'Стоп','timer-toggle','class="primary"')}
-      ${btn('Готово','timer-close')}
-    </div>`;
-}
-
-function openTimer(w,i,j) {
-  const e = w?.items[i];
-  if (w?.status !== 'active' || !e?.sets[j] || e.type === 'reps') return;
-  timerCell = {i,j};
-  paintTimer();
-  dialog.showModal();
-  dialog.querySelector('[data-action="timer-toggle"]').focus();
-}
-
-dialog.addEventListener('click',event => {
-  const action = event.target.closest('button[data-action]')?.dataset.action;
-  if (!timerCell) return;
-  if (action === 'timer-close') { dialog.close(); return; }
-  if (action !== 'timer-toggle') return;
-  const {i,j} = timerCell;
-  const s = current()?.items[i]?.sets[j];
-  if (!s) return;
-  if (s.started === null) {
-    if (data.workouts.some(w => w.items.some(e => e.sets.some(x => x.started !== null))))
-      return alert('Сначала останови секундомер другого упражнения.');
-    s.started = Date.now();
-  } else {
-    s.result = fmt(elapsed(s.started));
-    s.started = null;
-  }
-  save();
-  paintTimer();
-  dialog.querySelector('[data-action="timer-toggle"]').focus();
-});
-
-dialog.addEventListener('close',() => {
-  const cell = timerCell;
-  timerCell = null;
-  render();
-  if (cell) app.querySelector(
-    `[data-action="timer-open"][data-i="${cell.i}"][data-j="${cell.j}"]`
-  )?.focus({preventScroll:true});
-});
-
-setInterval(() => {
-  for (const node of document.querySelectorAll('[data-clock]'))
-    node.textContent = fmt(elapsed(Number(node.dataset.clock)));
-},250);
-
-app.addEventListener('click',event => {
-  const button = event.target.closest('button[data-action]');
-  if (!button) return;
-  const action = button.dataset.action, w = current();
-  const i = Number(button.closest('[data-item]')?.dataset.item), e = w?.items[i];
-  switch (action) {
-    case 'history-prev': case 'history-next': case 'history-today':
-      if (action === 'history-today') selectHistoryDate(today());
-      else moveMonth(action === 'history-prev' ? -1 : 1);
-      render();
-      app.querySelector(`[data-action="${action}"]`)?.focus({preventScroll:true});
-      return;
-    case 'history-day':
-      selectHistoryDate(button.dataset.date);
-      render();
-      app.querySelector('.calendar-day[aria-pressed="true"]')?.focus({preventScroll:true});
-      return;
-    case 'new': return newWorkout();
-    case 'open': selected = button.dataset.id; showCatalog = false; return render(false);
-    case 'back': selected = null; showCatalog = false; return render(false);
-    case 'copy': {
-      const source = data.workouts.find(x => x.id === button.dataset.id);
-      if (source) return newWorkout(source);
-      return;
-    }
-    case 'catalog': showCatalog = !showCatalog; return render();
-    case 'export': return exportBackup();
-    case 'import': backup.value = ''; return backup.click();
-    case 'convert':
-      if (!confirm('Преобразовать план? Старый отдых между подходами не перенесётся.')) return;
-      return newWorkout(w,true);
-    case 'up': case 'down': {
-      if (!e || w.status !== 'plan') return;
-      const list = groups(w,Boolean(e.after));
-      const p = list.findIndex(item => item.i === i);
-      const neighbor = list[p+(action === 'up' ? -1 : 1)];
-      if (!neighbor) return;
-      [w.items[i],w.items[neighbor.i]] = [w.items[neighbor.i],w.items[i]];
-      break;
-    }
-    case 'move':
-      if (!e || w.status !== 'plan' || !w.circuit) return;
-      if (e.after) {
-        delete e.after;
-        e.sets = Array.from(w.circuit,freshSet);
-      } else {
-        e.after = true;
-        e.sets = [freshSet()];
+    function save(next = workouts) {
+      try {
+        localStorage.setItem(KEY, JSON.stringify({ version: 1, workouts: next }));
+        notice.textContent = '';
+        return true;
+      } catch {
+        notice.textContent = 'Не удалось сохранить на устройстве. Не закрывай дневник: скачай копию на вкладке «Копии».';
+        return false;
       }
-      w.items.splice(i,1);
-      w.items.push(e);
-      break;
-    case 'remove':
-      if (!e || w.status !== 'plan') return;
-      w.items.splice(i,1);
-      break;
-    case 'after-more': case 'after-less':
-      if (!e?.after || w.status !== 'plan') return;
-      if (action === 'after-more' && e.sets.length < 50) e.sets.push(freshSet());
-      else if (action === 'after-less' && e.sets.length > 1) e.sets.pop();
-      else return;
-      break;
-    case 'more':
-      if (!w?.circuit || w.status !== 'plan' || w.circuit.length >= 50) return;
-      w.circuit.push(freshRest());
-      groups(w,false).forEach(({e}) => e.sets.push(freshSet()));
-      break;
-    case 'less':
-      if (!w?.circuit || w.status !== 'plan' || w.circuit.length <= 1) return;
-      if (w.circuit[w.circuit.length-1].restPlan.trim() &&
-          !confirm('Удалить последний круг вместе с его отдыхом?')) return;
-      w.circuit.pop();
-      groups(w,false).forEach(({e}) => e.sets.pop());
-      break;
-    case 'start': {
-      const error = checkPlan(w);
-      if (error) return alert(error);
-      w.status = 'active';
-      showCatalog = false;
-      break;
     }
-    case 'timer-open': return openTimer(w,Number(button.dataset.i),Number(button.dataset.j));
-    case 'done': {
-      const error = checkResults(w);
-      if (error) return alert(error);
-      if (w.items.some(item => item.sets.some(s => !s.result.trim())) &&
-          !confirm('Не все результаты записаны. Всё равно завершить?')) return;
-      w.status = 'done';
-      break;
+
+    function monthInfo(key) {
+      const [y, m] = key.split('-').map(Number);
+      return {
+        first: new Date(y, m - 1, 1),
+        days: new Date(y, m, 0).getDate()
+      };
     }
-    case 'edit': w.status = 'active'; break;
-    case 'delete':
-      if (!confirm('Удалить эту тренировку?')) return;
-      data.workouts = data.workouts.filter(x => x.id !== w.id);
-      selected = null;
-      showCatalog = false;
-      break;
-    default: return;
-  }
-  save();
-  render();
-});
 
-function exportBackup() {
-  const url = URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `training-diary-${today()}.json`;
-  document.body.append(link);
-  link.click();
-  link.remove();
-  setTimeout(() => URL.revokeObjectURL(url),60000);
-}
+    function shiftMonth(key, delta) {
+      const { first } = monthInfo(key);
+      first.setMonth(first.getMonth() + delta);
+      return dateKey(first).slice(0, 7);
+    }
 
-backup.addEventListener('change',async () => {
-  const file = backup.files[0];
-  if (!file) return;
-  let next;
-  try {
-    next = JSON.parse(await file.text());
-    if (!validData(next)) throw new Error('Неверный формат');
-  } catch {
-    return alert('Не удалось прочитать копию. Выбери JSON-файл, скачанный из дневника.');
-  }
-  if (!confirm('Восстановление заменит текущие тренировки и справочник. Продолжить?')) return;
-  const previous = data;
-  data = next;
-  if (!save()) { data = previous; return; }
-  loadFailed = false;
-  selected = null;
-  showCatalog = false;
-  selectHistoryDate(today());
-  render(false);
-});
+    function monthHeader(key, prefix) {
+      return `<div class="row between">
+        ${button('‹', `${prefix}-prev`, 'aria-label="Предыдущий месяц"')}
+        <strong aria-live="polite">${esc(monthLabel.format(monthInfo(key).first))}</strong>
+        ${button('›', `${prefix}-next`, 'aria-label="Следующий месяц"')}
+      </div>`;
+    }
 
-render();
-if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-  navigator.serviceWorker.register('./sw.js').catch(console.warn);
-}
-</script>
+    function renderDiary() {
+      const { first, days } = monthInfo(diaryMonth);
+      const offset = (first.getDay() + 6) % 7;
+      const marked = new Set(workouts.map(w => w.date));
+      let calendar = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
+        .map(d => `<div class="weekday">${d}</div>`).join('');
+      calendar += '<span aria-hidden="true"></span>'.repeat(offset);
+
+      for (let i = 1; i <= days; i++) {
+        const key = `${diaryMonth}-${pad(i)}`;
+        const mark = marked.has(key);
+        const label = `${dayLabel.format(localDate(key))}${mark ? ', есть записи' : ''}`;
+        calendar += button(`${i}<span class="dot" aria-hidden="true">${mark ? '•' : ''}</span>`,
+          'day', `class="day" data-key="${key}" aria-label="${esc(label)}"
+          aria-pressed="${key === selectedDay}" ${key === today() ? 'aria-current="date"' : ''}`);
+      }
+
+      const list = workouts.filter(w => w.date === selectedDay).map(w =>
+        button(`<strong>${esc(w.title)}</strong><small>${w.status === 'done'
+          ? 'Завершена' : 'План'} · Упражнений: ${w.items.length}</small>`,
+          'open', `class="entry" data-id="${esc(w.id)}"`)).join('');
+
+      return `${heading('Дневник')}
+        <p class="muted">Календарь тренировок</p>
+        <section class="card" aria-label="Календарь">
+          ${monthHeader(diaryMonth, 'diary')}
+          <div class="calendar">${calendar}</div>
+        </section>
+        <h2 class="brush">${esc(dayLabel.format(localDate(selectedDay)))}</h2>
+        <div class="stack">${list || '<p class="muted">На этот день пока нет записей.</p>'}
+          ${primary('Создать план на этот день', 'new')}
+        </div>`;
+    }
+
+    function elapsed() {
+      return timerElapsed + (timerStart === null ? 0 : Date.now() - timerStart);
+    }
+
+    function clock(ms) {
+      const total = Math.max(0, Math.floor(ms / 1000));
+      return `${pad(Math.floor(total / 60))}:${pad(total % 60)}`;
+    }
+
+    function exerciseCard(e, i) {
+      const isTime = e.type === 'time';
+      const sets = e.sets.map((s, j) => `<div class="set">
+        <label>
+          <small>Подход ${j + 1} · ${isTime ? 'время' : 'повторы'}</small>
+          <input data-field="result" data-i="${i}" data-j="${j}"
+            inputmode="${isTime ? 'text' : 'numeric'}"
+            placeholder="${isTime ? 'сек или 1:30' : '10'}" value="${esc(s.result)}">
+        </label>
+        ${isTime
+          ? `<div>${button('Секундомер', 'timer-fill', `data-i="${i}" data-j="${j}"`)}</div>`
+          : `<label><small>Вес, кг</small><input data-field="set-weight" data-i="${i}"
+              data-j="${j}" inputmode="decimal" placeholder="0" value="${esc(s.weight)}"></label>`}
+        ${button('×', 'set-delete', `data-i="${i}" data-j="${j}" aria-label="Удалить подход ${j + 1}"`)}
+      </div>`).join('');
+
+      return `<section class="card">
+        <div class="row between"><h3>Упражнение ${i + 1}</h3>
+          ${button('Удалить', 'item-delete', `class="danger" data-i="${i}"`)}
+        </div>
+        <div class="stack">
+          <label>Название<input data-field="name" data-i="${i}" value="${esc(e.name)}"
+            placeholder="Например, приседания"></label>
+          <div class="stack fields">
+            <label>Тип<select data-field="type" data-i="${i}">
+              <option value="reps" ${!isTime ? 'selected' : ''}>Повторы</option>
+              <option value="time" ${isTime ? 'selected' : ''}>Время</option>
+            </select></label>
+            <label>Круг<input data-field="round" data-i="${i}" type="number"
+              inputmode="numeric" min="1" step="1" value="${e.round}"></label>
+          </div>
+        </div>
+        <div style="margin-top:8px">${sets}</div>
+        ${button('+ Подход', 'set-add', `data-i="${i}"`)}
+      </section>`;
+    }
+
+    function renderWorkout(w) {
+      const items = w.items.map((e, i) => ({ e, i }))
+        .sort((a, b) => a.e.round - b.e.round || a.i - b.i);
+      let round = null;
+      const cards = items.map(({ e, i }) => {
+        const title = e.round === round ? '' : `<h2 class="brush">Круг ${e.round}</h2>`;
+        round = e.round;
+        return title + exerciseCard(e, i);
+      }).join('');
+
+      return `${heading(w.status === 'done' ? 'Тренировка завершена' : 'План тренировки')}
+        <div class="card stack">
+          <label>Название<input data-field="title" value="${esc(w.title)}" placeholder="Верх тела"></label>
+          <label>Дата<input data-field="date" type="date" value="${esc(w.date)}"></label>
+          <small>Правки сохраняются автоматически. Номер круга меняет группировку упражнений.</small>
+        </div>
+        <section class="card" aria-label="Секундомер">
+          <div class="row between"><h2>Секундомер</h2><strong class="timer" id="timer">${clock(elapsed())}</strong></div>
+          <div class="row">
+            ${button(timerStart === null ? 'Старт' : 'Пауза', 'timer-toggle', 'id="timer-toggle"')}
+            ${button('Сброс', 'timer-reset')}
+          </div>
+        </section>
+        ${cards || '<p class="muted">Добавь первое упражнение.</p>'}
+        <div class="stack">
+          ${button('+ Упражнение', 'item-add')}
+          ${w.items.length ? button('+ Круг с теми же упражнениями', 'round-add') : ''}
+          ${primary(w.status === 'done' ? 'Вернуть в планы' : 'Завершить тренировку', 'finish')}
+          ${button('Удалить тренировку', 'delete', 'class="danger"')}
+        </div>`;
+    }
+
+    function parseWeight(s) {
+      const value = text(s).trim().replace(',', '.');
+      const n = /^\d+(?:\.\d+)?$/.test(value) ? Number(value) : 0;
+      return Number.isFinite(n) ? n : 0;
+    }
+
+    function parseSeconds(s) {
+      const value = text(s).trim();
+      if (/^\d+$/.test(value)) {
+        const n = Number(value);
+        return Number.isSafeInteger(n) ? n : 0;
+      }
+      const m = /^(\d+):([0-5]\d)$/.exec(value);
+      const n = m ? Number(m[1]) * 60 + Number(m[2]) : 0;
+      return Number.isSafeInteger(n) ? n : 0;
+    }
+
+    function renderStats() {
+      const { days, first } = monthInfo(statsMonth);
+      const completed = workouts.filter(w => w.status === 'done' && w.date.slice(0, 7) === statsMonth);
+      const counts = Array(days).fill(0);
+      let reps = 0, volume = 0, seconds = 0;
+
+      for (const w of completed) {
+        counts[Number(w.date.slice(-2)) - 1]++;
+        for (const e of w.items) {
+          for (const s of e.sets) {
+            if (e.type === 'time') {
+              seconds += parseSeconds(s.result);
+            } else {
+              const value = text(s.result).trim();
+              if (!/^\d+$/.test(value)) continue;
+              const n = Number(value);
+              if (!Number.isSafeInteger(n)) continue;
+              reps += n;
+              const load = n * parseWeight(s.weight);
+              if (Number.isFinite(load)) volume += load;
+            }
+          }
+        }
+      }
+
+      const max = Math.max(1, ...counts);
+      const bars = counts.map((count, i) => {
+        const day = i + 1;
+        const label = `${dayLabel.format(new Date(first.getFullYear(), first.getMonth(), day))}: ${count}`;
+        const tick = day === 1 || day === days || (day % 5 === 0 && day < days - 2);
+        return `<div role="img" aria-label="${esc(label)}" title="${esc(label)}">
+          <div class="chart-track" aria-hidden="true">
+            <div class="chart-bar" style="--value:${count / max * 100}%"></div>
+          </div>
+          <div class="tick" aria-hidden="true">${tick ? day : ''}</div>
+        </div>`;
+      }).join('');
+      const metric = (label, value) =>
+        `<div class="card"><small>${label}</small><strong>${value}</strong></div>`;
+
+      return `${heading('Статистика')}
+        <section class="card" aria-label="Завершённые тренировки по дням">
+          ${monthHeader(statsMonth, 'stats')}
+          <div class="chart" style="--days:${days}">${bars}</div>
+          ${completed.length ? '' : '<p class="muted">В этом месяце нет завершённых тренировок.</p>'}
+        </section>
+        <div class="summary">
+          ${metric('Тренировки', number.format(completed.length))}
+          ${metric('Повторы', number.format(reps))}
+          ${metric('Объём с весом', `${number.format(volume)} кг`)}
+          ${metric('Время упражнений', `${number.format(Math.floor(seconds / 60))} мин ${seconds % 60} с`)}
+        </div>
+        <p class="muted">Объём — сумма «вес × повторы» по подходам. Время — сумма записанных результатов, без отдыха.</p>`;
+    }
+
+    function renderBackups() {
+      return `${heading('Резервные копии')}
+        <section class="card stack">
+          <p>Записи хранятся на этом устройстве и не синхронизируются через GitHub.</p>
+          ${button('Скачать копию', 'export')}
+          ${button('Восстановить из файла', 'import')}
+          <small>Восстановление заменит текущие записи. JSON с тренировками не загружай в публичный репозиторий.</small>
+        </section>`;
+    }
+
+    function renderDock() {
+      const tabs = [
+        ['Дневник', 'diary', '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4m8-4v4M4 10h16"/>'],
+        ['Новый план', 'new', '<circle cx="12" cy="12" r="9"/><path d="M12 8v8m-4-4h8"/>'],
+        ['Статистика', 'stats', '<path d="M4 20h16M7 16v-4m5 4V8m5 8V4"/>'],
+        ['Копии', 'backups', '<path d="M4 5h16v4H4zM6 9v10h12V9m-8 4h4"/>']
+      ];
+      dock.innerHTML = tabs.map(([label, action, path]) =>
+        button(`<svg viewBox="0 0 24 24" aria-hidden="true">${path}</svg><span>${label}</span>`,
+          action, screen === action ? 'aria-current="page"' : '')).join('');
+    }
+
+    const activeWorkout = () => workouts.find(w => w.id === activeId);
+
+    function render() {
+      const w = activeWorkout();
+      if (screen === 'workout' && !w) screen = 'diary';
+      app.innerHTML = screen === 'workout' ? renderWorkout(w)
+        : screen === 'stats' ? renderStats()
+        : screen === 'backups' ? renderBackups()
+        : renderDiary();
+      renderDock();
+    }
+
+    function go(target, id = null) {
+      if (target !== 'workout' || id !== activeId) {
+        timerStart = null;
+        timerElapsed = 0;
+      }
+      screen = target;
+      activeId = id;
+      render();
+      window.scrollTo(0, 0);
+    }
+
+    function updateTimer() {
+      const el = document.querySelector('#timer');
+      if (el) el.textContent = clock(elapsed());
+      const toggle = document.querySelector('#timer-toggle');
+      if (toggle) toggle.textContent = timerStart === null ? 'Старт' : 'Пауза';
+    }
+
+    setInterval(updateTimer, 250);
+
+    function editField(event) {
+      const el = event.target;
+      const field = el.dataset.field;
+      const w = activeWorkout();
+      if (!field || !w) return;
+      const e = w.items[Number(el.dataset.i)];
+      const s = e?.sets[Number(el.dataset.j)];
+
+      if (field === 'type' || field === 'round' || field === 'date') {
+        if (event.type !== 'change') return;
+        if (field === 'date') {
+          if (validDate(el.value)) w.date = el.value;
+          else el.value = w.date;
+        } else if (e && field === 'type') {
+          e.type = el.value === 'time' ? 'time' : 'reps';
+          save();
+          render();
+          return;
+        } else if (e) {
+          const round = Number(el.value);
+          if (Number.isSafeInteger(round) && round >= 1) e.round = round;
+          save();
+          render();
+          return;
+        }
+      } else {
+        if (event.type !== 'input') return;
+        if (field === 'title') w.title = el.value;
+        if (field === 'name' && e) e.name = el.value;
+        if (field === 'result' && s) s.result = el.value;
+        if (field === 'set-weight' && s) s.weight = el.value;
+      }
+      save();
+    }
+
+    app.addEventListener('input', editField);
+    app.addEventListener('change', editField);
+
+    function newWorkout() {
+      const w = { id: uid(), title: '', date: selectedDay, status: 'plan', items: [] };
+      workouts.push(w);
+      save();
+      go('workout', w.id);
+    }
+
+    function downloadBackup() {
+      const blob = new Blob([JSON.stringify({ version: 1, workouts }, null, 2)],
+        { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `ofp-${today()}.json`;
+      document.body.append(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 60_000);
+    }
+
+    fileInput.addEventListener('change', async () => {
+      const file = fileInput.files?.[0];
+      fileInput.value = '';
+      if (!file) return;
+      try {
+        const restored = normalizeBackup(JSON.parse(await file.text()));
+        if (!confirm(`Восстановить тренировок: ${restored.length}? Текущие записи будут заменены.`)) return;
+        if (!save(restored)) return;
+        workouts = restored;
+
+        if (workouts.length) {
+          selectedDay = workouts.map(w => w.date).sort().at(-1);
+          diaryMonth = selectedDay.slice(0, 7);
+          statsMonth = diaryMonth;
+        }
+        go('diary');
+      } catch (error) {
+        notice.textContent = `Копия не восстановлена: ${error.message}`;
+      }
+    });
+
+    document.addEventListener('click', event => {
+      const control = event.target.closest('button[data-action]');
+      if (!control) return;
+      const { action, id, key, i, j } = control.dataset;
+      const w = activeWorkout();
+      const e = w?.items[Number(i)];
+      const s = e?.sets[Number(j)];
+
+      switch (action) {
+        case 'diary':
+          if (w) {
+            selectedDay = w.date;
+            diaryMonth = w.date.slice(0, 7);
+          }
+          return go('diary');
+        case 'stats': return go('stats');
+        case 'backups': return go('backups');
+        case 'new': return newWorkout();
+        case 'open': return go('workout', id);
+        case 'export': return downloadBackup();
+        case 'import': return fileInput.click();
+
+        case 'day':
+          selectedDay = key;
+          render();
+          app.querySelector(`[data-key="${key}"]`)?.focus({ preventScroll: true });
+          return;
+        case 'diary-prev':
+        case 'diary-next':
+          diaryMonth = shiftMonth(diaryMonth, action.endsWith('prev') ? -1 : 1);
+          selectedDay = diaryMonth === today().slice(0, 7) ? today() : `${diaryMonth}-01`;
+          break;
+        case 'stats-prev':
+        case 'stats-next':
+          statsMonth = shiftMonth(statsMonth, action.endsWith('prev') ? -1 : 1);
+          break;
+
+        case 'timer-toggle':
+          if (timerStart === null) timerStart = Date.now();
+          else {
+            timerElapsed = elapsed();
+            timerStart = null;
+          }
+          return updateTimer();
+        case 'timer-reset':
+          timerStart = null;
+          timerElapsed = 0;
+          return updateTimer();
+        case 'timer-fill':
+          if (!s || e.type !== 'time') return;
+          s.result = String(Math.max(0, Math.floor(elapsed() / 1000)));
+          save();
+          break;
+
+        case 'item-add':
+          if (!w) return;
+          w.items.push({ name: '', type: 'reps',
+            round: Math.max(1, ...w.items.map(item => item.round)),
+            sets: [{ result: '', weight: '' }] });
+          save();
+          render();
+          app.querySelector(`[data-field="name"][data-i="${w.items.length - 1}"]`)?.focus();
+          return;
+        case 'item-delete':
+          if (!e || !confirm('Удалить упражнение вместе с подходами?')) return;
+          w.items.splice(Number(i), 1);
+          save();
+          break;
+        case 'set-add':
+          if (!e) return;
+          e.sets.push({ result: '', weight: e.sets.at(-1)?.weight ?? '' });
+          save();
+          break;
+        case 'set-delete':
+          if (!s) return;
+          e.sets.splice(Number(j), 1);
+          save();
+          break;
+        case 'round-add': {
+          if (!w?.items.length) return;
+          const last = Math.max(...w.items.map(item => item.round));
+          const next = w.items.filter(item => item.round === last).map(item => ({
+            ...item, round: last + 1,
+            sets: item.sets.map(set => ({ weight: set.weight, result: '' }))
+          }));
+          w.items.push(...next);
+          save();
+          break;
+        }
+        case 'finish':
+          if (!w) return;
+          if (w.status !== 'done' && !w.items.length) {
+            notice.textContent = 'Добавь хотя бы одно упражнение.';
+            return;
+          }
+          w.title = w.title.trim() || 'Тренировка';
+          for (const item of w.items) item.name = item.name.trim() || 'Упражнение';
+          w.status = w.status === 'done' ? 'plan' : 'done';
+          save();
+          selectedDay = w.date;
+          diaryMonth = w.date.slice(0, 7);
+          statsMonth = diaryMonth;
+          return go('diary');
+        case 'delete':
+          if (!w || !confirm('Удалить тренировку без возможности отмены?')) return;
+          workouts = workouts.filter(item => item.id !== w.id);
+          save();
+          return go('diary');
+        default: return;
+      }
+      render();
+      if (action.endsWith('-prev') || action.endsWith('-next')) {
+        app.querySelector(`[data-action="${action}"]`)?.focus({ preventScroll: true });
+      }
+    });
+
+    render();
+
+    if ('serviceWorker' in navigator && window.isSecureContext) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(error => {
+          console.warn('Не удалось включить офлайн-режим:', error);
+        });
+      });
+    }
+  </script>
 </body>
 </html>
