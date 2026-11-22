@@ -2,60 +2,117 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#dff3ff">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <link rel="manifest" href="./manifest.webmanifest">
-  <title>Дневник тренировок · ОФП</title>
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0875bf">
+  <title>Дневник тренировок — визуальный прототип</title>
   <style>
     :root {
       color-scheme: light;
-      --ink: #082d56;
-      --muted: #396285;
-      --blue: #075bb0;
-      --line: #b9dcef;
-      --card: #f8fcfff2;
-      --brush: polygon(0 15%, 10% 9%, 5% 5%, 38% 3%, 71% 1%,
-        97% 6%, 94% 14%, 100% 20%, 96% 34%, 100% 44%, 97% 57%,
-        100% 70%, 94% 77%, 98% 85%, 88% 92%, 90% 97%, 61% 95%,
-        38% 100%, 15% 96%, 3% 98%, 7% 87%, 0 81%, 4% 69%,
-        1% 57%, 5% 45%, 0 34%, 6% 23%);
+      --ink: #05265a;
+      --blue: #005cc7;
+      --muted: #235c91;
+      --line: #c1e4f8;
+      --ice: #f2fbff;
+      --top: env(safe-area-inset-top, 0px);
+      --bottom: env(safe-area-inset-bottom, 0px);
+      --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.035 .070' numOctaves='4' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 .10 0 0 0 0 .64 0 0 0 0 .90 0 0 0 3 -1.38'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      --brush: polygon(
+        1% 20%, 11% 13%, 6% 9%, 19% 10%, 15% 4%, 32% 7%,
+        49% 3%, 63% 6%, 77% 1%, 88% 6%, 98% 5%, 92% 13%,
+        100% 15%, 95% 23%, 99% 27%, 94% 35%, 99% 40%,
+        96% 45%, 100% 51%, 96% 58%, 99% 64%, 94% 69%,
+        98% 75%, 92% 79%, 95% 84%, 88% 88%, 93% 94%,
+        77% 92%, 60% 97%, 42% 94%, 25% 98%, 14% 94%,
+        4% 96%, 9% 88%, 0% 86%, 6% 77%, 1% 73%,
+        5% 65%, 0% 59%, 5% 51%, 1% 44%, 6% 35%, 0% 31%, 7% 24%
+      );
     }
 
     *, *::before, *::after { box-sizing: border-box; }
+    [hidden] { display: none !important; }
     body {
       margin: 0;
-      min-height: 100vh;
+      background: #d0edfc var(--grain);
       color: var(--ink);
-      font: 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(ellipse at 0 0, #76c7ff80, transparent 32rem),
-        radial-gradient(ellipse at 100% 15%, #a7e1ff, transparent 26rem),
-        repeating-linear-gradient(135deg, #fff6 0 1px, transparent 1px 23px),
-        linear-gradient(160deg, #dff3ff, #f6fcff 54%, #d4edff);
+      font: 15px/1.3 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button { font: inherit; color: inherit; cursor: pointer; }
+    button:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+    h1, h2, p { margin: 0; }
+    .icon {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex: none;
     }
 
-    main {
-      width: min(100%, 700px);
+    .phone {
+      position: relative;
+      isolation: isolate;
+      display: flex;
+      flex-direction: column;
+      width: min(100%, 440px);
+      min-height: 100vh;
+      min-height: 100dvh;
       margin: auto;
-      padding: calc(16px + env(safe-area-inset-top))
-        max(14px, env(safe-area-inset-right))
-        calc(130px + env(safe-area-inset-bottom))
-        max(14px, env(safe-area-inset-left));
+      overflow: hidden;
+      background: var(--ice);
+      box-shadow: 0 10px 44px #054d8424;
     }
-
-    h1, h2, h3, p { margin: 0 0 10px; }
-    h1 { font-size: clamp(26px, 7vw, 39px); line-height: 1.05; }
-    h2 { font-size: 20px; }
-    h3 { font-size: 17px; }
-    .muted, small { color: var(--muted); }
+    .phone::before {
+      content: "";
+      position: absolute;
+      z-index: -2;
+      inset: 0;
+      pointer-events: none;
+      background:
+        var(--grain),
+        linear-gradient(168deg, #0061ae 0%, #1186cb 3%,
+          #91d8f8 6%, #e9f9ff00 13%),
+        repeating-linear-gradient(135deg, #fff0 0 29px,
+          #b5e3f521 30px 32px, #fff0 34px 52px),
+        radial-gradient(ellipse at 96% 6%, #abdef5 0%, transparent 33%),
+        linear-gradient(121deg, #e4f6ff, #f8fdff 44%, #e9f8ff);
+    }
+    main {
+      position: relative;
+      flex: 1;
+      padding: calc(var(--top) + 18px) 20px 12px;
+    }
+    .screen { position: relative; }
+    .hero {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .hero-peaks {
+      position: absolute;
+      z-index: -1;
+      pointer-events: none;
+      width: 78%;
+      height: 80px;
+      top: -13px;
+      left: 5%;
+      transform: rotate(-9deg);
+      opacity: .94;
+    }
+    .home .hero { margin-bottom: 8px; }
     .brush {
       position: relative;
       isolation: isolate;
       display: inline-block;
-      padding: 10px 19px 12px;
       color: #fff;
-      font-style: italic;
+      font-weight: 800;
     }
     .brush::before {
       content: "";
@@ -64,726 +121,416 @@
       z-index: -1;
       clip-path: var(--brush);
       background:
-        repeating-linear-gradient(-5deg, transparent 0 6px, #fff1 6px 7px),
-        linear-gradient(110deg, #062e60, #0759ae 68%, #0e7dd1);
+        repeating-linear-gradient(173deg, #fff0 0 5px, #93d7ff26 6px, #fff0 7px 12px),
+        linear-gradient(110deg, #034789, #00275a 55%, #0657a1);
+    }
+    .hero h1 {
+      padding: 12px 25px 15px 17px;
+      margin-left: -10px;
+      font-size: clamp(31px, 8.5vw, 46px);
+      font-style: italic;
+      letter-spacing: -.045em;
+      line-height: .99;
+      transform: rotate(-6deg);
+    }
+    .home .hero h1 { padding-right: 48px; }
+    .icon-button {
+      display: grid;
+      place-items: center;
+      flex: none;
+      width: 44px;
+      height: 44px;
+      margin-right: -7px;
+      border: 0;
+      background: transparent;
+      color: #064b95;
+    }
+    .tagline { font-size: 17px; font-weight: 700; margin: 4px 0 26px 3px; }
+    .label-brush {
+      padding: 4px 24px 6px 11px;
+      font-size: 17px;
+      font-style: italic;
+      transform: rotate(-3deg);
     }
 
-    .card {
-      margin: 0 0 10px;
-      padding: 12px;
+    .goal {
+      position: relative;
+      padding: 8px 17px 13px;
+      border: 1px solid #c0e4fa;
+      border-radius: 12px;
+      background: var(--grain), linear-gradient(110deg, #e8f7ff, #b8e3fa);
+    }
+    .goal .label-brush { margin-left: -20px; margin-bottom: 4px; }
+    .goal-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 17px;
+      font-weight: 800;
+    }
+    .goal-title .icon, .today-card > .icon { width: 18px; height: 18px; }
+    .progress {
+      height: 10px;
+      margin: 9px 0 7px;
+      border-radius: 20px;
+      overflow: hidden;
+      background: #91cbee6e;
+    }
+    .progress span {
+      display: block;
+      width: 75%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #0088ec, #0058c4);
+    }
+    .goal small { color: var(--muted); font-size: 13px; }
+    .today { margin-top: 20px; }
+    .today h2 { margin: 0 0 8px 3px; font-size: 23px; letter-spacing: -.03em; }
+    .today-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 10px 12px 12px;
       border: 1px solid var(--line);
-      border-radius: 15px;
-      background: var(--card);
-      box-shadow: 0 4px 14px #0b427b0e;
+      border-radius: 12px;
+      background: #fbfeff87;
     }
-    .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-    .between { justify-content: space-between; }
-    .stack { display: grid; gap: 8px; }
-    .stack > label { min-width: 0; }
-    label { display: grid; gap: 4px; }
-    button, input, select { font: inherit; }
-    button {
-      min-height: 44px;
-      padding: 7px 11px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: #e8f6ff;
-      color: var(--ink);
-      cursor: pointer;
-      font-weight: 650;
+    .badge {
+      display: grid;
+      place-items: center;
+      flex: none;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #d7f0fd;
+      color: #0073df;
     }
-    button:focus-visible, input:focus-visible, select:focus-visible {
-      outline: 2px solid #0875cc;
-      outline-offset: 2px;
-    }
-    button.primary { border-color: transparent; background: transparent; }
-    button.danger { color: #9e2342; background: #fff1f4; border-color: #efc8d2; }
-    .full { width: 100%; }
-    input, select {
+    .badge .icon { width: 37px; height: 37px; stroke-width: 2.5; }
+    .today-text { flex: 1; }
+    .today-text strong { display: block; font-size: 18px; line-height: 1.2; }
+    .today-text small { display: block; color: var(--muted); font-size: 12px; }
+    .start {
       width: 100%;
-      min-width: 0;
-      min-height: 44px;
-      padding: 8px;
-      border: 1px solid var(--line);
-      border-radius: 9px;
-      background: #fff;
-      color: var(--ink);
+      min-height: 54px;
+      margin-top: 16px;
+      padding: 8px 16px;
+      border: none;
+      background: transparent;
       font-size: 16px;
     }
+    .start::before { background-color: #0053a1; }
+    .hint {
+      margin: 8px 3px 0;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
 
-    .calendar { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; }
-    .weekday { text-align: center; font-size: 12px; color: var(--muted); }
-    .day { padding: 2px; border-color: transparent; background: transparent; }
-    .day[aria-pressed="true"] { color: #fff; background: var(--blue); }
-    .day[aria-current="date"] { border-color: #1382d2; }
-    .dot { display: block; height: 5px; font-size: 13px; line-height: 4px; }
-    .entry { width: 100%; text-align: left; border-left: 4px solid #3291d8; }
-    .entry small { display: block; }
-    .fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .set {
+    .week {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 44px;
-      align-items: end;
-      gap: 6px;
-      margin-bottom: 7px;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 1px;
+      margin: 10px -4px 13px;
     }
-    .set button { padding: 0; }
-    .timer { font-size: 30px; font-variant-numeric: tabular-nums; }
-    .summary {
+    .day {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
+      justify-items: center;
+      gap: 4px;
+      min-width: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
     }
-    .summary strong {
-      display: block;
-      font-size: clamp(18px, 5vw, 25px);
-      overflow-wrap: anywhere;
-    }
-    .chart {
+    .day span { font-size: 12px; color: var(--muted); }
+    .day strong {
       display: grid;
-      grid-template-columns: repeat(var(--days), minmax(0, 1fr));
-      gap: 2px;
-      margin-top: 12px;
+      place-items: center;
+      width: min(100%, 35px);
+      height: 35px;
+      border-radius: 50%;
+      font-size: 15px;
     }
-    .chart-track {
-      height: 105px;
+    .day[aria-pressed="true"] strong { color: #fff; background: #005dcc; }
+    .diary .label-brush { margin: 0 0 8px -8px; }
+    .entries { display: grid; gap: 9px; }
+    .entry {
       display: flex;
-      align-items: end;
-      background: repeating-linear-gradient(to top, var(--line) 0 1px, transparent 1px 26px);
+      align-items: center;
+      justify-content: space-between;
+      min-height: 70px;
+      padding: 8px 11px 8px 12px;
+      border: 1px solid #d0e9f8;
+      border-left: 4px solid #addbf6;
+      border-radius: 10px;
+      background: #fbfeff75;
     }
-    .chart-bar {
-      width: 100%;
-      height: var(--value);
-      border-radius: 4px 4px 0 0;
-      background: linear-gradient(#1c93e8, #084d96);
+    .entry.current {
+      border-left-color: #0675dc;
+      background: linear-gradient(110deg, #e4f5ff, #d4effb);
     }
-    .tick { font-size: 9px; text-align: center; min-height: 15px; }
+    .entry small { display: block; color: var(--muted); font-size: 12px; }
+    .entry strong { display: block; font-size: 17px; line-height: 1.2; }
+    .entry .icon { width: 17px; height: 17px; color: #005abd; }
+    .entry.current .icon {
+      padding: 4px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      color: white;
+      background: #005dca;
+    }
+    .empty { padding: 12px; color: var(--muted); }
 
-    .mountains {
-      position: fixed;
+    .ridge {
+      display: block;
+      width: 100%;
+      height: clamp(56px, 10dvh, 92px);
+      flex: none;
       pointer-events: none;
-      width: min(100%, 700px);
-      height: 78px;
-      bottom: calc(55px + env(safe-area-inset-bottom));
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: -1;
     }
+    .phone[data-screen="diary"] .ridge { height: clamp(31px, 5dvh, 47px); }
     .dock {
-      position: fixed;
+      position: sticky;
       z-index: 2;
       bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: min(100%, 700px);
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 3px;
-      padding: 4px max(6px, env(safe-area-inset-right))
-        calc(4px + env(safe-area-inset-bottom))
-        max(6px, env(safe-area-inset-left));
-      border: 1px solid var(--line);
-      border-radius: 16px 16px 0 0;
+      flex: none;
+      padding: 4px 7px calc(4px + var(--bottom));
+      border-top: 1px solid #d5edfa;
       background: #f7fcff;
-      box-shadow: 0 -4px 16px #073c7018;
     }
     .dock button {
       display: grid;
-      justify-items: center;
+      place-items: center;
       align-content: center;
-      gap: 2px;
-      min-height: 47px;
-      padding: 2px;
+      gap: 3px;
+      min-height: 54px;
+      padding: 3px 1px;
       border: 0;
       background: transparent;
+      color: #07518e;
       font-size: 11px;
+      font-weight: 650;
     }
-    .dock button[aria-current="page"] { color: #064e97; background: #dcefff; }
-    .dock svg {
-      width: 21px;
-      height: 21px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+    .dock .icon { width: 22px; height: 22px; }
+    .dock [aria-current="page"] { color: #0067dc; font-weight: 800; }
+    .dock [data-tab="home"][aria-current="page"] .icon {
+      fill: currentColor;
+      stroke-width: 1;
     }
-    #notice { color: #9e2342; }
-    #notice:empty { display: none; }
+
+    @media (min-width: 520px) {
+      .phone {
+        margin: 22px auto;
+        min-height: calc(100dvh - 44px);
+        border-radius: 26px;
+      }
+    }
   </style>
 </head>
 <body>
-  <svg class="mountains" viewBox="0 0 700 85" preserveAspectRatio="none" aria-hidden="true">
-    <path fill="#b4e5ff" d="M0 76 65 36l35 24 77-52 81 52 61-27 37 22 66-42 82 48 67-34 40 27 45-35 44 38v28H0z"/>
-    <path fill="#3d97d4" d="M0 80l61-29 36 21 80-64 18 38 58 35 64-38 43 30 63-60 78 61 67-38 44 33 44-50 44 42v24H0z"/>
-    <path fill="#0a4f95" d="m0 85 62-20 28 14 87-71-16 37 19-12 32 31 44 17 61-26 44 24 62-66-11 42 16-14 37 26 36 14 68-35 43 34 44-61-9 35 15-11 38 34v8z"/>
-    <path fill="#f8fdff" d="m145 35 32-27 28 34-21-10-7 10-6-9-18 12zm252 4 26-26 27 23-16-4-7 8-7-9-16 13zm235 8 24-28 22 22-13-5-7 9-5-8-13 13z"/>
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute">
+    <defs>
+      <symbol id="home" viewBox="0 0 24 24">
+        <path d="m2 11 10-9 10 9-3 0v10h-5v-6h-4v6H5V11z"/>
+      </symbol>
+      <symbol id="calendar" viewBox="0 0 24 24">
+        <rect x="4" y="5" width="16" height="16" rx="2"/>
+        <path d="M8 3v4m8-4v4M4 10h16m-12 4h2m4 0h2m-8 3h2"/>
+      </symbol>
+      <symbol id="chart" viewBox="0 0 24 24">
+        <path d="M4 20v-4m5 4v-7m5 7V9m5 11V4"/>
+      </symbol>
+      <symbol id="person" viewBox="0 0 24 24">
+        <circle cx="12" cy="7" r="3" fill="currentColor"/>
+        <path d="M4 20c0-4 3-7 8-7s8 3 8 7Z" fill="currentColor"/>
+      </symbol>
+      <symbol id="gear" viewBox="0 0 24 24">
+        <path d="m10 2-.6 3.1-2 .9-2.8-1.4-2 3.4L5 10v3l-2.4 2 2 3.4 2.8-1.4 2 .9L10 21h4l.6-3.1 2-.9 2.8 1.4 2-3.4-2.4-2v-3l2.4-2-2-3.4-2.8 1.4-2-.9L14 2z"/>
+        <circle cx="12" cy="11.5" r="3"/>
+      </symbol>
+      <symbol id="chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+      <symbol id="check" viewBox="0 0 24 24"><path d="m5 12 4 4 10-9"/></symbol>
+      <symbol id="dumbbell" viewBox="0 0 24 24">
+        <path d="M8 12h8M3 10v4m3-7v10M8 5v14m8-14v14m2-12v10m3-7v4"/>
+      </symbol>
+
+      <symbol id="peaks" viewBox="0 0 440 95">
+        <path fill="#b5e4fb" d="M0 74 25 61 47 38 77 64 101 52 126 25 150 48 166 43 191 68 213 59 251 21 281 50 300 38 333 65 361 43 387 62 415 42 440 65v30H0Z"/>
+        <path fill="#469ed6" d="m0 83 25-17 12 4 32-34 24 31 17-10 28-39 33 42 19-13 29 26 27-13 24-40 32 41 14-8 39 21 19-9 26-28 40 38v20H0Z"/>
+        <path fill="#075496" d="m0 95 25-21 12 6 32-44 14 35 12 6 15-15 28-44 18 43 15 14 19-28 16 27 19 7 24-17 21-44 18 44 13 12 15-23 20 25 23 2 16-9 25-34 18 34 22 13v12Z"/>
+        <path fill="#003467" d="m42 79 27-43-8 29 8-7 11 18 17 10-19-7-6 12-9-17-7 13zm74 0 22-61-7 43 8-9 11 20 21 17-19-8-6 12-12-27-7 21zm123 2 31-61-8 42 11-10 14 25 14 13-21-10-6 9-12-18-10 16zm139-5 22-39-5 29 8-6 13 21 15 10-21-8-7 5-9-17-8 14z"/>
+        <path fill="#f5fcff" d="m48 64 21-28 12 29-9-8-5 9 2-15-11 7-6 12zm65-7 25-39 20 39-15-12 3 14-10-12-9 17 3-15-11 16zm59 15 18-25 14 24-13-9-6 10 2-10zm76-17 22-35 19 36-11-7 2 11-11-14-9 14 2-14-8 15zm52 19 16-21 18 22-11-4-7-7-5 12 1-12zm80-9 20-28 15 28-14-10-4 12-1-11-11 15z"/>
+        <path fill="#a6ddfa" d="m4 93 21-19 9 11-9-3-6 8-3-4zm85-9 8-12 10 8-8-3-3 8zm96 0 6-12 12 11-11-5zm33 5 18-10-6 10zm104-5 15-7 13 14-14-9-4 6zm30 7 17-12 9 10-10-3-7 7z"/>
+      </symbol>
+    </defs>
   </svg>
 
-  <main>
-    <p id="notice" role="status"></p>
-    <div id="app"></div>
-  </main>
-  <nav id="dock" class="dock" aria-label="Навигация"></nav>
-  <input id="backup-file" type="file" accept=".json,application/json" hidden>
+  <div class="phone" id="phone" data-screen="home">
+    <main>
+      <section class="screen home" id="screen-home" aria-labelledby="home-title">
+        <header class="hero">
+          <svg class="hero-peaks" viewBox="90 15 250 70" aria-hidden="true">
+            <use href="#peaks" width="440" height="95"/>
+          </svg>
+          <h1 class="brush" id="home-title">Привет,<br>Алексей</h1>
+          <button class="icon-button" type="button" aria-label="Настройки"
+                  data-preview="Настройки появятся в профиле.">
+            <svg class="icon" aria-hidden="true"><use href="#gear"/></svg>
+          </button>
+        </header>
+
+        <p class="tagline">Двигайся к своим целям!</p>
+
+        <section class="goal" aria-labelledby="goal-title">
+          <h2 class="brush label-brush" id="goal-title">Текущая цель</h2>
+          <div class="goal-title">
+            Силовая выносливость
+            <svg class="icon" aria-hidden="true"><use href="#chevron"/></svg>
+          </div>
+          <div class="progress" role="progressbar" aria-label="Тренировки за неделю"
+               aria-valuemin="0" aria-valuenow="3" aria-valuemax="4"><span></span></div>
+          <small>3 / 4 тренировок в неделю</small>
+        </section>
+
+        <section class="today" aria-labelledby="today-title">
+          <h2 id="today-title">Сегодня</h2>
+          <div class="today-card">
+            <span class="badge">
+              <svg class="icon" aria-hidden="true"><use href="#dumbbell"/></svg>
+            </span>
+            <div class="today-text">
+              <small>Тренировка</small>
+              <strong>Верх тела</strong>
+              <small>45 мин · 8 упражнений</small>
+            </div>
+            <svg class="icon" aria-hidden="true"><use href="#chevron"/></svg>
+          </div>
+          <button type="button" class="brush start"
+                  data-preview="Экран тренировки добавим после согласования дизайна.">
+            Начать тренировку
+          </button>
+        </section>
+      </section>
+
+      <section class="screen diary" id="screen-diary" aria-labelledby="diary-title" hidden>
+        <header class="hero">
+          <h1 class="brush" id="diary-title">Дневник</h1>
+          <button type="button" class="icon-button" id="reset-week" aria-label="Показать записи недели">
+            <svg class="icon" aria-hidden="true"><use href="#calendar"/></svg>
+          </button>
+        </header>
+        <div class="week" id="week" role="group" aria-label="Неделя 21–27 апреля"></div>
+        <h2 class="brush label-brush">Тренировки</h2>
+        <div class="entries" id="entries" aria-live="polite"></div>
+      </section>
+
+      <p class="hint" id="hint" role="status" hidden></p>
+    </main>
+
+    <svg class="ridge" viewBox="0 0 440 95" preserveAspectRatio="none" aria-hidden="true">
+      <use href="#peaks" width="440" height="95"/>
+    </svg>
+
+    <nav class="dock" aria-label="Основное меню">
+      <button type="button" data-tab="home" aria-current="page">
+        <svg class="icon" aria-hidden="true"><use href="#home"/></svg>Главная
+      </button>
+      <button type="button" data-tab="diary">
+        <svg class="icon" aria-hidden="true"><use href="#calendar"/></svg>Дневник
+      </button>
+      <button type="button" data-preview="Экран статистики пока не подключён.">
+        <svg class="icon" aria-hidden="true"><use href="#chart"/></svg>Статистика
+      </button>
+      <button type="button" data-preview="Экран профиля пока не подключён.">
+        <svg class="icon" aria-hidden="true"><use href="#person"/></svg>Профиль
+      </button>
+    </nav>
+  </div>
 
   <script>
-    'use strict';
+    const phone = document.querySelector('#phone');
+    const week = document.querySelector('#week');
+    const entries = document.querySelector('#entries');
+    const hint = document.querySelector('#hint');
+    const tabs = document.querySelectorAll('[data-tab]');
+    const workouts = [
+      { day: 24, date: 'Сегодня, 24 апреля', name: 'Верх тела', minutes: 45, exercises: 8 },
+      { day: 23, date: 'Вчера, 23 апреля', name: 'Ноги', minutes: 50, exercises: 7 },
+      { day: 21, date: '21 апреля', name: 'Спина', minutes: 55, exercises: 8 },
+      { day: 19, date: '19 апреля', name: 'Грудь', minutes: 45, exercises: 6 }
+    ];
 
-    const KEY = 'ofp-diary.ice.v1';
-    const app = document.querySelector('#app');
-    const dock = document.querySelector('#dock');
-    const notice = document.querySelector('#notice');
-    const fileInput = document.querySelector('#backup-file');
-    const monthLabel = new Intl.DateTimeFormat('ru-RU', { month: 'long', year: 'numeric' });
-    const dayLabel = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long' });
-    const number = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 });
+    let selectedDay = 24;
+    let showAll = true;
 
-    const pad = n => String(n).padStart(2, '0');
-    const dateKey = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-    const today = () => dateKey(new Date());
-    const localDate = key => new Date(`${key}T12:00:00`);
-    const validDate = key => /^\d{4}-\d{2}-\d{2}$/.test(key) &&
-      Number.isFinite(localDate(key).getTime()) && dateKey(localDate(key)) === key;
-    const uid = () => crypto.randomUUID?.() ??
-      `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-    const text = value => typeof value === 'string' || typeof value === 'number'
-      ? String(value) : '';
-    const esc = value => String(value).replace(/[&<>"']/g, c => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    }[c]));
-    const button = (label, action, attrs = '') =>
-      `<button type="button" data-action="${action}" ${attrs}>${label}</button>`;
-    const heading = label => `<h1 class="brush">${esc(label)}</h1>`;
-    const primary = (label, action) =>
-      button(label, action, 'class="brush primary full"');
-
-    let workouts = [];
-    let screen = 'diary';
-    let activeId = null;
-    let selectedDay = today();
-    let diaryMonth = selectedDay.slice(0, 7);
-    let statsMonth = diaryMonth;
-    let timerStart = null;
-    let timerElapsed = 0;
-
-    function normalizeBackup(raw) {
-      const source = Array.isArray(raw) ? raw : raw?.workouts;
-      if (!Array.isArray(source)) throw new Error('В файле не найден список тренировок.');
-
-      return source.map((w, i) => {
-        if (!w || !validDate(text(w.date)) || !Array.isArray(w.items)) {
-          throw new Error(`Тренировка №${i + 1}: нужна корректная дата и список упражнений.`);
-        }
-        return {
-          id: uid(),
-          title: text(w.title || w.name).trim() || 'Тренировка',
-          date: w.date,
-          status: w.status === 'done' ? 'done' : 'plan',
-          items: w.items.map((e, j) => {
-            if (!e || !Array.isArray(e.sets)) {
-              throw new Error(`Тренировка №${i + 1}, упражнение №${j + 1}: не найдены подходы.`);
-            }
-            const round = Number(e.round ?? e.circle);
-            return {
-              name: text(e.name || e.title).trim() || 'Упражнение',
-              type: e.type === 'time' ? 'time' : 'reps',
-              round: Number.isSafeInteger(round) && round > 0 ? round : 1,
-              weight: text(e.weight),
-              sets: e.sets.map(s => {
-                if (s == null || typeof s !== 'object') {
-                  return { result: text(s), weight: text(e.weight) };
-                }
-                return { result: text(s.result), weight: text(s.weight ?? e.weight) };
-              })
-            };
-          })
-        };
-      });
-    }
-
-    try {
-      const stored = localStorage.getItem(KEY);
-      if (stored !== null) workouts = normalizeBackup(JSON.parse(stored));
-    } catch {
-      notice.textContent = 'Не удалось прочитать записи в браузере. Можно восстановить их из резервной копии.';
-    }
-
-    function save(next = workouts) {
-      try {
-        localStorage.setItem(KEY, JSON.stringify({ version: 1, workouts: next }));
-        notice.textContent = '';
-        return true;
-      } catch {
-        notice.textContent = 'Не удалось сохранить на устройстве. Не закрывай дневник: скачай копию на вкладке «Копии».';
-        return false;
-      }
-    }
-
-    function monthInfo(key) {
-      const [y, m] = key.split('-').map(Number);
-      return {
-        first: new Date(y, m - 1, 1),
-        days: new Date(y, m, 0).getDate()
-      };
-    }
-
-    function shiftMonth(key, delta) {
-      const { first } = monthInfo(key);
-      first.setMonth(first.getMonth() + delta);
-      return dateKey(first).slice(0, 7);
-    }
-
-    function monthHeader(key, prefix) {
-      return `<div class="row between">
-        ${button('‹', `${prefix}-prev`, 'aria-label="Предыдущий месяц"')}
-        <strong aria-live="polite">${esc(monthLabel.format(monthInfo(key).first))}</strong>
-        ${button('›', `${prefix}-next`, 'aria-label="Следующий месяц"')}
-      </div>`;
+    for (const [i, label] of ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].entries()) {
+      const day = i + 21;
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'day';
+      button.dataset.day = day;
+      button.setAttribute('aria-label', `${label}, ${day} апреля`);
+      button.innerHTML = `<span>${label}</span><strong>${day}</strong>`;
+      week.append(button);
     }
 
     function renderDiary() {
-      const { first, days } = monthInfo(diaryMonth);
-      const offset = (first.getDay() + 6) % 7;
-      const marked = new Set(workouts.map(w => w.date));
-      let calendar = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
-        .map(d => `<div class="weekday">${d}</div>`).join('');
-      calendar += '<span aria-hidden="true"></span>'.repeat(offset);
-
-      for (let i = 1; i <= days; i++) {
-        const key = `${diaryMonth}-${pad(i)}`;
-        const mark = marked.has(key);
-        const label = `${dayLabel.format(localDate(key))}${mark ? ', есть записи' : ''}`;
-        calendar += button(`${i}<span class="dot" aria-hidden="true">${mark ? '•' : ''}</span>`,
-          'day', `class="day" data-key="${key}" aria-label="${esc(label)}"
-          aria-pressed="${key === selectedDay}" ${key === today() ? 'aria-current="date"' : ''}`);
+      for (const button of week.children) {
+        button.setAttribute('aria-pressed', Number(button.dataset.day) === selectedDay);
       }
-
-      const list = workouts.filter(w => w.date === selectedDay).map(w =>
-        button(`<strong>${esc(w.title)}</strong><small>${w.status === 'done'
-          ? 'Завершена' : 'План'} · Упражнений: ${w.items.length}</small>`,
-          'open', `class="entry" data-id="${esc(w.id)}"`)).join('');
-
-      return `${heading('Дневник')}
-        <p class="muted">Календарь тренировок</p>
-        <section class="card" aria-label="Календарь">
-          ${monthHeader(diaryMonth, 'diary')}
-          <div class="calendar">${calendar}</div>
-        </section>
-        <h2 class="brush">${esc(dayLabel.format(localDate(selectedDay)))}</h2>
-        <div class="stack">${list || '<p class="muted">На этот день пока нет записей.</p>'}
-          ${primary('Создать план на этот день', 'new')}
-        </div>`;
-    }
-
-    function elapsed() {
-      return timerElapsed + (timerStart === null ? 0 : Date.now() - timerStart);
-    }
-
-    function clock(ms) {
-      const total = Math.max(0, Math.floor(ms / 1000));
-      return `${pad(Math.floor(total / 60))}:${pad(total % 60)}`;
-    }
-
-    function exerciseCard(e, i) {
-      const isTime = e.type === 'time';
-      const sets = e.sets.map((s, j) => `<div class="set">
-        <label>
-          <small>Подход ${j + 1} · ${isTime ? 'время' : 'повторы'}</small>
-          <input data-field="result" data-i="${i}" data-j="${j}"
-            inputmode="${isTime ? 'text' : 'numeric'}"
-            placeholder="${isTime ? 'сек или 1:30' : '10'}" value="${esc(s.result)}">
-        </label>
-        ${isTime
-          ? `<div>${button('Секундомер', 'timer-fill', `data-i="${i}" data-j="${j}"`)}</div>`
-          : `<label><small>Вес, кг</small><input data-field="set-weight" data-i="${i}"
-              data-j="${j}" inputmode="decimal" placeholder="0" value="${esc(s.weight)}"></label>`}
-        ${button('×', 'set-delete', `data-i="${i}" data-j="${j}" aria-label="Удалить подход ${j + 1}"`)}
-      </div>`).join('');
-
-      return `<section class="card">
-        <div class="row between"><h3>Упражнение ${i + 1}</h3>
-          ${button('Удалить', 'item-delete', `class="danger" data-i="${i}"`)}
-        </div>
-        <div class="stack">
-          <label>Название<input data-field="name" data-i="${i}" value="${esc(e.name)}"
-            placeholder="Например, приседания"></label>
-          <div class="stack fields">
-            <label>Тип<select data-field="type" data-i="${i}">
-              <option value="reps" ${!isTime ? 'selected' : ''}>Повторы</option>
-              <option value="time" ${isTime ? 'selected' : ''}>Время</option>
-            </select></label>
-            <label>Круг<input data-field="round" data-i="${i}" type="number"
-              inputmode="numeric" min="1" step="1" value="${e.round}"></label>
+      const visible = showAll ? workouts : workouts.filter(w => w.day === selectedDay);
+      entries.innerHTML = visible.map(w => `
+        <article class="entry ${w.day === 24 ? 'current' : ''}">
+          <div>
+            <small>${w.date}</small>
+            <strong>${w.name}</strong>
+            <small>${w.minutes} мин · ${w.exercises} упражнений</small>
           </div>
-        </div>
-        <div style="margin-top:8px">${sets}</div>
-        ${button('+ Подход', 'set-add', `data-i="${i}"`)}
-      </section>`;
+          <svg class="icon" aria-hidden="true">
+            <use href="#${w.day === 24 ? 'check' : 'chevron'}"/>
+          </svg>
+        </article>
+      `).join('') || '<p class="empty">На этот день тренировок нет.</p>';
     }
 
-    function renderWorkout(w) {
-      const items = w.items.map((e, i) => ({ e, i }))
-        .sort((a, b) => a.e.round - b.e.round || a.i - b.i);
-      let round = null;
-      const cards = items.map(({ e, i }) => {
-        const title = e.round === round ? '' : `<h2 class="brush">Круг ${e.round}</h2>`;
-        round = e.round;
-        return title + exerciseCard(e, i);
-      }).join('');
-
-      return `${heading(w.status === 'done' ? 'Тренировка завершена' : 'План тренировки')}
-        <div class="card stack">
-          <label>Название<input data-field="title" value="${esc(w.title)}" placeholder="Верх тела"></label>
-          <label>Дата<input data-field="date" type="date" value="${esc(w.date)}"></label>
-          <small>Правки сохраняются автоматически. Номер круга меняет группировку упражнений.</small>
-        </div>
-        <section class="card" aria-label="Секундомер">
-          <div class="row between"><h2>Секундомер</h2><strong class="timer" id="timer">${clock(elapsed())}</strong></div>
-          <div class="row">
-            ${button(timerStart === null ? 'Старт' : 'Пауза', 'timer-toggle', 'id="timer-toggle"')}
-            ${button('Сброс', 'timer-reset')}
-          </div>
-        </section>
-        ${cards || '<p class="muted">Добавь первое упражнение.</p>'}
-        <div class="stack">
-          ${button('+ Упражнение', 'item-add')}
-          ${w.items.length ? button('+ Круг с теми же упражнениями', 'round-add') : ''}
-          ${primary(w.status === 'done' ? 'Вернуть в планы' : 'Завершить тренировку', 'finish')}
-          ${button('Удалить тренировку', 'delete', 'class="danger"')}
-        </div>`;
-    }
-
-    function parseWeight(s) {
-      const value = text(s).trim().replace(',', '.');
-      const n = /^\d+(?:\.\d+)?$/.test(value) ? Number(value) : 0;
-      return Number.isFinite(n) ? n : 0;
-    }
-
-    function parseSeconds(s) {
-      const value = text(s).trim();
-      if (/^\d+$/.test(value)) {
-        const n = Number(value);
-        return Number.isSafeInteger(n) ? n : 0;
-      }
-      const m = /^(\d+):([0-5]\d)$/.exec(value);
-      const n = m ? Number(m[1]) * 60 + Number(m[2]) : 0;
-      return Number.isSafeInteger(n) ? n : 0;
-    }
-
-    function renderStats() {
-      const { days, first } = monthInfo(statsMonth);
-      const completed = workouts.filter(w => w.status === 'done' && w.date.slice(0, 7) === statsMonth);
-      const counts = Array(days).fill(0);
-      let reps = 0, volume = 0, seconds = 0;
-
-      for (const w of completed) {
-        counts[Number(w.date.slice(-2)) - 1]++;
-        for (const e of w.items) {
-          for (const s of e.sets) {
-            if (e.type === 'time') {
-              seconds += parseSeconds(s.result);
-            } else {
-              const value = text(s.result).trim();
-              if (!/^\d+$/.test(value)) continue;
-              const n = Number(value);
-              if (!Number.isSafeInteger(n)) continue;
-              reps += n;
-              const load = n * parseWeight(s.weight);
-              if (Number.isFinite(load)) volume += load;
-            }
-          }
-        }
-      }
-
-      const max = Math.max(1, ...counts);
-      const bars = counts.map((count, i) => {
-        const day = i + 1;
-        const label = `${dayLabel.format(new Date(first.getFullYear(), first.getMonth(), day))}: ${count}`;
-        const tick = day === 1 || day === days || (day % 5 === 0 && day < days - 2);
-        return `<div role="img" aria-label="${esc(label)}" title="${esc(label)}">
-          <div class="chart-track" aria-hidden="true">
-            <div class="chart-bar" style="--value:${count / max * 100}%"></div>
-          </div>
-          <div class="tick" aria-hidden="true">${tick ? day : ''}</div>
-        </div>`;
-      }).join('');
-      const metric = (label, value) =>
-        `<div class="card"><small>${label}</small><strong>${value}</strong></div>`;
-
-      return `${heading('Статистика')}
-        <section class="card" aria-label="Завершённые тренировки по дням">
-          ${monthHeader(statsMonth, 'stats')}
-          <div class="chart" style="--days:${days}">${bars}</div>
-          ${completed.length ? '' : '<p class="muted">В этом месяце нет завершённых тренировок.</p>'}
-        </section>
-        <div class="summary">
-          ${metric('Тренировки', number.format(completed.length))}
-          ${metric('Повторы', number.format(reps))}
-          ${metric('Объём с весом', `${number.format(volume)} кг`)}
-          ${metric('Время упражнений', `${number.format(Math.floor(seconds / 60))} мин ${seconds % 60} с`)}
-        </div>
-        <p class="muted">Объём — сумма «вес × повторы» по подходам. Время — сумма записанных результатов, без отдыха.</p>`;
-    }
-
-    function renderBackups() {
-      return `${heading('Резервные копии')}
-        <section class="card stack">
-          <p>Записи хранятся на этом устройстве и не синхронизируются через GitHub.</p>
-          ${button('Скачать копию', 'export')}
-          ${button('Восстановить из файла', 'import')}
-          <small>Восстановление заменит текущие записи. JSON с тренировками не загружай в публичный репозиторий.</small>
-        </section>`;
-    }
-
-    function renderDock() {
-      const tabs = [
-        ['Дневник', 'diary', '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4m8-4v4M4 10h16"/>'],
-        ['Новый план', 'new', '<circle cx="12" cy="12" r="9"/><path d="M12 8v8m-4-4h8"/>'],
-        ['Статистика', 'stats', '<path d="M4 20h16M7 16v-4m5 4V8m5 8V4"/>'],
-        ['Копии', 'backups', '<path d="M4 5h16v4H4zM6 9v10h12V9m-8 4h4"/>']
-      ];
-      dock.innerHTML = tabs.map(([label, action, path]) =>
-        button(`<svg viewBox="0 0 24 24" aria-hidden="true">${path}</svg><span>${label}</span>`,
-          action, screen === action ? 'aria-current="page"' : '')).join('');
-    }
-
-    const activeWorkout = () => workouts.find(w => w.id === activeId);
-
-    function render() {
-      const w = activeWorkout();
-      if (screen === 'workout' && !w) screen = 'diary';
-      app.innerHTML = screen === 'workout' ? renderWorkout(w)
-        : screen === 'stats' ? renderStats()
-        : screen === 'backups' ? renderBackups()
-        : renderDiary();
-      renderDock();
-    }
-
-    function go(target, id = null) {
-      if (target !== 'workout' || id !== activeId) {
-        timerStart = null;
-        timerElapsed = 0;
-      }
-      screen = target;
-      activeId = id;
-      render();
-      window.scrollTo(0, 0);
-    }
-
-    function updateTimer() {
-      const el = document.querySelector('#timer');
-      if (el) el.textContent = clock(elapsed());
-      const toggle = document.querySelector('#timer-toggle');
-      if (toggle) toggle.textContent = timerStart === null ? 'Старт' : 'Пауза';
-    }
-
-    setInterval(updateTimer, 250);
-
-    function editField(event) {
-      const el = event.target;
-      const field = el.dataset.field;
-      const w = activeWorkout();
-      if (!field || !w) return;
-      const e = w.items[Number(el.dataset.i)];
-      const s = e?.sets[Number(el.dataset.j)];
-
-      if (field === 'type' || field === 'round' || field === 'date') {
-        if (event.type !== 'change') return;
-        if (field === 'date') {
-          if (validDate(el.value)) w.date = el.value;
-          else el.value = w.date;
-        } else if (e && field === 'type') {
-          e.type = el.value === 'time' ? 'time' : 'reps';
-          save();
-          render();
-          return;
-        } else if (e) {
-          const round = Number(el.value);
-          if (Number.isSafeInteger(round) && round >= 1) e.round = round;
-          save();
-          render();
-          return;
-        }
-      } else {
-        if (event.type !== 'input') return;
-        if (field === 'title') w.title = el.value;
-        if (field === 'name' && e) e.name = el.value;
-        if (field === 'result' && s) s.result = el.value;
-        if (field === 'set-weight' && s) s.weight = el.value;
-      }
-      save();
-    }
-
-    app.addEventListener('input', editField);
-    app.addEventListener('change', editField);
-
-    function newWorkout() {
-      const w = { id: uid(), title: '', date: selectedDay, status: 'plan', items: [] };
-      workouts.push(w);
-      save();
-      go('workout', w.id);
-    }
-
-    function downloadBackup() {
-      const blob = new Blob([JSON.stringify({ version: 1, workouts }, null, 2)],
-        { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `ofp-${today()}.json`;
-      document.body.append(link);
-      link.click();
-      link.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 60_000);
-    }
-
-    fileInput.addEventListener('change', async () => {
-      const file = fileInput.files?.[0];
-      fileInput.value = '';
-      if (!file) return;
-      try {
-        const restored = normalizeBackup(JSON.parse(await file.text()));
-        if (!confirm(`Восстановить тренировок: ${restored.length}? Текущие записи будут заменены.`)) return;
-        if (!save(restored)) return;
-        workouts = restored;
-
-        if (workouts.length) {
-          selectedDay = workouts.map(w => w.date).sort().at(-1);
-          diaryMonth = selectedDay.slice(0, 7);
-          statsMonth = diaryMonth;
-        }
-        go('diary');
-      } catch (error) {
-        notice.textContent = `Копия не восстановлена: ${error.message}`;
-      }
+    week.addEventListener('click', event => {
+      const button = event.target.closest('[data-day]');
+      if (!button) return;
+      selectedDay = Number(button.dataset.day);
+      showAll = false;
+      renderDiary();
     });
 
-    document.addEventListener('click', event => {
-      const control = event.target.closest('button[data-action]');
-      if (!control) return;
-      const { action, id, key, i, j } = control.dataset;
-      const w = activeWorkout();
-      const e = w?.items[Number(i)];
-      const s = e?.sets[Number(j)];
-
-      switch (action) {
-        case 'diary':
-          if (w) {
-            selectedDay = w.date;
-            diaryMonth = w.date.slice(0, 7);
-          }
-          return go('diary');
-        case 'stats': return go('stats');
-        case 'backups': return go('backups');
-        case 'new': return newWorkout();
-        case 'open': return go('workout', id);
-        case 'export': return downloadBackup();
-        case 'import': return fileInput.click();
-
-        case 'day':
-          selectedDay = key;
-          render();
-          app.querySelector(`[data-key="${key}"]`)?.focus({ preventScroll: true });
-          return;
-        case 'diary-prev':
-        case 'diary-next':
-          diaryMonth = shiftMonth(diaryMonth, action.endsWith('prev') ? -1 : 1);
-          selectedDay = diaryMonth === today().slice(0, 7) ? today() : `${diaryMonth}-01`;
-          break;
-        case 'stats-prev':
-        case 'stats-next':
-          statsMonth = shiftMonth(statsMonth, action.endsWith('prev') ? -1 : 1);
-          break;
-
-        case 'timer-toggle':
-          if (timerStart === null) timerStart = Date.now();
-          else {
-            timerElapsed = elapsed();
-            timerStart = null;
-          }
-          return updateTimer();
-        case 'timer-reset':
-          timerStart = null;
-          timerElapsed = 0;
-          return updateTimer();
-        case 'timer-fill':
-          if (!s || e.type !== 'time') return;
-          s.result = String(Math.max(0, Math.floor(elapsed() / 1000)));
-          save();
-          break;
-
-        case 'item-add':
-          if (!w) return;
-          w.items.push({ name: '', type: 'reps',
-            round: Math.max(1, ...w.items.map(item => item.round)),
-            sets: [{ result: '', weight: '' }] });
-          save();
-          render();
-          app.querySelector(`[data-field="name"][data-i="${w.items.length - 1}"]`)?.focus();
-          return;
-        case 'item-delete':
-          if (!e || !confirm('Удалить упражнение вместе с подходами?')) return;
-          w.items.splice(Number(i), 1);
-          save();
-          break;
-        case 'set-add':
-          if (!e) return;
-          e.sets.push({ result: '', weight: e.sets.at(-1)?.weight ?? '' });
-          save();
-          break;
-        case 'set-delete':
-          if (!s) return;
-          e.sets.splice(Number(j), 1);
-          save();
-          break;
-        case 'round-add': {
-          if (!w?.items.length) return;
-          const last = Math.max(...w.items.map(item => item.round));
-          const next = w.items.filter(item => item.round === last).map(item => ({
-            ...item, round: last + 1,
-            sets: item.sets.map(set => ({ weight: set.weight, result: '' }))
-          }));
-          w.items.push(...next);
-          save();
-          break;
-        }
-        case 'finish':
-          if (!w) return;
-          if (w.status !== 'done' && !w.items.length) {
-            notice.textContent = 'Добавь хотя бы одно упражнение.';
-            return;
-          }
-          w.title = w.title.trim() || 'Тренировка';
-          for (const item of w.items) item.name = item.name.trim() || 'Упражнение';
-          w.status = w.status === 'done' ? 'plan' : 'done';
-          save();
-          selectedDay = w.date;
-          diaryMonth = w.date.slice(0, 7);
-          statsMonth = diaryMonth;
-          return go('diary');
-        case 'delete':
-          if (!w || !confirm('Удалить тренировку без возможности отмены?')) return;
-          workouts = workouts.filter(item => item.id !== w.id);
-          save();
-          return go('diary');
-        default: return;
-      }
-      render();
-      if (action.endsWith('-prev') || action.endsWith('-next')) {
-        app.querySelector(`[data-action="${action}"]`)?.focus({ preventScroll: true });
-      }
+    document.querySelector('#reset-week').addEventListener('click', () => {
+      selectedDay = 24;
+      showAll = true;
+      renderDiary();
     });
 
-    render();
-
-    if ('serviceWorker' in navigator && window.isSecureContext) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(error => {
-          console.warn('Не удалось включить офлайн-режим:', error);
-        });
+    for (const tab of tabs) {
+      tab.addEventListener('click', () => {
+        const name = tab.dataset.tab;
+        phone.dataset.screen = name;
+        document.querySelector('#screen-home').hidden = name !== 'home';
+        document.querySelector('#screen-diary').hidden = name !== 'diary';
+        for (const item of tabs) item.removeAttribute('aria-current');
+        tab.setAttribute('aria-current', 'page');
+        hint.hidden = true;
+        window.scrollTo(0, 0);
       });
     }
+
+    for (const button of document.querySelectorAll('[data-preview]')) {
+      button.addEventListener('click', () => {
+        hint.textContent = button.dataset.preview;
+        hint.hidden = false;
+        hint.scrollIntoView({ block: 'nearest' });
+      });
+    }
+
+    renderDiary();
   </script>
 </body>
 </html>
