@@ -238,6 +238,52 @@
       font-size: 14px;
       pointer-events: none;
     }
+    /* Шапка из чистого референса. Горы и меню не меняем. */
+.app {
+  container-type: inline-size;
+}
+
+.content {
+  padding-top: 0;
+  background: #eef8fd;
+}
+
+.hero {
+  display: block;
+  min-height: 0;
+  aspect-ratio: 408 / 166;
+  margin-inline: -18px;
+  background: url("./assets/reference-v3/home-hero.png")
+    center top / 100% auto no-repeat;
+}
+
+.greeting {
+  position: absolute;
+  top: 30%;
+  left: 9%;
+  width: auto;
+  min-height: 0;
+  padding: 0;
+  background: none;
+}
+
+.greeting h1 {
+  font-size: 11cqw;
+  line-height: .96;
+  text-shadow: none;
+  transform: rotate(-8deg);
+  transform-origin: left center;
+}
+
+.settings {
+  top: 24%;
+  right: 4%;
+}
+
+.tagline {
+  margin-top: 0;
+  margin-inline-start: 4%;
+}
   </style>
 </head>
 
