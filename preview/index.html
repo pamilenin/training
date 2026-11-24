@@ -380,6 +380,30 @@
         box-shadow: 0 10px 40px #04487c30;
       }
     }
+    /* Компактная «Главная» на телефоне. «Дневник» не меняем. */
+@media (max-width: 519px) {
+  .home .hero { height: 39cqw; }
+  .home .tagline { margin-bottom: 3.5cqw; }
+
+  .home .goal .brush { height: 10.5cqw; }
+  .home .progress { margin: 2cqw 0 1.6cqw; }
+
+  .home .today { margin-top: 2.8cqw; }
+  .home .today h2 { margin-bottom: 1.8cqw; }
+  .home .today-card { min-height: 21cqw; padding-block: 2cqw; }
+  .home .badge { width: 15cqw; height: 15cqw; }
+  .home .start { height: 13cqw; margin-top: 2.5cqw; }
+
+  .app[data-screen="home"] .ridge { height: 11cqw; }
+
+  .app[data-screen="home"] .dock {
+    position: static;
+  }
+
+  .app[data-screen="home"] .dock button {
+    min-height: max(48px, 13cqw);
+  }
+}
   </style>
 </head>
 
