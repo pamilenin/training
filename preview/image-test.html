@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#e5f5ff">
+  <title>Дневник тренировок — тест по новому макету</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #e5f5ff;
+      font-family: system-ui, sans-serif;
+    }
+
+    .screen {
+      position: relative;
+      width: min(100%, 440px);
+      width: min(100%, 440px, calc(100dvh * var(--ratio, .5)));
+      aspect-ratio: var(--ratio, .5);
+      margin-inline: auto;
+      overflow: hidden;
+      background: #f1faff;
+    }
+
+    .art, .zones {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .art {
+      display: block;
+      pointer-events: none;
+    }
+
+    .zone {
+      position: absolute;
+      padding: 0;
+      border: 0;
+      border-radius: 5px;
+      background: transparent;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .zone:focus-visible {
+      outline: 3px solid #0067dc;
+      outline-offset: -3px;
+    }
+
+    /* Для проверки добавь ?zones к адресу страницы. */
+    .debug .zone {
+      outline: 1px dashed #0055b8;
+      outline-offset: -1px;
+      background: #1689ff33;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="screen" id="screen" tabindex="-1" aria-label="Главная">
+    <svg class="art" id="art" aria-hidden="true">
+      <image href="./screens-reference.png?v=2"
+             x="0" y="0" width="900" height="900"
+             preserveAspectRatio="none"></image>
+    </svg>
+    <div class="zones" id="zones"></div>
+  </main>
+
+  <script>
+    const screen = document.getElementById('screen');
+    const art = document.getElementById('art');
+    const zones = document.getElementById('zones');
+
+    // Координаты на коллаже 900 × 900: [лево, верх, ширина, высота].
+    // Верх с нарисованными часами и батарейкой не показываем.
+    const screens = {
+      home: {
+        title: 'Главная', box: [14, 38, 208, 416], navTop: 413,
+        actions: [
+          { label: 'Открыть тренировку «Верх тела»', to: 'workout', box: [26, 266, 186, 58] },
+          { label: 'Начать тренировку', to: 'workout', box: [26, 330, 187, 42] }
+        ]
+      },
+      diary: {
+        title: 'Дневник', box: [235, 38, 208, 416], navTop: 413,
+        actions: [
+          { label: 'Открыть тренировку «Верх тела»', to: 'workout', box: [247, 171, 186, 49] }
+        ]
+      },
+      workout: {
+        title: 'Верх тела', box: [458, 38, 209, 416], navTop: 413,
+        actions: [
+          { label: 'Назад', to: 'back', box: [458, 38, 32, 33] },
+          { label: 'Начать тренировку', to: 'exercise', box: [468, 150, 190, 37] },
+          { label: 'Открыть «Жим штанги лёжа»', to: 'exercise', box: [468, 216, 190, 26] }
+        ]
+      },
+      exercise: {
+        title: 'Жим штанги лёжа', box: [680, 38, 209, 416],
+        actions: [
+          { label: 'Назад к тренировке', to: 'back', box: [680, 38, 33, 33] }
+        ]
+      },
+      stats: {
+        title: 'Статистика', box: [236, 493, 207, 387], navTop: 839,
+        actions: []
+      },
+      profile: {
+        title: 'Профиль', box: [681, 493, 208, 387], navTop: 839,
+        actions: []
+      }
+    };
+
+    const tabs = [
+      ['home', 'Главная'],
+      ['diary', 'Дневник'],
+      ['stats', 'Статистика'],
+      ['profile', 'Профиль']
+    ];
+
+    let current = 'home';
+    let workoutFrom = 'home';
+
+    function makeZone(action, frame, active = false) {
+      const [x, y, width, height] = frame;
+      const [left, top, zoneWidth, zoneHeight] = action.box;
+      const button = document.createElement('button');
+
+      button.type = 'button';
+      button.className = 'zone';
+      button.setAttribute('aria-label', action.label);
+      if (active) button.setAttribute('aria-current', 'page');
+
+      button.style.left = `${(left - x) / width * 100}%`;
+      button.style.top = `${(top - y) / height * 100}%`;
+      button.style.width = `${zoneWidth / width * 100}%`;
+      button.style.height = `${zoneHeight / height * 100}%`;
+
+      button.addEventListener('click', () => {
+        if (action.to === 'back') {
+          render(current === 'exercise' ? 'workout' : workoutFrom, true);
+          return;
+        }
+
+        if (action.to === 'workout' && (current === 'home' || current === 'diary')) {
+          workoutFrom = current;
+        }
+
+        render(action.to, true);
+      });
+
+      zones.append(button);
+    }
+
+    function render(key, moveFocus = false) {
+      current = key;
+      const page = screens[key];
+      const [x, y, width, height] = page.box;
+
+      screen.style.setProperty('--ratio', width / height);
+      screen.setAttribute('aria-label', page.title);
+      art.setAttribute('viewBox', page.box.join(' '));
+      zones.replaceChildren();
+
+      for (const action of page.actions) makeZone(action, page.box);
+
+      if (page.navTop !== undefined) {
+        const tabWidth = width / tabs.length;
+
+        tabs.forEach(([to, label], index) => {
+          makeZone({
+            to,
+            label,
+            box: [x + index * tabWidth, page.navTop, tabWidth, y + height - page.navTop]
+          }, page.box, key === to);
+        });
+      }
+
+      if (moveFocus) {
+        screen.focus({ preventScroll: true });
+        window.scrollTo(0, 0);
+      }
+    }
+
+    if (new URLSearchParams(window.location.search).has('zones')) {
+      document.body.classList.add('debug');
+    }
+
+    render('home');
+  </script>
+</body>
+</html>
