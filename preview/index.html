@@ -394,7 +394,11 @@
   .home .badge { width: 15cqw; height: 15cqw; }
   .home .start { height: 13cqw; margin-top: 2.5cqw; }
 
-  .app[data-screen="home"] .ridge { height: 11cqw; }
+ .app[data-screen="home"] .ridge {
+  height: auto;
+  width: 100%;
+  aspect-ratio: 612 / 116;
+}
 
   .app[data-screen="home"] .dock {
     position: static;
