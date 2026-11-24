@@ -10,50 +10,6 @@
         content="black-translucent">
   <title>Главная — тест шапки</title>
 
-  <script>
-  (() => {
-    const standalone =
-      window.matchMedia('(display-mode: standalone)').matches ||
-      navigator.standalone === true;
-
-    if (!standalone) return;
-
-    const root = document.documentElement;
-    const hide = () => root.classList.remove('show-launch-screen');
-
-    /*root.classList.add('show-launch-screen');*/
-
-    // Если PNG не загрузится, не оставляем пользователя на чёрном экране.
-    const fallback = window.setTimeout(hide, 8000);
-
-    document.addEventListener('DOMContentLoaded', async () => {
-      const logo = document.querySelector('.launch-screen__logo');
-
-      try {
-        await logo.decode();
-      } catch {
-        window.clearTimeout(fallback);
-        hide();
-        return;
-      }
-
-      // Если запасной таймер уже закрыл заставку, не показываем её снова.
-      if (!root.classList.contains('show-launch-screen')) return;
-
-      window.clearTimeout(fallback);
-      root.classList.add('launch-logo-ready');
-
-      // Даём браузеру отрисовать круг и логотип до начала отсчёта.
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-window.setTimeout(hide, 5000 + (reducedMotion ? 0 : 650));
-        });
-      });
-    }, { once: true });
-  })();
-</script>
-  
   <style>
     * {
       box-sizing: border-box;
@@ -76,57 +32,6 @@ window.setTimeout(hide, 5000 + (reducedMotion ? 0 : 650));
       outline-offset: 3px;
     }
 
-    /* Заставка при запуске с иконки «Домой». */
-    .launch-screen {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      display: grid;
-      place-items: center;
-      background: #000;
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transition: opacity 800ms ease-in-out, visibility 0s linear 800ms;
-    }
-
-    .show-launch-screen .launch-screen {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-      transition: none;
-    }
-
-    .launch-screen__badge {
-  display: grid;
-  place-items: center;
-  width: min(52vw, 210px);
-  transition: opacity 650ms ease-in-out;
-  aspect-ratio: 1;
-  overflow: hidden;
-  border-radius: 50%;
-  background: #fff;
-  opacity: 0;
-}
-
-.launch-logo-ready .launch-screen__badge {
-  opacity: 1;
-}
-
-.launch-screen__logo {
-  display: block;
-  width: 86%;
-  height: auto;
-}
-
-    @media (prefers-reduced-motion: reduce) {
-  .launch-screen,
-  .launch-screen__badge {
-    transition: none;
-  }
-}
-    }
-
     .app {
       display: flex;
       flex-direction: column;
@@ -143,6 +48,7 @@ window.setTimeout(hide, 5000 + (reducedMotion ? 0 : 650));
       padding: 0 18px;
     }
 
+    /* Один фон от верхнего края, без отдельной полосы под часами. */
     .hero {
       position: relative;
       width: calc(100% + 36px);
@@ -293,6 +199,7 @@ window.setTimeout(hide, 5000 + (reducedMotion ? 0 : 650));
       font-size: 13px;
     }
 
+    /* Свободное место остаётся над кнопкой, а не под меню. */
     .home-bottom {
       margin-top: auto;
     }
@@ -335,7 +242,7 @@ window.setTimeout(hide, 5000 + (reducedMotion ? 0 : 650));
       align-content: center;
       gap: 3px;
       min-height: 44px;
-      padding: 4px 0 0;
+      padding: 4px 0;
       border: 0;
       background: transparent;
       font-size: clamp(11px, 3.2vw, 14px);
@@ -357,16 +264,15 @@ window.setTimeout(hide, 5000 + (reducedMotion ? 0 : 650));
       stroke-linejoin: round;
       flex-shrink: 0;
     }
-
     .settings .icon {
       width: 34px;
       height: 34px;
       color: #255ba8;
       filter:
-        drop-shadow(1px 0 0 #fff)
-        drop-shadow(-1px 0 0 #fff)
-        drop-shadow(0 1px 0 #fff)
-        drop-shadow(0 -1px 0 #fff);
+    drop-shadow(1px 0 0 #fff)
+    drop-shadow(-1px 0 0 #fff)
+    drop-shadow(0 1px 0 #fff)
+    drop-shadow(0 -1px 0 #fff);
     }
 
     .badge .icon {
@@ -390,39 +296,16 @@ window.setTimeout(hide, 5000 + (reducedMotion ? 0 : 650));
       font-size: 14px;
       pointer-events: none;
     }
-    /* Фон под нижней кромкой страницы — в цвет меню. */
-html,
-body {
-  background-color: #edf8ff;
-}
-
-/* Пока видна заставка, фон под ней тоже чёрный. */
-html.show-launch-screen,
-html.show-launch-screen body {
-  background-color: #000;
-}
- /*   html { background: #ff00ff; }
-.app { outline: 2px solid red; outline-offset: -2px; }
-.dock { background: #a4eea4; }
-    */
   </style>
 </head>
 
 <body>
-  <div class="launch-screen" aria-hidden="true">
-    <div class="launch-screen__badge">
-      <img class="launch-screen__logo"
-           src="./assets/reference-v3/umc-logo.png"
-           alt="">
-    </div>
-  </div>
-
   <main class="app">
     <div class="content">
       <header>
         <div class="hero">
           <div class="greeting">
-            <h1>Привет,<br>Денис</h1>
+            <h1>Привет,<br>Алексей</h1>
           </div>
 
           <button class="settings" type="button" aria-label="Настройки"
@@ -447,8 +330,7 @@ html.show-launch-screen body {
           </svg>
         </p>
 
-        <div class="progress" role="progressbar"
-             aria-label="Тренировок за неделю"
+        <div class="progress" role="progressbar" aria-label="Тренировок за неделю"
              aria-valuemin="0" aria-valuemax="4" aria-valuenow="3">
           <span></span>
         </div>
@@ -495,8 +377,7 @@ html.show-launch-screen body {
       <nav class="dock" aria-label="Основное меню">
         <button type="button" aria-current="page" id="home-tab">
           <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="m2 11 10-8 10 8h-3v10h-5v-6h-4v6H5V11z"
-                  fill="currentColor"/>
+            <path d="m2 11 10-8 10 8h-3v10h-5v-6h-4v6H5V11z" fill="currentColor"/>
           </svg>
           Главная
         </button>
@@ -536,11 +417,11 @@ html.show-launch-screen body {
 
     document.querySelectorAll('[data-message]').forEach((button) => {
       button.addEventListener('click', () => {
-        window.clearTimeout(toastTimer);
+        clearTimeout(toastTimer);
         toast.textContent = button.dataset.message;
         toast.hidden = false;
 
-        toastTimer = window.setTimeout(() => {
+        toastTimer = setTimeout(() => {
           toast.hidden = true;
         }, 2500);
       });
