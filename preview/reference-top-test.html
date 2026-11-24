@@ -40,14 +40,19 @@
     /* Один фон от верхнего края экрана до подписи под мазком. */
 .hero {
   position: relative;
-  min-height: 0;
   width: calc(100% + 36px);
   max-width: none;
   margin-inline: -18px;
+
+  height: auto;
+  min-height: 0;
+  max-height: none;
   aspect-ratio: 900 / 590;
+
   background: url("./assets/reference-v3/home-hero-ice.png?v=2")
     center top / 100% auto no-repeat;
-  outline: 2px solid magenta;
+
+  outline: 2px solid magenta; /* Удалим после проверки. */
 }
 
     .greeting {
