@@ -38,8 +38,12 @@
     }
 
     /* Один фон от верхнего края экрана до подписи под мазком. */
-   .hero {
+.hero {
+  position: relative;
   min-height: 0;
+  width: calc(100% + 36px);
+  max-width: none;
+  margin-inline: -18px;
   aspect-ratio: 900 / 590;
   background: url("./assets/reference-v3/home-hero-ice.png")
     center top / 100% auto no-repeat;
