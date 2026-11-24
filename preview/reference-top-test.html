@@ -63,7 +63,7 @@
 
     .greeting {
       position: absolute;
-      top: 46%;
+      top: 51%;
       left: 12%;
     }
 
@@ -83,7 +83,7 @@
     .settings {
       position: absolute;
       top: max(28%, calc(env(safe-area-inset-top, 0px) + 4px));
-      right: 4%;
+      right: calc(12.5% - 16px);
       display: grid;
       place-items: center;
       width: 44px;
@@ -263,6 +263,10 @@
       stroke-linecap: round;
       stroke-linejoin: round;
       flex-shrink: 0;
+    }
+    .settings .icon {
+      width: 37.5px;
+      height: 37.5px;
     }
 
     .badge .icon {
