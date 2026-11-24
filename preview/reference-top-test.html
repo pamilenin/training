@@ -11,30 +11,48 @@
   <title>Главная — тест шапки</title>
 
   <script>
-    (() => {
-      const standalone =
-        window.matchMedia('(display-mode: standalone)').matches ||
-        navigator.standalone === true;
+  (() => {
+    const standalone =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      navigator.standalone === true;
 
-      if (!standalone) return;
+    if (!standalone) return;
 
-      const root = document.documentElement;
-      const startedAt = performance.now();
-      const hide = () => root.classList.remove('show-launch-screen');
+    const root = document.documentElement;
+    const hide = () => root.classList.remove('show-launch-screen');
 
-      root.classList.add('show-launch-screen');
+    root.classList.add('show-launch-screen');
 
-      // Не держим заставку слишком долго при медленной загрузке.
-      const fallback = window.setTimeout(hide, 1600);
+    // Если PNG не загрузится, не оставляем пользователя на чёрном экране.
+    const fallback = window.setTimeout(hide, 8000);
 
-      window.addEventListener('load', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
+      const logo = document.querySelector('.launch-screen__logo');
+
+      try {
+        await logo.decode();
+      } catch {
         window.clearTimeout(fallback);
-        const remaining = Math.max(0, 550 - (performance.now() - startedAt));
-        window.setTimeout(hide, remaining);
-      }, { once: true });
-    })();
-  </script>
+        hide();
+        return;
+      }
 
+      // Если запасной таймер уже закрыл заставку, не показываем её снова.
+      if (!root.classList.contains('show-launch-screen')) return;
+
+      window.clearTimeout(fallback);
+      root.classList.add('launch-logo-ready');
+
+      // Даём браузеру отрисовать круг и логотип до начала отсчёта.
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          window.setTimeout(hide, 5000);
+        });
+      });
+    }, { once: true });
+  })();
+</script>
+  
   <style>
     * {
       box-sizing: border-box;
@@ -79,14 +97,19 @@
     }
 
     .launch-screen__badge {
-      display: grid;
-      place-items: center;
-      width: min(62vw, 250px);
-      aspect-ratio: 1;
-      overflow: hidden;
-      border-radius: 50%;
-      background: #fff;
-    }
+  display: grid;
+  place-items: center;
+  width: min(62vw, 250px);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0;
+}
+
+.launch-logo-ready .launch-screen__badge {
+  opacity: 1;
+}
 
     .launch-screen__logo {
       display: block;
