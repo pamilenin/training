@@ -241,6 +241,21 @@
       font-size: 14px;
       pointer-events: none;
     }
+    /* Без отдельной полосы под часами. */
+body,
+.app,
+.content,
+.content > header {
+  padding-top: 0;
+  background-image: none;
+}
+
+.hero {
+  min-height: 0;
+  aspect-ratio: 408 / 182;
+  background: url("./assets/reference-v3/home-hero-full.png")
+    center top / 100% auto no-repeat;
+}
   </style>
 </head>
 
