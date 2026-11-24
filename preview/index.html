@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#d0eeff">
+  <title>Дневник тренировок — визуальный прототип</title>
+
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #081d59;
+      --blue: #0067dc;
+      --muted: #185aa6;
+      --ice: #f5fbfd;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #c8edff url("assets/sheet/ice.png") center / 300px auto repeat;
+      font: 16px/1.25 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    h1, h2, p { margin: 0; }
+    button { font: inherit; color: inherit; cursor: pointer; }
+    button:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+
+    .phone {
+      container-type: inline-size;
+      width: min(100%, 480px);
+      margin-inline: auto;
+    }
+
+    .app {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding-top: var(--safe-top);
+      isolation: isolate;
+      background: var(--ice);
+    }
+
+    .app::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(
+          180deg,
+          #c4eaff33 0,
+          #eefaff55 23cqw,
+          #f7fcfde8 57cqw,
+          #f7fcfdf5 80%,
+          #e8f7fc99 100%
+        ),
+        url("assets/sheet/ice.png") center top / 100% auto repeat-y;
+    }
+
+    main {
+      flex: 1;
+      padding-inline: 4.5cqw;
+    }
+
+    /* Общая шапка для «Главной» и «Дневника». */
+    .hero {
+      position: relative;
+      height: 41.5cqw;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0 -4.5cqw;
+      pointer-events: none;
+      background:
+        url("assets/sheet/header-brush.png")
+          left 1cqw top 10.5cqw / 76cqw 30cqw no-repeat,
+        url("assets/sheet/header-peak.png")
+          left 27cqw top 1cqw / 51cqw auto no-repeat;
+    }
+
+    .hero h1 {
+      position: absolute;
+      z-index: 1;
+      top: 15.3cqw;
+      left: 3.8cqw;
+      color: #fff;
+      font-size: 10.7cqw;
+      font-weight: 900;
+      font-style: italic;
+      line-height: .94;
+      letter-spacing: -.045em;
+      text-shadow: 0 1px 2px #00245180;
+      transform: rotate(-7deg);
+    }
+
+    .diary .hero h1 { top: 20.5cqw; }
+
+    .hero button {
+      position: absolute;
+      z-index: 1;
+      top: 12.5cqw;
+      right: 0;
+      display: grid;
+      place-items: center;
+      width: max(44px, 9cqw);
+      height: max(44px, 9cqw);
+      padding: 0;
+      border: 0;
+      background: transparent;
+    }
+
+    .icon {
+      width: 6cqw;
+      height: 6cqw;
+      flex: none;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .hero .icon { width: 7.5cqw; height: 7.5cqw; }
+
+    .tagline {
+      margin: 0 0 5.4cqw 2.5cqw;
+      font-size: 5.1cqw;
+      font-weight: 750;
+    }
+
+    .goal {
+      padding: 0 5cqw 2.8cqw;
+      border-radius: 3.5cqw;
+      background:
+        linear-gradient(110deg, #d8f2fdd9, #bce9f98c),
+        url("assets/sheet/ice.png") right center / cover no-repeat;
+    }
+
+    .brush {
+      display: grid;
+      place-items: center;
+      border: 0;
+      color: #fff;
+      font-weight: 800;
+      line-height: 1;
+      text-shadow: 0 1px 2px #00245180;
+      background: var(--brush-art) center / 100% 100% no-repeat;
+    }
+
+    .goal .brush,
+    .diary .brush {
+      --brush-art: url("assets/sheet/label-brush.png");
+      font-style: italic;
+    }
+
+    .goal .brush {
+      width: 49.5cqw;
+      height: 12.2cqw;
+      margin-left: -5cqw;
+      padding: 0 2cqw .8cqw 0;
+      font-size: 5.2cqw;
+    }
+
+    .goal-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1cqw;
+      font-size: 5.4cqw;
+      font-weight: 800;
+    }
+
+    .goal-title .icon,
+    .today-card > .icon { width: 4.8cqw; height: 4.8cqw; }
+
+    .progress {
+      height: 3cqw;
+      margin: 2.6cqw 0 2.1cqw;
+      overflow: hidden;
+      border-radius: 99px;
+      background: #97d7fa;
+    }
+
+    .progress span {
+      display: block;
+      width: 75%;
+      height: 100%;
+      border-radius: inherit;
+      background: #0076e7;
+    }
+
+    .goal small { color: var(--muted); font-size: 4.35cqw; }
+
+    .today { margin-top: 3.4cqw; }
+    .today h2 { margin-bottom: 2.2cqw; font-size: 7.1cqw; line-height: 1.1; }
+
+    .today-card {
+      display: flex;
+      align-items: center;
+      gap: 4.8cqw;
+      min-height: 24.5cqw;
+      padding: 2.8cqw 3cqw 2.8cqw 4cqw;
+      border: 1px solid #9edcff;
+      border-radius: 3.7cqw;
+      background: #f8fdffae;
+    }
+
+    .badge {
+      display: grid;
+      place-items: center;
+      flex: none;
+      width: 16.5cqw;
+      height: 16.5cqw;
+      border-radius: 50%;
+      color: var(--blue);
+      background: #d5eefb;
+    }
+
+    .badge .icon { width: 12.5cqw; height: 12.5cqw; stroke-width: 2.5; }
+    .today-text { flex: 1; }
+    .today-text strong { display: block; font-size: 5.5cqw; }
+    .today-text small { display: block; color: var(--muted); font-size: 4.1cqw; }
+
+    .start {
+      --brush-art: url("assets/sheet/button-brush.png");
+      width: 98%;
+      min-height: 44px;
+      height: 15cqw;
+      margin: 3.4cqw auto 0;
+      font-size: 5.1cqw;
+    }
+
+    .week {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      margin: 0 -1cqw 1cqw;
+    }
+
+    .week::before {
+      content: "";
+      position: absolute;
+      top: 5.45cqw;
+      inset-inline: 0;
+      border-top: 1px solid #b4e2ff;
+      pointer-events: none;
+    }
+
+    .day {
+      position: relative;
+      display: grid;
+      justify-items: center;
+      gap: 1.2cqw;
+      padding: 0;
+      border: 0;
+      background: transparent;
+    }
+
+    .day span { font-size: 3.75cqw; }
+
+    .day:not([aria-pressed="true"])::after {
+      content: "";
+      position: absolute;
+      top: 5.45cqw;
+      width: 1.15cqw;
+      height: 1.15cqw;
+      border-radius: 50%;
+      background: var(--blue);
+      transform: translateY(-50%);
+    }
+
+    .day strong {
+      display: grid;
+      place-items: center;
+      width: 9.3cqw;
+      height: 9.3cqw;
+      border-radius: 50%;
+      font-size: 4.4cqw;
+    }
+
+    .day[aria-pressed="true"] strong { color: #fff; background: var(--blue); }
+
+    .diary .brush {
+      width: 48.5cqw;
+      height: 11.45cqw;
+      margin: 0 0 .4cqw -2.4cqw;
+      padding: 0 2cqw .8cqw 0;
+      font-size: 5.6cqw;
+    }
+
+    .entries { display: grid; gap: 1.6cqw; }
+
+    .entry {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2cqw;
+      min-height: 18.3cqw;
+      padding: 1.1cqw 3.1cqw 1.1cqw 3.7cqw;
+      border: 1px solid #b6e5fc;
+      border-left: 1.6cqw solid #63b8f3;
+      border-radius: 2.9cqw;
+      background: #f5fbfdb8;
+    }
+
+    .entry.current { border-left-color: #007cf0; background: #e1f3fd; }
+    .entry small { display: block; font-size: 3.6cqw; color: #1055af; }
+    .entry strong { display: block; font-size: 4.8cqw; }
+    .entry .icon { width: 4.7cqw; height: 4.7cqw; }
+
+    .entry.current .icon {
+      width: 7.4cqw;
+      height: 7.4cqw;
+      padding: 1.5cqw;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--blue);
+    }
+
+    .empty, .hint { padding: 3cqw 0; color: var(--muted); font-size: 14px; }
+
+    .ridge {
+      flex: none;
+      height: 15.55cqw;
+      background: url("assets/sheet/home-ridge.png") center bottom / 100% auto no-repeat;
+      pointer-events: none;
+    }
+
+    .app[data-screen="diary"] .ridge {
+      height: 10.6cqw;
+      background-image: url("assets/sheet/diary-ridge.png");
+    }
+
+    .dock {
+      position: sticky;
+      bottom: 0;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      padding: 1.1cqw 1cqw calc(1.6cqw + var(--safe-bottom));
+      border-top: 1px solid #d3e9f6;
+      background: #f8fdff;
+    }
+
+    .dock button {
+      display: grid;
+      justify-items: center;
+      align-content: center;
+      gap: 1cqw;
+      min-height: max(48px, 15cqw);
+      padding: 3px 1px;
+      border: 0;
+      background: transparent;
+      color: #154e88;
+      font-size: clamp(11px, 3.4cqw, 17px);
+    }
+
+    .dock .icon { width: 6.4cqw; height: 6.4cqw; }
+    .dock [aria-current="page"] { color: var(--blue); font-weight: 800; }
+    .dock [data-tab="home"][aria-current="page"] .icon { fill: currentColor; }
+
+    @media (min-width: 520px) {
+      .phone { margin-block: 16px; }
+      .app {
+        min-height: calc(100dvh - 32px);
+        overflow: clip;
+        border-radius: 30px;
+        box-shadow: 0 10px 40px #04487c30;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <svg width="0" height="0" aria-hidden="true" style="position: absolute">
+    <defs>
+      <symbol id="icon-home" viewBox="0 0 24 24">
+        <path d="m2 11 10-9 10 9h-3v10h-5v-6h-4v6H5V11z"/>
+      </symbol>
+      <symbol id="icon-calendar" viewBox="0 0 24 24">
+        <rect x="3.5" y="5" width="17" height="16" rx="2"/>
+        <path d="M8 3v4m8-4v4M4 10h16m-12 4h2m4 0h2m-8 3h2"/>
+      </symbol>
+      <symbol id="icon-chart" viewBox="0 0 24 24">
+        <path d="M4 21v-5m5 5v-8m5 8V9m5 12V4" stroke-width="3"/>
+      </symbol>
+      <symbol id="icon-person" viewBox="0 0 24 24">
+        <circle cx="12" cy="7" r="3" fill="currentColor"/>
+        <path d="M4 21c0-4 3-7 8-7s8 3 8 7Z" fill="currentColor"/>
+      </symbol>
+      <symbol id="icon-gear" viewBox="0 0 24 24">
+        <path d="m10 2-.6 3.1-2 .9-2.8-1.4-2 3.4L5 10v3l-2.4 2 2 3.4 2.8-1.4 2 .9L10 21h4l.6-3.1 2-.9 2.8 1.4 2-3.4-2.4-2v-3l2.4-2-2-3.4-2.8 1.4-2-.9L14 2z"/>
+        <circle cx="12" cy="11.5" r="3"/>
+      </symbol>
+      <symbol id="icon-chevron" viewBox="0 0 24 24">
+        <path d="m9 5 7 7-7 7"/>
+      </symbol>
+      <symbol id="icon-check" viewBox="0 0 24 24">
+        <path d="m5 12 4 4 10-9"/>
+      </symbol>
+      <symbol id="icon-dumbbell" viewBox="0 0 24 24">
+        <path d="M8 12h8M2 11v2m3-5v8m3-11v14m8-14v14m3-11v8m3-5v2"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <div class="phone">
+    <div class="app" id="app" data-screen="home">
+      <main>
+        <section class="home" id="screen-home" aria-labelledby="home-title">
+          <header class="hero">
+            <h1 id="home-title">Привет,<br>Алексей</h1>
+            <button type="button" aria-label="Настройки"
+                    data-preview="Настройки появятся в профиле.">
+              <svg class="icon" aria-hidden="true"><use href="#icon-gear"/></svg>
+            </button>
+          </header>
+
+          <p class="tagline">Двигайся к своим целям!</p>
+
+          <section class="goal" aria-labelledby="goal-heading">
+            <h2 class="brush" id="goal-heading">Текущая цель</h2>
+            <div class="goal-title">
+              Силовая выносливость
+              <svg class="icon" aria-hidden="true"><use href="#icon-chevron"/></svg>
+            </div>
+
+            <div class="progress" role="progressbar" aria-label="Тренировки за неделю"
+                 aria-valuemin="0" aria-valuenow="3" aria-valuemax="4">
+              <span></span>
+            </div>
+            <small>3 / 4 тренировок в неделю</small>
+          </section>
+
+          <section class="today" aria-labelledby="today-heading">
+            <h2 id="today-heading">Сегодня</h2>
+            <div class="today-card">
+              <span class="badge">
+                <svg class="icon" aria-hidden="true"><use href="#icon-dumbbell"/></svg>
+              </span>
+              <div class="today-text">
+                <small>Тренировка</small>
+                <strong>Верх тела</strong>
+                <small>45 мин · 8 упражнений</small>
+              </div>
+              <svg class="icon" aria-hidden="true"><use href="#icon-chevron"/></svg>
+            </div>
+
+            <button class="brush start" type="button"
+                    data-preview="Экран тренировки пока не подключён.">
+              Начать тренировку
+            </button>
+          </section>
+        </section>
+
+        <section class="diary" id="screen-diary" aria-labelledby="diary-title" hidden>
+          <header class="hero">
+            <h1 id="diary-title">Дневник</h1>
+            <button type="button" id="reset-week" aria-label="Показать все записи">
+              <svg class="icon" aria-hidden="true"><use href="#icon-calendar"/></svg>
+            </button>
+          </header>
+
+          <div class="week" id="week" role="group" aria-label="Неделя 21–27 апреля"></div>
+          <h2 class="brush">Тренировки</h2>
+          <div class="entries" id="entries" aria-live="polite"></div>
+        </section>
+
+        <p class="hint" id="hint" role="status" hidden></p>
+      </main>
+
+      <div class="ridge" aria-hidden="true"></div>
+
+      <nav class="dock" aria-label="Основное меню">
+        <button type="button" data-tab="home" aria-current="page">
+          <svg class="icon" aria-hidden="true"><use href="#icon-home"/></svg>
+          Главная
+        </button>
+        <button type="button" data-tab="diary">
+          <svg class="icon" aria-hidden="true"><use href="#icon-calendar"/></svg>
+          Дневник
+        </button>
+        <button type="button" data-preview="Экран статистики пока не подключён.">
+          <svg class="icon" aria-hidden="true"><use href="#icon-chart"/></svg>
+          Статистика
+        </button>
+        <button type="button" data-preview="Экран профиля пока не подключён.">
+          <svg class="icon" aria-hidden="true"><use href="#icon-person"/></svg>
+          Профиль
+        </button>
+      </nav>
+    </div>
+  </div>
+
+  <script>
+    const app = document.querySelector('#app');
+    const home = document.querySelector('#screen-home');
+    const diary = document.querySelector('#screen-diary');
+    const week = document.querySelector('#week');
+    const entries = document.querySelector('#entries');
+    const hint = document.querySelector('#hint');
+    const tabs = document.querySelectorAll('[data-tab]');
+
+    const workouts = [
+      { day: 24, date: 'Сегодня, 24 апреля', name: 'Верх тела', details: '45 мин · 8 упражнений' },
+      { day: 23, date: 'Вчера, 23 апреля', name: 'Ноги', details: '50 мин · 7 упражнений' },
+      { day: 21, date: '21 апреля', name: 'Спина', details: '55 мин · 8 упражнений' },
+      { day: 19, date: '19 апреля', name: 'Грудь', details: '45 мин · 6 упражнений' }
+    ];
+
+    let selectedDay = 24;
+    let showAll = true;
+
+    ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].forEach((label, index) => {
+      const day = index + 21;
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'day';
+      button.dataset.day = day;
+      button.setAttribute('aria-label', `${label}, ${day} апреля`);
+      button.innerHTML = `<span>${label}</span><strong>${day}</strong>`;
+      week.append(button);
+    });
+
+    function renderDiary() {
+      for (const button of week.children) {
+        button.setAttribute('aria-pressed', Number(button.dataset.day) === selectedDay);
+      }
+
+      const visible = showAll
+        ? workouts
+        : workouts.filter(workout => workout.day === selectedDay);
+
+      entries.innerHTML = visible.map(workout => {
+        const current = workout.day === 24;
+        return `
+          <article class="entry${current ? ' current' : ''}">
+            <div>
+              <small>${workout.date}</small>
+              <strong>${workout.name}</strong>
+              <small>${workout.details}</small>
+            </div>
+            <svg class="icon" aria-hidden="true">
+              <use href="#icon-${current ? 'check' : 'chevron'}"/>
+            </svg>
+          </article>`;
+      }).join('') || '<p class="empty">На этот день тренировок нет.</p>';
+    }
+
+    week.addEventListener('click', event => {
+      const button = event.target.closest('[data-day]');
+      if (!button) return;
+
+      selectedDay = Number(button.dataset.day);
+      showAll = false;
+      renderDiary();
+    });
+
+    document.querySelector('#reset-week').addEventListener('click', () => {
+      selectedDay = 24;
+      showAll = true;
+      renderDiary();
+    });
+
+    for (const tab of tabs) {
+      tab.addEventListener('click', () => {
+        const screen = tab.dataset.tab;
+        app.dataset.screen = screen;
+        home.hidden = screen !== 'home';
+        diary.hidden = screen !== 'diary';
+
+        for (const item of tabs) item.removeAttribute('aria-current');
+        tab.setAttribute('aria-current', 'page');
+
+        hint.hidden = true;
+        window.scrollTo(0, 0);
+      });
+    }
+
+    for (const button of document.querySelectorAll('[data-preview]')) {
+      button.addEventListener('click', () => {
+        hint.textContent = button.dataset.preview;
+        hint.hidden = false;
+        hint.scrollIntoView({ block: 'nearest' });
+      });
+    }
+
+    renderDiary();
+  </script>
+</body>
+</html>
