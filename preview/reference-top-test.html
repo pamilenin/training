@@ -46,7 +46,8 @@
       // Даём браузеру отрисовать круг и логотип до начала отсчёта.
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          window.setTimeout(hide, 5000);
+          const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+window.setTimeout(hide, 5000 + (reducedMotion ? 0 : 650));
         });
       });
     }, { once: true });
@@ -86,7 +87,7 @@
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
-      transition: opacity 220ms ease, visibility 0s linear 220ms;
+      transition: opacity 800ms ease-in-out, visibility 0s linear 800ms;
     }
 
     .show-launch-screen .launch-screen {
@@ -99,7 +100,8 @@
     .launch-screen__badge {
   display: grid;
   place-items: center;
-  width: min(62vw, 250px);
+  width: min(52vw, 210px);
+  transition: opacity 650ms ease-in-out;
   aspect-ratio: 1;
   overflow: hidden;
   border-radius: 50%;
@@ -118,9 +120,11 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .launch-screen {
-        transition: none;
-      }
+  .launch-screen,
+  .launch-screen__badge {
+    transition: none;
+  }
+}
     }
 
     .app {
@@ -403,7 +407,7 @@
       <header>
         <div class="hero">
           <div class="greeting">
-            <h1>Привет,<br>Алексей</h1>
+            <h1>Привет,<br>Денис</h1>
           </div>
 
           <button class="settings" type="button" aria-label="Настройки"
