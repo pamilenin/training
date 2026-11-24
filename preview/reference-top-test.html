@@ -7,10 +7,12 @@
   <meta name="theme-color" content="#07539b">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Главная — тест по новому макету</title>
+  <title>Главная — тест шапки</title>
 
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -19,7 +21,11 @@
       font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
     }
 
-    button { font: inherit; color: inherit; }
+    button {
+      font: inherit;
+      color: inherit;
+    }
+
     button:focus-visible {
       outline: 3px solid #0064e8;
       outline-offset: 3px;
@@ -37,23 +43,21 @@
       padding: 0 18px;
     }
 
-    /* Один фон от верхнего края экрана до подписи под мазком. */
-.hero {
-  position: relative;
-  width: calc(100% + 36px);
-  max-width: none;
-  margin-inline: -18px;
+    /* Один фон от самого верха. Отдельной полосы под часами нет. */
+    .hero {
+      position: relative;
+      width: calc(100% + 36px);
+      margin-inline: -18px;
+      height: auto;
+      min-height: 0;
+      max-height: none;
+      aspect-ratio: 900 / 590;
+      background: url("./assets/reference-v3/home-hero-ice.png?v=2")
+        center top / 100% auto no-repeat;
 
-  height: auto;
-  min-height: 0;
-  max-height: none;
-  aspect-ratio: 900 / 590;
-
-  background: url("./assets/reference-v3/home-hero-ice.png?v=2")
-    center top / 100% auto no-repeat;
-
-  outline: 2px solid magenta; /* Удалим после проверки. */
-}
+      /* Временно: убрать после проверки высоты. */
+      outline: 2px solid magenta;
+    }
 
     .greeting {
       position: absolute;
@@ -135,7 +139,10 @@
       background: linear-gradient(90deg, #008cfc, #0061e9);
     }
 
-    .goal-note { margin: 7px 0 0; font-size: 16px; }
+    .goal-note {
+      margin: 7px 0 0;
+      font-size: 16px;
+    }
 
     .today h2 {
       margin: 14px 0 8px;
@@ -167,11 +174,28 @@
       background: #c7eafd;
     }
 
-    .workout-text { display: grid; gap: 2px; }
-    .workout-text strong { font-size: 21px; line-height: 1.1; }
-    .workout-label, .workout-meta { color: #17447d; }
-    .workout-label { font-size: 14px; }
-    .workout-meta { font-size: 13px; }
+    .workout-text {
+      display: grid;
+      gap: 2px;
+    }
+
+    .workout-text strong {
+      font-size: 21px;
+      line-height: 1.1;
+    }
+
+    .workout-label,
+    .workout-meta {
+      color: #17447d;
+    }
+
+    .workout-label {
+      font-size: 14px;
+    }
+
+    .workout-meta {
+      font-size: 13px;
+    }
 
     .start {
       display: block;
@@ -181,15 +205,14 @@
       padding: 10px 14px;
       border: 0;
       color: #fff;
-     background: url("./assets/reference-v3/home-start-brush.png")
-  center / contain no-repeat;
+      background: url("./assets/reference-v3/home-start-brush.png")
+        center / contain no-repeat;
       font-size: clamp(17px, 5vw, 22px);
       font-weight: 750;
       text-shadow: 0 1px 3px #082456;
       cursor: pointer;
     }
 
-    /* Горы примыкают к меню и показываются целиком. */
     .reference-ridge {
       display: block;
       width: 100%;
@@ -232,7 +255,10 @@
       flex-shrink: 0;
     }
 
-    .badge .icon { width: 38px; height: 38px; }
+    .badge .icon {
+      width: 38px;
+      height: 38px;
+    }
 
     .toast {
       position: fixed;
@@ -250,21 +276,6 @@
       font-size: 14px;
       pointer-events: none;
     }
-    /* Без отдельной полосы под часами. */
-body,
-.app,
-.content,
-.content > header {
-  padding-top: 0;
-  background-image: none;
-}
-
-.hero {
-  min-height: 0;
-  aspect-ratio: 408 / 217;
-  background: url("./assets/reference-v3/home-hero-tall.png")
-    center top / 100% auto no-repeat;
-}
   </style>
 </head>
 
@@ -291,6 +302,7 @@ body,
 
       <section class="goal" aria-labelledby="goal-heading">
         <h2 id="goal-heading">Текущая цель</h2>
+
         <p class="goal-title">
           Силовая выносливость
           <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -383,6 +395,7 @@ body,
         clearTimeout(toastTimer);
         toast.textContent = button.dataset.message;
         toast.hidden = false;
+
         toastTimer = setTimeout(() => {
           toast.hidden = true;
         }, 2500);
