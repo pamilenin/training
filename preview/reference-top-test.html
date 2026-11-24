@@ -113,11 +113,11 @@ window.setTimeout(hide, 5000 + (reducedMotion ? 0 : 650));
   opacity: 1;
 }
 
-    .launch-screen__logo {
-      display: block;
-      width: 78%;
-      height: auto;
-    }
+.launch-screen__logo {
+  display: block;
+  width: 86%;
+  height: auto;
+}
 
     @media (prefers-reduced-motion: reduce) {
   .launch-screen,
@@ -390,6 +390,17 @@ window.setTimeout(hide, 5000 + (reducedMotion ? 0 : 650));
       font-size: 14px;
       pointer-events: none;
     }
+    /* Фон под нижней кромкой страницы — в цвет меню. */
+html,
+body {
+  background-color: #edf8ff;
+}
+
+/* Пока видна заставка, фон под ней тоже чёрный. */
+html.show-launch-screen,
+html.show-launch-screen body {
+  background-color: #000;
+}
   </style>
 </head>
 
