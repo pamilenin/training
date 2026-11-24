@@ -6,7 +6,8 @@
         content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#07539b">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style"
+        content="black-translucent">
   <title>Главная — тест шапки</title>
 
   <style>
@@ -32,8 +33,12 @@
     }
 
     .app {
+      display: flex;
+      flex-direction: column;
       width: 100%;
       max-width: 460px;
+      min-height: 100vh;
+      min-height: 100dvh;
       margin-inline: auto;
       background: #eef8fd;
       container-type: inline-size;
@@ -43,7 +48,7 @@
       padding: 0 18px;
     }
 
-    /* Один фон от самого верха. Отдельной полосы под часами нет. */
+    /* Один фон от верхнего края, без отдельной полосы под часами. */
     .hero {
       position: relative;
       width: calc(100% + 36px);
@@ -51,19 +56,16 @@
       height: auto;
       min-height: 0;
       max-height: none;
-aspect-ratio: 900 / 530;
-background: url("./assets/reference-v3/home-hero-ice-final.png")
-  center top / 100% auto no-repeat;
-
-      /* Временно: убрать после проверки высоты. */
-      outline: 2px solid magenta;
+      aspect-ratio: 900 / 500;
+      background: url("./assets/reference-v3/home-hero-ice-final.png")
+        center top / 100% auto no-repeat;
     }
 
- .greeting {
-  position: absolute;
-  top: 41%;
-  left: 14%;
-}
+    .greeting {
+      position: absolute;
+      top: 41%;
+      left: 14%;
+    }
 
     .greeting h1 {
       margin: 0;
@@ -80,7 +82,7 @@ background: url("./assets/reference-v3/home-hero-ice-final.png")
 
     .settings {
       position: absolute;
-      top: max(31%, calc(env(safe-area-inset-top, 0px) + 4px));
+      top: max(28%, calc(env(safe-area-inset-top, 0px) + 4px));
       right: 4%;
       display: grid;
       place-items: center;
@@ -197,11 +199,19 @@ background: url("./assets/reference-v3/home-hero-ice-final.png")
       font-size: 13px;
     }
 
+    /* Свободное место остаётся над кнопкой, а не под меню. */
+    .home-bottom {
+      margin-top: auto;
+    }
+
+    .home-start-wrap {
+      padding: 10px 18px 0;
+    }
+
     .start {
       display: block;
       width: 100%;
       min-height: 66px;
-      margin: 10px 0 0;
       padding: 10px 14px;
       border: 0;
       color: #fff;
@@ -339,49 +349,54 @@ background: url("./assets/reference-v3/home-hero-ice-final.png")
             <path d="m9 5 7 7-7 7"/>
           </svg>
         </button>
+      </section>
+    </div>
 
+    <div class="home-bottom">
+      <div class="home-start-wrap">
         <button class="start" type="button"
                 data-message="Запуск тренировки в этом превью пока не подключён.">
           Начать тренировку
         </button>
-      </section>
+      </div>
+
+      <img class="reference-ridge"
+           src="./assets/reference-v3/home-ridge.png"
+           width="412" height="86" alt="">
+
+      <nav class="dock" aria-label="Основное меню">
+        <button type="button" aria-current="page" id="home-tab">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m2 11 10-8 10 8h-3v10h-5v-6h-4v6H5V11z" fill="currentColor"/>
+          </svg>
+          Главная
+        </button>
+
+        <button type="button" data-message="Дневник доступен в основном превью.">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="16" rx="2"/>
+            <path d="M7 3v4m10-4v4M3 10h18m-13 4h3m-3 3h6"/>
+          </svg>
+          Дневник
+        </button>
+
+        <button type="button"
+                data-message="Статистика в этом превью не подключена.">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 20v-5m5 5v-8m5 8V8m5 12V4" stroke-width="3"/>
+          </svg>
+          Статистика
+        </button>
+
+        <button type="button" data-message="Профиль в этом превью не подключён.">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="7" r="4"/>
+            <path d="M4 21v-2a8 5 0 0 1 16 0v2z"/>
+          </svg>
+          Профиль
+        </button>
+      </nav>
     </div>
-
-    <img class="reference-ridge"
-         src="./assets/reference-v3/home-ridge.png"
-         width="412" height="86" alt="">
-
-    <nav class="dock" aria-label="Основное меню">
-      <button type="button" aria-current="page" id="home-tab">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="m2 11 10-8 10 8h-3v10h-5v-6h-4v6H5V11z" fill="currentColor"/>
-        </svg>
-        Главная
-      </button>
-
-      <button type="button" data-message="Дневник доступен в основном превью.">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-          <rect x="3" y="5" width="18" height="16" rx="2"/>
-          <path d="M7 3v4m10-4v4M3 10h18m-13 4h3m-3 3h6"/>
-        </svg>
-        Дневник
-      </button>
-
-      <button type="button" data-message="Статистика в этом превью не подключена.">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M5 20v-5m5 5v-8m5 8V8m5 12V4" stroke-width="3"/>
-        </svg>
-        Статистика
-      </button>
-
-      <button type="button" data-message="Профиль в этом превью не подключён.">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="12" cy="7" r="4"/>
-          <path d="M4 21v-2a8 5 0 0 1 16 0v2z"/>
-        </svg>
-        Профиль
-      </button>
-    </nav>
   </main>
 
   <p class="toast" id="toast" role="status" hidden></p>
