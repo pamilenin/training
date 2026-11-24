@@ -21,7 +21,7 @@
     const root = document.documentElement;
     const hide = () => root.classList.remove('show-launch-screen');
 
-    root.classList.add('show-launch-screen');
+    /*root.classList.add('show-launch-screen');*/
 
     // Если PNG не загрузится, не оставляем пользователя на чёрном экране.
     const fallback = window.setTimeout(hide, 8000);
@@ -405,17 +405,6 @@ html.show-launch-screen body {
 .app { outline: 2px solid red; outline-offset: -2px; }
 .dock { background: #a4eea4; }
     */
-    body::after {
-  content: "Низ веб-экрана";
-  position: fixed;
-  inset: auto 0 0;
-  z-index: 9999;
-  background: #ff00ff;
-  color: #000;
-  font: bold 12px/18px system-ui, sans-serif;
-  text-align: center;
-  pointer-events: none;
-}
   </style>
 </head>
 
