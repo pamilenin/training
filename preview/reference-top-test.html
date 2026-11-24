@@ -401,9 +401,21 @@ html.show-launch-screen,
 html.show-launch-screen body {
   background-color: #000;
 }
-    html { background: #ff00ff; }
+ /*   html { background: #ff00ff; }
 .app { outline: 2px solid red; outline-offset: -2px; }
 .dock { background: #a4eea4; }
+    */
+    body::after {
+  content: "Низ веб-экрана";
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 9999;
+  background: #ff00ff;
+  color: #000;
+  font: bold 12px/18px system-ui, sans-serif;
+  text-align: center;
+  pointer-events: none;
+}
   </style>
 </head>
 
