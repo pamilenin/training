@@ -264,15 +264,16 @@
       stroke-linejoin: round;
       flex-shrink: 0;
     }
+
     .settings .icon {
       width: 34px;
       height: 34px;
       color: #255ba8;
       filter:
-    drop-shadow(1px 0 0 #fff)
-    drop-shadow(-1px 0 0 #fff)
-    drop-shadow(0 1px 0 #fff)
-    drop-shadow(0 -1px 0 #fff);
+        drop-shadow(1px 0 0 #fff)
+        drop-shadow(-1px 0 0 #fff)
+        drop-shadow(0 1px 0 #fff)
+        drop-shadow(0 -1px 0 #fff);
     }
 
     .badge .icon {
@@ -296,10 +297,115 @@
       font-size: 14px;
       pointer-events: none;
     }
+
+    /* Заставка поверх страницы: места в раскладке не занимает. */
+    .launch-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      background: #000;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 800ms ease-in-out, visibility 0s linear 800ms;
+    }
+
+    .show-launch-screen .launch-screen {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition: none;
+    }
+
+    .launch-screen__badge {
+      display: grid;
+      place-items: center;
+      width: min(52vw, 210px);
+      aspect-ratio: 1;
+      overflow: hidden;
+      border-radius: 50%;
+      background: #fff;
+      opacity: 0;
+      transition: opacity 650ms ease-in-out;
+    }
+
+    .launch-logo-ready .launch-screen__badge {
+      opacity: 1;
+    }
+
+    .launch-screen__logo {
+      display: block;
+      width: 86%;
+      height: auto;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .launch-screen,
+      .launch-screen__badge {
+        transition: none;
+      }
+    }
   </style>
+
+  <script>
+    (() => {
+      const standalone =
+        window.matchMedia('(display-mode: standalone)').matches ||
+        navigator.standalone === true;
+
+      if (!standalone) return;
+
+      const root = document.documentElement;
+      const hide = () => root.classList.remove('show-launch-screen');
+
+      root.classList.add('show-launch-screen');
+
+      // Не оставляем чёрный экран, если картинка не загрузилась.
+      const fallback = window.setTimeout(hide, 8000);
+
+      document.addEventListener('DOMContentLoaded', async () => {
+        const logo = document.querySelector('.launch-screen__logo');
+
+        try {
+          await logo.decode();
+        } catch {
+          window.clearTimeout(fallback);
+          hide();
+          return;
+        }
+
+        if (!root.classList.contains('show-launch-screen')) return;
+
+        const reducedMotion =
+          window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            if (!root.classList.contains('show-launch-screen')) return;
+
+            window.clearTimeout(fallback);
+            root.classList.add('launch-logo-ready');
+
+            // Пять секунд полностью видимого логотипа, не считая появления.
+            window.setTimeout(hide, 5000 + (reducedMotion ? 0 : 650));
+          });
+        });
+      }, { once: true });
+    })();
+  </script>
 </head>
 
 <body>
+  <div class="launch-screen" aria-hidden="true">
+    <div class="launch-screen__badge">
+      <img class="launch-screen__logo"
+           src="./assets/reference-v3/umc-logo.png"
+           width="900" height="900" alt="">
+    </div>
+  </div>
+
   <main class="app">
     <div class="content">
       <header>
@@ -330,7 +436,8 @@
           </svg>
         </p>
 
-        <div class="progress" role="progressbar" aria-label="Тренировок за неделю"
+        <div class="progress" role="progressbar"
+             aria-label="Тренировок за неделю"
              aria-valuemin="0" aria-valuemax="4" aria-valuenow="3">
           <span></span>
         </div>
