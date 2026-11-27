@@ -196,19 +196,34 @@
   left: -24px;
 }
 
-/* Одинаковый жирный светло-серый текст во всех полях тренировки. */
+/* Подписи и заполненные поля берут цвет из родительского блока. */
+.boulder .session .route-row > span,
+.boulder .session :is(input, select, textarea) {
+  color: inherit;
+}
+
 .boulder .session :is(input, select, textarea) {
   font-family: inherit;
   font-weight: 700;
+}
+
+/* Подсказки в пустых полях. */
+.boulder .session :is(input, textarea)::placeholder {
+  color: #d1d5db;
+  opacity: 1;
+}
+
+/* «Выбрать» в поле «Категория» — тоже подсказка. */
+.boulder .session select[name="grade"]:invalid {
   color: #d1d5db;
 }
 
-/* Подсказки внутри пустых полей — в том же стиле. */
-.boulder .session :is(input, textarea)::placeholder {
-  color: #d1d5db;
-  font-weight: 700;
-  opacity: 1;
+/* Не добавляем рамку или свечение при фокусе. */
+.boulder .session :is(input, select, textarea):focus {
+  outline: none;
+  box-shadow: none;
 }
+
 @media (display-mode: standalone) {
   html,
   body {
