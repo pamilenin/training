@@ -350,6 +350,60 @@
         transition: none;
       }
     }
+    .training-types {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.training-types legend {
+  margin-bottom: 10px;
+  padding: 0;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.training-types__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.training-types label {
+  position: relative;
+  cursor: pointer;
+}
+
+.training-types input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.training-types label span {
+  display: grid;
+  place-items: center;
+  min-height: 56px;
+  padding: 8px;
+  border: 2px solid #b0daf5;
+  border-radius: 14px;
+  background: #f7fcff;
+  font-weight: 750;
+  text-align: center;
+}
+
+.training-types input:checked + span {
+  border-color: #07539b;
+  background: #07539b;
+  color: #fff;
+}
+
+.training-types input:focus-visible + span {
+  outline: 3px solid #0064e8;
+  outline-offset: 3px;
+}
   </style>
 
   <script>
@@ -429,47 +483,29 @@
         <p class="tagline">Двигайся к своим целям!</p>
       </header>
 
-      <section class="goal" aria-labelledby="goal-heading">
-        <h2 id="goal-heading">Текущая цель</h2>
+  <fieldset class="training-types">
+  <legend>Тип тренировки</legend>
 
-        <p class="goal-title">
-          Силовая выносливость
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="m9 5 7 7-7 7"/>
-          </svg>
-        </p>
+  <div class="training-types__grid">
+  <label>
+    <input type="radio" name="training-type" value="Болдер" checked>
+    <span>Болдер</span>
+  </label>
+  <label>
+    <input type="radio" name="training-type" value="Трудность">
+    <span>Трудность</span>
+  </label>
+  <label>
+    <input type="radio" name="training-type" value="Скалы">
+    <span>Скалы</span>
+  </label>
+  <label>
+    <input type="radio" name="training-type" value="ОФП">
+    <span>ОФП</span>
+  </label>
+</div>
+</fieldset>
 
-        <div class="progress" role="progressbar"
-             aria-label="Тренировок за неделю"
-             aria-valuemin="0" aria-valuemax="4" aria-valuenow="3">
-          <span></span>
-        </div>
-
-        <p class="goal-note">3 / 4 тренировок в неделю</p>
-      </section>
-
-      <section class="today" aria-labelledby="today-heading">
-        <h2 id="today-heading">Сегодня</h2>
-
-        <button class="workout" type="button"
-                data-message="Экран «Верх тела» пока не подключён.">
-          <span class="badge">
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M2 10v4m3-7v10m3-12v14m0-7h8m0-7v14m3-12v10m3-7v4"/>
-            </svg>
-          </span>
-
-          <span class="workout-text">
-            <span class="workout-label">Тренировка</span>
-            <strong>Верх тела</strong>
-            <span class="workout-meta">45 мин · 8 упражнений</span>
-          </span>
-
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="m9 5 7 7-7 7"/>
-          </svg>
-        </button>
-      </section>
     </div>
 
     <div class="home-bottom">
@@ -524,7 +560,14 @@
   <script>
     const toast = document.getElementById('toast');
     let toastTimer;
+const startButton = document.querySelector('.start');
 
+startButton.addEventListener('click', () => {
+  const selected = document.querySelector('input[name="training-type"]:checked');
+  startButton.dataset.message =
+    `Выбрано: ${selected.value}. Экран тренировки пока не подключён.`;
+});
+    
     document.querySelectorAll('[data-message]').forEach((button) => {
       button.addEventListener('click', () => {
         clearTimeout(toastTimer);
