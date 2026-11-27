@@ -186,11 +186,14 @@
   text-shadow: 0 1px 3px #082456;
 }
 
-/* Опускаем дату на 8 px и сдвигаем на 12 px влево. */
 .boulder .hero__subtitle {
   position: relative;
-  top: 10px;
-  left: -16px;
+  top: 8px;
+  left: 0;
+}
+
+.boulder .hero__subtitle.is-today {
+  left: -24px;
 }
 
 /* Одинаковый жирный светло-серый текст во всех полях тренировки. */
