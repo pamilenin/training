@@ -350,36 +350,12 @@
         transition: none;
       }
     }
-    .training-types {
-  min-inline-size: 0;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
 
 .training-types legend {
   margin-bottom: 10px;
   padding: 0;
   font-size: 24px;
   font-weight: 800;
-}
-
-.training-types__grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.training-types label {
-  position: relative;
-  cursor: pointer;
-}
-
-.training-types input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
 }
 
 .training-types label span {
@@ -404,6 +380,91 @@
   outline: 3px solid #0064e8;
   outline-offset: 3px;
 }
+    .training-types {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.training-types legend {
+  margin: 0 0 6px;
+  padding: 0;
+  font-size: clamp(22px, 6vw, 28px);
+  font-weight: 850;
+  line-height: 1.12;
+}
+
+.training-types__list {
+  display: grid;
+  gap: 3px;
+}
+
+.training-option {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+.training-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.training-option__row {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding-inline: 8px;
+  border-radius: 10px;
+  font-size: clamp(18px, 5vw, 24px);
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.training-option__badge {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 74px;
+  height: 50px;
+  color: #fff;
+}
+
+.training-option__badge::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("./assets/reference-v3/home-start-brush.png")
+    center / 100% 100% no-repeat;
+  transform: rotate(-7deg);
+}
+
+.training-option__badge svg {
+  position: relative;
+  width: 33px;
+  height: 33px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.training-option input:checked + .training-option__row
+  .training-option__badge::before {
+  filter: brightness(.67) saturate(.85);
+}
+
+.training-option input:focus-visible + .training-option__row {
+  outline: 3px solid #0064e8;
+  outline-offset: 1px;
+}
+    
   </style>
 
   <script>
@@ -486,24 +547,66 @@
   <fieldset class="training-types">
   <legend>Тип тренировки</legend>
 
-  <div class="training-types__grid">
-  <label>
-    <input type="radio" name="training-type" value="Болдер" checked>
-    <span>Болдер</span>
-  </label>
-  <label>
-    <input type="radio" name="training-type" value="Трудность">
-    <span>Трудность</span>
-  </label>
-  <label>
-    <input type="radio" name="training-type" value="Скалы">
-    <span>Скалы</span>
-  </label>
-  <label>
-    <input type="radio" name="training-type" value="ОФП">
-    <span>ОФП</span>
-  </label>
-</div>
+  <div class="training-types__list">
+    <label class="training-option">
+      <input type="radio" name="training-type" value="Болдер" checked>
+      <span class="training-option__row">
+        <span class="training-option__badge" aria-hidden="true">
+          <svg viewBox="0 0 48 48">
+            <path d="m31 5 11 3 2 11-4 9 1 13-10 3 2-10-4-9 4-8z"
+                  fill="currentColor" stroke="none"/>
+            <circle cx="14" cy="13" r="4" fill="currentColor" stroke="none"/>
+            <path d="m13 21 7-3 6-10m-13 13-1 9 9 6 4 8m-12-23 9 7 7-4 5 7"/>
+          </svg>
+        </span>
+        <span>Болдер</span>
+      </span>
+    </label>
+
+    <label class="training-option">
+      <input type="radio" name="training-type" value="Трудность">
+      <span class="training-option__row">
+        <span class="training-option__badge" aria-hidden="true">
+          <svg viewBox="0 0 48 48">
+            <circle cx="21" cy="12" r="4" fill="currentColor" stroke="none"/>
+            <path d="m17 21 9-1 9-11m-18 12-4 13-6 9m9-15 11 1-2 10"/>
+            <path d="M37 5c-1 15-5 28-11 39" stroke-width="2"/>
+          </svg>
+        </span>
+        <span>Трудность</span>
+      </span>
+    </label>
+
+    <label class="training-option">
+      <input type="radio" name="training-type" value="Скалы">
+      <span class="training-option__row">
+        <span class="training-option__badge" aria-hidden="true">
+          <svg viewBox="0 0 48 48">
+            <path d="M2 41 14 22l3 4L26 6l10 17 3-4 8 22h-7l-5-10-3 3-6-15-5 14-4-4-8 12z"
+                  fill="currentColor" stroke="none"/>
+            <path d="m18 41 8-11 6 11z" fill="currentColor" stroke="none"/>
+          </svg>
+        </span>
+        <span>Скалы</span>
+      </span>
+    </label>
+
+    <label class="training-option">
+      <input type="radio" name="training-type" value="ОФП">
+      <span class="training-option__row">
+        <span class="training-option__badge" aria-hidden="true">
+          <svg viewBox="0 0 48 48">
+            <path d="M6 6v11m6-12v13m24-13v13m6-12v11M12 11h24"/>
+            <circle cx="24" cy="24" r="5" fill="currentColor" stroke="none"/>
+            <path d="m12 17 5 11 7 5 7-5 5-11"/>
+            <path d="m16 29 8 4 8-4-2 15H18z"
+                  fill="currentColor" stroke="none"/>
+          </svg>
+        </span>
+        <span>ОФП</span>
+      </span>
+    </label>
+  </div>
 </fieldset>
 
     </div>
