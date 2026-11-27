@@ -47,9 +47,12 @@
       container-type: inline-size;
     }
 
-    .content {
-      padding: 0 18px;
-    }
+.content {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  padding: 0 18px;
+}
 
     .hero {
       position: relative;
@@ -99,25 +102,41 @@
       font-weight: 750;
     }
 
-    .training-types {
-      min-inline-size: 0;
-      margin: 0 0 0 4%;
-      padding: 0;
-      border: 0;
-    }
+.training-types {
+  width: min(100%, 340px);
+  min-inline-size: 0;
+  margin: auto;
+  padding: 0 0 10px;
+  border: 0;
+}
 
-    .training-types legend {
-      margin: 0 0 6px;
-      padding: 0;
-      font-size: clamp(22px, 6vw, 28px);
-      font-weight: 850;
-      line-height: 1.12;
-    }
+.training-types legend {
+  margin-inline: auto;
+  margin-bottom: 10px;
+  padding: 8px 0 0;
+  font-size: clamp(24px, 6.5vw, 32px);
+  font-weight: 850;
+  line-height: 1.12;
+  text-align: center;
+}
 
-    .training-types__list {
-      display: grid;
-      gap: 3px;
-    }
+  .training-types {
+  width: min(100%, 340px);
+  min-inline-size: 0;
+  margin: auto;
+  padding: 0 0 10px;
+  border: 0;
+}
+
+.training-types legend {
+  margin-inline: auto;
+  margin-bottom: 10px;
+  padding: 8px 0 0;
+  font-size: clamp(24px, 6.5vw, 32px);
+  font-weight: 850;
+  line-height: 1.12;
+  text-align: center;
+}
 
     .training-option {
       position: relative;
@@ -132,25 +151,25 @@
       opacity: 0;
     }
 
-    .training-option__row {
-      display: grid;
-      grid-template-columns: 74px minmax(0, 1fr);
-      align-items: center;
-      gap: 12px;
-      min-height: 52px;
-      padding-inline: 8px;
-      border-radius: 10px;
-      font-size: clamp(18px, 5vw, 24px);
-      font-weight: 800;
-      line-height: 1.15;
-    }
+.training-option__row {
+  display: grid;
+  grid-template-columns: var(--badge-width) minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
+  padding-inline: 6px;
+  border-radius: 12px;
+  font-size: clamp(22px, 6vw, 30px);
+  font-weight: 800;
+  line-height: 1.12;
+}
 
-    .training-option__badge {
-      display: block;
-      width: 74px;
-      height: 50px;
-      object-fit: contain;
-    }
+  .training-option__badge {
+  display: block;
+  width: 100%;
+  height: clamp(60px, 17vw, 76px);
+  object-fit: contain;
+}
 
     .training-option input:checked + .training-option__row {
       background: rgb(7 83 155 / 8%);
@@ -377,11 +396,10 @@
           </button>
         </div>
 
-        <p class="tagline">Двигайся к своим целям!</p>
       </header>
 
       <fieldset class="training-types">
-        <legend>Тип тренировки</legend>
+        <legend>Выбери тренировку</legend>
 
         <div class="training-types__list">
           <label class="training-option">
@@ -424,12 +442,7 @@
     </div>
 
     <div class="home-bottom">
-      <div class="home-start-wrap">
-        <button class="start" type="button" id="start-training">
-          Начать тренировку
-        </button>
-      </div>
-
+     
       <img class="reference-ridge"
            src="./assets/reference-v3/home-ridge.png"
            width="412" height="86" alt="">
