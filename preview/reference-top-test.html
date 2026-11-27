@@ -295,6 +295,16 @@
   line-height: 1.2;
   transform: translateY(-8px);
 }
+    .training-option--link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.training-option--link:focus-visible {
+  outline: 3px solid #0064e8;
+  outline-offset: 1px;
+  border-radius: 12px;
+}
   </style>
 
   <script>
@@ -374,15 +384,13 @@
         <legend>Выбери тренировку</legend>
 
         <div class="training-types__list">
-          <label class="training-option">
-            <input type="radio" name="training-type" value="Болдер" checked>
-            <span class="training-option__row">
-              <img class="training-option__badge"
-                   src="./assets/reference-v3/training-boulder.png" alt="">
-              <span>Болдер</span>
-            </span>
-          </label>
-
+         <a class="training-option training-option--link" href="./boulder.html">
+  <span class="training-option__row">
+    <img class="training-option__badge"
+         src="./assets/reference-v3/training-boulder.png" alt="">
+    <span>Болдер</span>
+  </span>
+</a>
           <label class="training-option">
             <input type="radio" name="training-type" value="Трудность">
             <span class="training-option__row">
