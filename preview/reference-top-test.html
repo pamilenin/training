@@ -47,12 +47,12 @@
       container-type: inline-size;
     }
 
-.content {
-  display: flex;
-  flex: 1 0 auto;
-  flex-direction: column;
-  padding: 0 18px;
-}
+    .content {
+      display: flex;
+      flex: 1 0 auto;
+      flex-direction: column;
+      padding: 0 18px;
+    }
 
     .hero {
       position: relative;
@@ -96,47 +96,28 @@
       cursor: pointer;
     }
 
-    .tagline {
-      margin: 0 0 12px 4%;
-      font-size: clamp(17px, 4.8vw, 21px);
-      font-weight: 750;
+    .training-types {
+      width: min(100%, 340px);
+      min-inline-size: 0;
+      margin: auto;
+      padding: 0 0 10px;
+      border: 0;
     }
 
-.training-types {
-  width: min(100%, 340px);
-  min-inline-size: 0;
-  margin: auto;
-  padding: 0 0 10px;
-  border: 0;
-}
+    .training-types legend {
+      margin: 0 auto 10px;
+      padding: 8px 0 0;
+      font-size: clamp(24px, 6.5vw, 32px);
+      font-weight: 850;
+      line-height: 1.12;
+      text-align: center;
+    }
 
-.training-types legend {
-  margin-inline: auto;
-  margin-bottom: 10px;
-  padding: 8px 0 0;
-  font-size: clamp(24px, 6.5vw, 32px);
-  font-weight: 850;
-  line-height: 1.12;
-  text-align: center;
-}
-
-  .training-types {
-  width: min(100%, 340px);
-  min-inline-size: 0;
-  margin: auto;
-  padding: 0 0 10px;
-  border: 0;
-}
-
-.training-types legend {
-  margin-inline: auto;
-  margin-bottom: 10px;
-  padding: 8px 0 0;
-  font-size: clamp(24px, 6.5vw, 32px);
-  font-weight: 850;
-  line-height: 1.12;
-  text-align: center;
-}
+    .training-types__list {
+      --badge-width: clamp(88px, 25vw, 112px);
+      display: grid;
+      gap: 4px;
+    }
 
     .training-option {
       position: relative;
@@ -151,25 +132,25 @@
       opacity: 0;
     }
 
-.training-option__row {
-  display: grid;
-  grid-template-columns: var(--badge-width) minmax(0, 1fr);
-  align-items: center;
-  gap: 12px;
-  min-height: 64px;
-  padding-inline: 6px;
-  border-radius: 12px;
-  font-size: clamp(22px, 6vw, 30px);
-  font-weight: 800;
-  line-height: 1.12;
-}
+    .training-option__row {
+      display: grid;
+      grid-template-columns: var(--badge-width) minmax(0, 1fr);
+      align-items: center;
+      gap: 12px;
+      min-height: 64px;
+      padding-inline: 6px;
+      border-radius: 12px;
+      font-size: clamp(22px, 6vw, 30px);
+      font-weight: 800;
+      line-height: 1.12;
+    }
 
-  .training-option__badge {
-  display: block;
-  width: 100%;
-  height: clamp(60px, 17vw, 76px);
-  object-fit: contain;
-}
+    .training-option__badge {
+      display: block;
+      width: 100%;
+      height: clamp(60px, 17vw, 76px);
+      object-fit: contain;
+    }
 
     .training-option input:checked + .training-option__row {
       background: rgb(7 83 155 / 8%);
@@ -180,28 +161,8 @@
       outline-offset: 1px;
     }
 
-    /* Свободное место остаётся над кнопкой, а не под меню. */
     .home-bottom {
       margin-top: auto;
-    }
-
-    .home-start-wrap {
-      padding: 10px 18px 0;
-    }
-
-    .start {
-      display: block;
-      width: 100%;
-      min-height: 66px;
-      padding: 10px 14px;
-      border: 0;
-      color: #fff;
-      background: url("./assets/reference-v3/home-start-brush.png")
-        center / contain no-repeat;
-      font-size: clamp(17px, 5vw, 22px);
-      font-weight: 750;
-      text-shadow: 0 1px 3px #082456;
-      cursor: pointer;
     }
 
     .reference-ridge {
@@ -381,21 +342,18 @@
 
   <main class="app">
     <div class="content">
-      <header>
-        <div class="hero">
-          <div class="greeting">
-            <h1>Привет,<br>Денис</h1>
-          </div>
-
-          <button class="settings" type="button" aria-label="Настройки"
-                  data-message="Настройки в этом превью не подключены.">
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="m10 3-.6 2.4-2 .9-2.2-1-2 3.4 1.9 1.6v2.4l-1.9 1.6 2 3.4 2.2-1 2 .9L10 20h4l.6-2.4 2-.9 2.2 1 2-3.4-1.9-1.6v-2.4l1.9-1.6-2-3.4-2.2 1-2-.9L14 3z"/>
-              <circle cx="12" cy="11.5" r="2.8"/>
-            </svg>
-          </button>
+      <header class="hero">
+        <div class="greeting">
+          <h1>Привет,<br>Денис</h1>
         </div>
 
+        <button class="settings" type="button" aria-label="Настройки"
+                data-message="Настройки в этом превью не подключены.">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m10 3-.6 2.4-2 .9-2.2-1-2 3.4 1.9 1.6v2.4l-1.9 1.6 2 3.4 2.2-1 2 .9L10 20h4l.6-2.4 2-.9 2.2 1 2-3.4-1.9-1.6v-2.4l1.9-1.6-2-3.4-2.2 1-2-.9L14 3z"/>
+            <circle cx="12" cy="11.5" r="2.8"/>
+          </svg>
+        </button>
       </header>
 
       <fieldset class="training-types">
@@ -442,7 +400,6 @@
     </div>
 
     <div class="home-bottom">
-     
       <img class="reference-ridge"
            src="./assets/reference-v3/home-ridge.png"
            width="412" height="86" alt="">
@@ -503,17 +460,6 @@
       button.addEventListener('click', () => {
         showToast(button.dataset.message);
       });
-    });
-
-    document.getElementById('start-training').addEventListener('click', () => {
-      const selected = document.querySelector('input[name="training-type"]:checked');
-
-      if (!selected) {
-        showToast('Выбери тип тренировки.');
-        return;
-      }
-
-      showToast(`Выбрано: ${selected.value}. Экран тренировки пока не подключён.`);
     });
 
     document.getElementById('home-tab').addEventListener('click', () => {
