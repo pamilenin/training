@@ -189,12 +189,20 @@
 /* Опускаем дату на 8 px и сдвигаем на 12 px влево. */
 .boulder .hero__subtitle {
   position: relative;
-  top: 8px;
-  left: -12px;
+  top: 10px;
+  left: -16px;
 }
 
-/* Жирный текст внутри полей «Результат» и «Попытки». */
-.session select[name="result"],
-.session input[name="attempts"] {
-  font-weight: 750;
+/* Одинаковый жирный светло-серый текст во всех полях тренировки. */
+.boulder .session :is(input, select, textarea) {
+  font-family: inherit;
+  font-weight: 700;
+  color: #d1d5db;
+}
+
+/* Подсказки внутри пустых полей — в том же стиле. */
+.boulder .session :is(input, textarea)::placeholder {
+  color: #d1d5db;
+  font-weight: 700;
+  opacity: 1;
 }
