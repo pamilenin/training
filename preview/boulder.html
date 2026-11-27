@@ -263,6 +263,32 @@
       font-size: 14px;
       pointer-events: none;
     }
+    .session :is(input, select, textarea) {
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.session .session-date {
+  text-align: center;
+}
+
+.session-date::-webkit-date-and-time-value {
+  text-align: center;
+}
+
+.session-date::-webkit-datetime-edit {
+  text-align: center;
+}
+
+.route-row--notes {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.route-row--notes textarea {
+  display: block;
+  width: 100%;
+}
   </style>
 </head>
 
@@ -281,20 +307,18 @@
       </h1>
     </header>
 
-    <form class="session" id="session" novalidate>
-      <fieldset class="route">
-        <legend id="route-title">Трасса 1</legend>
+<form class="session" id="session" novalidate>
+  <div class="session-meta">
+    <input class="session-date" type="date" name="date"
+           aria-label="Дата тренировки" required>
 
-        <div class="session-meta">
-          <input class="session-date" type="date" name="date"
-                 aria-label="Дата тренировки" required>
+    <input class="session-gym" type="text" name="gym"
+           aria-label="Название зала" placeholder="Название зала"
+           maxlength="100">
+  </div>
 
-          <input class="session-gym" type="text" name="gym"
-                 aria-label="Название зала" placeholder="Название зала"
-                 maxlength="100">
-        </div>
-
-        <label class="route-row">
+  <fieldset class="route">
+    <legend id="route-title">Трасса 1</legend>
           <span>Категория</span>
           <select name="grade" required>
             <option value="" disabled selected>Выбери категорию</option>
@@ -315,10 +339,10 @@
         </label>
 
         <label class="route-row">
-          <span>Название / Цвет</span>
-          <input type="text" name="problem" maxlength="100"
-                 placeholder="Синяя № 12" required>
-        </label>
+  <span>Название / Цвет</span>
+  <input type="text" name="problem" maxlength="100"
+         placeholder="Синяя № 12">
+</label>
 
         <label class="route-row">
           <span>Результат</span>
@@ -334,11 +358,10 @@
                  inputmode="numeric" value="1" required>
         </label>
 
-        <label class="route-row route-row--notes">
-          <span>Заметки</span>
-          <textarea name="route-notes" rows="2" maxlength="2000"
-                    placeholder="Что учесть на этой трассе?"></textarea>
-        </label>
+       <div class="route-row route-row--notes">
+  <textarea name="route-notes" rows="2" maxlength="2000"
+            aria-label="Заметки" placeholder="Заметки"></textarea>
+</div>
       </fieldset>
 
       <p class="status" id="status" role="status"></p>
@@ -466,10 +489,6 @@
       }
 
       const name = field('problem').value.trim();
-
-      if (!name) {
-        return showError('Укажи название или цвет трассы.', field('problem'));
-      }
 
       const attempts = field('attempts').valueAsNumber;
 
