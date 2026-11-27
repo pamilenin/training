@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#07539b">
+  <title>Болдер — UMC diary</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #e6f5ff;
+      color: #0c2358;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+
+    main {
+      max-width: 460px;
+      min-height: 100vh;
+      margin-inline: auto;
+      padding: calc(16px + env(safe-area-inset-top, 0px)) 18px
+               calc(20px + env(safe-area-inset-bottom, 0px));
+      background: #eef8fd;
+    }
+
+    .back {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      color: #07539b;
+      font-weight: 750;
+      text-decoration: none;
+    }
+
+    .heading {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 6px 0 18px;
+    }
+
+    .heading img {
+      width: 96px;
+      height: 64px;
+      object-fit: contain;
+    }
+
+    h1, h2, p { margin: 0; }
+    h1 { font-size: 34px; }
+    h2 { margin: 6px 0 12px; font-size: 23px; }
+
+    form, #problems {
+      display: grid;
+      gap: 12px;
+    }
+
+    fieldset {
+      min-width: 0;
+      margin: 0;
+      padding: 12px;
+      border: 1px solid #b0daf5;
+      border-radius: 14px;
+      background: #f7fcff;
+    }
+
+    legend { padding-inline: 5px; font-weight: 800; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    label {
+      display: grid;
+      align-content: start;
+      gap: 5px;
+      font-weight: 650;
+    }
+
+    input, select, textarea, button {
+      width: 100%;
+      min-width: 0;
+      min-height: 44px;
+      border: 1px solid #92c5e5;
+      border-radius: 10px;
+      padding: 8px 10px;
+      background: #fff;
+      color: inherit;
+      font: inherit;
+    }
+
+    textarea { resize: vertical; }
+
+    button {
+      background: #e4f3ff;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    button[type="submit"] {
+      border-color: #07539b;
+      background: #07539b;
+      color: #fff;
+    }
+
+    :focus-visible {
+      outline: 3px solid #0064e8;
+      outline-offset: 2px;
+    }
+
+    #status { font-size: 14px; }
+    #status:empty { display: none; }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back" href="./reference-top-test.html">← На главную</a>
+
+    <header class="heading">
+      <img src="./assets/reference-v3/training-boulder.png" alt="">
+      <h1>Болдер</h1>
+    </header>
+
+    <form id="session">
+      <label>
+        Дата
+        <input type="date" name="date" required>
+      </label>
+
+      <label>
+        Зал
+        <input name="gym" placeholder="Название зала" maxlength="100">
+      </label>
+
+      <section aria-labelledby="problems-title">
+        <h2 id="problems-title">Трассы</h2>
+        <div id="problems"></div>
+      </section>
+
+      <button type="button" id="add-problem">＋ Добавить трассу</button>
+
+      <label>
+        Заметка о тренировке
+        <textarea name="notes" rows="3" maxlength="2000"
+                  placeholder="Что получилось? Над чем поработать?"></textarea>
+      </label>
+
+      <button type="submit">Сохранить тренировку</button>
+      <p id="status" role="status"></p>
+    </form>
+  </main>
+
+  <template id="problem-template">
+    <fieldset>
+      <legend></legend>
+      <div class="grid">
+        <label class="full">
+          Название, номер или цвет
+          <input name="problem" placeholder="Например, синяя № 12" maxlength="100"
+                 required>
+        </label>
+
+        <label>
+          Категория
+          <input name="grade" placeholder="6B+ или V4" maxlength="20">
+        </label>
+
+        <label>
+          Попытки
+          <input name="attempts" type="number" min="1" step="1" value="1" required>
+        </label>
+
+        <label class="full">
+          Результат
+          <select name="result">
+            <option value="project">В работе</option>
+            <option value="sent">Пролез</option>
+          </select>
+        </label>
+
+        <button class="full remove-problem" type="button">Удалить трассу</button>
+      </div>
+    </fieldset>
+  </template>
+
+  <script>
+    const form = document.getElementById('session');
+    const problems = document.getElementById('problems');
+    const template = document.getElementById('problem-template');
+    const status = document.getElementById('status');
+    const storageKey = 'umc-diary:boulder-sessions';
+
+    function setToday() {
+      const now = new Date();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      form.elements.namedItem('date').value = `${now.getFullYear()}-${month}-${day}`;
+    }
+
+    function updateProblemLabels() {
+      const cards = [...problems.children];
+
+      cards.forEach((card, index) => {
+        const number = index + 1;
+        const remove = card.querySelector('.remove-problem');
+
+        card.querySelector('legend').textContent = `Трасса ${number}`;
+        remove.hidden = cards.length === 1;
+        remove.setAttribute('aria-label', `Удалить трассу ${number}`);
+      });
+    }
+
+    function addProblem(focus = false) {
+      const card = template.content.firstElementChild.cloneNode(true);
+
+      card.querySelector('.remove-problem').addEventListener('click', () => {
+        if (problems.children.length <= 1) return;
+
+        card.remove();
+        updateProblemLabels();
+        document.getElementById('add-problem').focus();
+      });
+
+      problems.append(card);
+      updateProblemLabels();
+
+      if (focus) card.querySelector('input').focus();
+    }
+
+    document.getElementById('add-problem').addEventListener('click', () => {
+      addProblem(true);
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const field = (name) => form.elements.namedItem(name).value.trim();
+      const routes = [...problems.children].map((card) => {
+        const value = (name) => card.querySelector(`[name="${name}"]`).value.trim();
+
+        return {
+          name: value('problem'),
+          grade: value('grade'),
+          attempts: Number(value('attempts')),
+          result: value('result')
+        };
+      });
+
+      const emptyName = routes.findIndex((route) => !route.name);
+      if (emptyName !== -1) {
+        status.textContent = 'Укажи название, номер или цвет трассы.';
+        problems.children[emptyName].querySelector('input').focus();
+        return;
+      }
+
+      const session = {
+        type: 'boulder',
+        date: field('date'),
+        gym: field('gym'),
+        notes: field('notes'),
+        routes,
+        savedAt: new Date().toISOString()
+      };
+
+      try {
+        const sessions = JSON.parse(localStorage.getItem(storageKey) ?? '[]');
+        sessions.unshift(session);
+        localStorage.setItem(storageKey, JSON.stringify(sessions));
+      } catch {
+        status.textContent = 'Не удалось сохранить тренировку. Введённые данные остались в форме.';
+        return;
+      }
+
+      form.reset();
+      problems.replaceChildren();
+      setToday();
+      addProblem();
+      status.textContent = 'Тренировка сохранена на этом устройстве.';
+    });
+
+    setToday();
+    addProblem();
+  </script>
+</body>
+</html>
