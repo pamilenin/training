@@ -185,3 +185,16 @@
   font-weight: 800;
   text-shadow: 0 1px 3px #082456;
 }
+
+/* Опускаем дату на 8 px и сдвигаем на 12 px влево. */
+.boulder .hero__subtitle {
+  position: relative;
+  top: 8px;
+  left: -12px;
+}
+
+/* Жирный текст внутри полей «Результат» и «Попытки». */
+.session select[name="result"],
+.session input[name="attempts"] {
+  font-weight: 750;
+}
