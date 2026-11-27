@@ -141,3 +141,7 @@
     transition: none;
   }
 }
+.training-types > legend {
+  position: relative;
+  top: -8px;
+}
