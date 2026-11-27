@@ -27,6 +27,16 @@
 
       if (!standalone) return;
 
+const launchKey = 'umc-diary:launch-shown';
+
+try {
+  if (sessionStorage.getItem(launchKey) === '1') return;
+  sessionStorage.setItem(launchKey, '1');
+} catch {
+  // Если хранилище недоступно, пропускаем заставку.
+  return;
+}
+      
       const root = document.documentElement;
       const hide = () => root.classList.remove('show-launch-screen');
 
