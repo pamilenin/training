@@ -130,8 +130,8 @@
 .session .session-gym:disabled {
   opacity: 1;
   background: #e9f2fa;
-  color: #0c2358;
-  -webkit-text-fill-color: #0c2358;
+  color: inherit;
+  -webkit-text-fill-color: currentColor;
 }
 
 .route-row--notes {
@@ -220,6 +220,7 @@
 
 /* Не добавляем рамку или свечение при фокусе. */
 .boulder .session :is(input, select, textarea):focus {
+  border-color: #368be2;
   outline: none;
   box-shadow: none;
 }
