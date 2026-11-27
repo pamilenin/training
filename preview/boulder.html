@@ -18,12 +18,7 @@
       font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
     }
 
-    button, input, select, textarea {
-      color: inherit;
-      font: inherit;
-    }
-
-    button { cursor: pointer; }
+    button { font: inherit; cursor: pointer; }
 
     :focus-visible {
       outline: 3px solid #0064e8;
@@ -49,10 +44,9 @@
         center top / 100% auto no-repeat;
     }
 
-    .back {
+    .back, .boulder-calendar {
       position: absolute;
-      top: max(28%, calc(env(safe-area-inset-top, 0px) + 4px));
-      left: 7%;
+      top: max(20%, calc(env(safe-area-inset-top, 0px) + 4px));
       display: grid;
       place-items: center;
       width: 44px;
@@ -60,27 +54,78 @@
       border-radius: 50%;
       background: #eef8fd;
       color: #07539b;
+    }
+
+    .back {
+      left: 7%;
       text-decoration: none;
     }
 
-    .hero-title {
-      position: absolute;
-      inset: 48% 9% auto;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin: 0;
-      color: #fff;
-      font-size: clamp(29px, 9vw, 42px);
-      font-weight: 850;
-      line-height: 1;
-      text-shadow: 0 2px 4px #082456, 0 1px 8px #082456;
+    .boulder-calendar { right: 7%; }
+
+    .boulder-calendar:focus-within {
+      outline: 3px solid #0064e8;
+      outline-offset: 3px;
     }
 
-    .hero-title img {
-      display: block;
-      width: clamp(76px, 23vw, 104px);
-      height: auto;
+    .boulder-calendar .icon { pointer-events: none; }
+
+    /* Прозрачное нативное поле даты занимает всю кнопку календаря. */
+    .boulder-calendar__input {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      opacity: 0;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .boulder-calendar__input::-webkit-calendar-picker-indicator {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .boulder-heading {
+      position: absolute;
+      top: max(46%, calc(env(safe-area-inset-top, 0px) + 52px));
+      left: 9%;
+      right: 9%;
+      display: grid;
+      justify-items: start;
+      gap: 3px;
+    }
+
+    .boulder-heading__title {
+      display: grid;
+      place-items: center;
+      width: min(66%, 220px);
+      min-height: clamp(46px, 14vw, 57px);
+      margin: 0;
+      padding: 6px 14px;
+      background: url("./assets/reference-v3/home-start-brush.png")
+        center / 100% 100% no-repeat;
+      color: #fff;
+      font-size: clamp(26px, 7.5vw, 38px);
+      font-weight: 850;
+      line-height: 1;
+      text-shadow: 0 1px 3px #082456;
+    }
+
+    .boulder-heading__date {
+      margin: 0 0 0 10px;
+      color: #0c2358;
+      font-size: clamp(16px, 4.5vw, 22px);
+      font-weight: 800;
+      line-height: 1.2;
     }
 
     .session {
@@ -92,6 +137,12 @@
       max-width: 390px;
       margin-inline: auto;
       padding: 4px 18px 16px;
+    }
+
+    .session-meta {
+      display: grid;
+      justify-items: center;
+      margin: 4px 0 12px;
     }
 
     .route {
@@ -108,14 +159,6 @@
       font-weight: 850;
     }
 
-    .session-meta {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      justify-items: center;
-      gap: 8px;
-      margin: 4px 0 12px;
-    }
-
     .route-row {
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
@@ -124,18 +167,12 @@
       min-height: 61px;
       padding-block: 7px;
       border-bottom: 1px solid #b0daf5;
-      font-weight: 750;
     }
 
-    .route-row--notes {
-      align-items: start;
-    }
+    .route-row > span { font-weight: 750; }
 
-    .route-row--notes > span {
-      padding-top: 9px;
-    }
-
-    input, select, textarea {
+    .session :is(input, select, textarea) {
+      display: block;
       width: 100%;
       min-width: 0;
       min-height: 44px;
@@ -143,29 +180,45 @@
       border: 1px solid #368be2;
       border-radius: 10px;
       background: #f7fcff;
+      color: inherit;
+      font-family: inherit;
       font-size: 16px;
+      font-weight: 400;
     }
 
-    textarea { resize: vertical; }
-
-    .session-date {
-      display: block;
-      width: min(100%, 160px);
-      max-width: 100%;
-      text-align: center;
+    .session :is(input, textarea)::placeholder {
+      color: #526585;
+      font-weight: 750;
+      opacity: 1;
     }
 
-    .session-date::-webkit-date-and-time-value {
-      min-width: 0;
-      text-align: center;
+    .session select:invalid {
+      color: #526585;
+      font-weight: 750;
     }
 
-    .session-gym {
-      display: block;
+    .session select option {
+      color: #0c2358;
+      font-weight: 400;
+    }
+
+    .session .session-gym {
       width: min(100%, 240px);
-      max-width: 100%;
       text-align: center;
     }
+
+    .session .session-gym:disabled {
+      opacity: 1;
+      background: #e9f2fa;
+      color: #0c2358;
+      -webkit-text-fill-color: #0c2358;
+    }
+
+    .route-row--notes {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .route-row--notes textarea { resize: vertical; }
 
     .status {
       margin: 8px 0 0;
@@ -263,32 +316,6 @@
       font-size: 14px;
       pointer-events: none;
     }
-    .session :is(input, select, textarea) {
-  font-family: inherit;
-  font-size: 16px;
-  font-weight: 400;
-}
-
-.session .session-date {
-  text-align: center;
-}
-
-.session-date::-webkit-date-and-time-value {
-  text-align: center;
-}
-
-.session-date::-webkit-datetime-edit {
-  text-align: center;
-}
-
-.route-row--notes {
-  grid-template-columns: minmax(0, 1fr);
-}
-
-.route-row--notes textarea {
-  display: block;
-  width: 100%;
-}
   </style>
 </head>
 
@@ -301,27 +328,39 @@
         </svg>
       </a>
 
-      <h1 class="hero-title">
-        <img src="./assets/reference-v3/training-boulder.png" alt="">
-        <span>Болдер</span>
-      </h1>
+      <div class="boulder-heading">
+        <h1 class="boulder-heading__title">Болдер</h1>
+        <p class="boulder-heading__date" id="training-date-label"
+           aria-live="polite"></p>
+      </div>
+
+      <div class="boulder-calendar">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="16" rx="2"/>
+          <path d="M7 3v4m10-4v4M3 10h18m-13 4h2m4 0h2m-8 3h2m4 0h2"/>
+        </svg>
+
+        <input class="boulder-calendar__input" type="date"
+               id="training-date" name="date" form="session"
+               aria-label="Выбрать дату тренировки"
+               aria-describedby="training-date-label" required>
+      </div>
     </header>
 
-<form class="session" id="session" novalidate>
-  <div class="session-meta">
-    <input class="session-date" type="date" name="date"
-           aria-label="Дата тренировки" required>
+    <form class="session" id="session" novalidate>
+      <div class="session-meta">
+        <input class="session-gym" type="text" name="gym"
+               aria-label="Название зала" placeholder="Название зала"
+               maxlength="100">
+      </div>
 
-    <input class="session-gym" type="text" name="gym"
-           aria-label="Название зала" placeholder="Название зала"
-           maxlength="100">
-  </div>
+      <fieldset class="route">
+        <legend id="route-title" tabindex="-1">Трасса 1</legend>
 
-  <fieldset class="route">
-    <legend id="route-title">Трасса 1</legend>
+        <label class="route-row">
           <span>Категория</span>
           <select name="grade" required>
-            <option value="" disabled selected>Выбери категорию</option>
+            <option value="" disabled selected>Выбрать</option>
             <option value="5C">5C</option>
             <option value="6A">6A</option>
             <option value="6B">6B</option>
@@ -339,10 +378,10 @@
         </label>
 
         <label class="route-row">
-  <span>Название / Цвет</span>
-  <input type="text" name="problem" maxlength="100"
-         placeholder="Синяя № 12">
-</label>
+          <span>Название / Цвет</span>
+          <input type="text" name="problem" maxlength="100"
+                 placeholder="Синяя № 12">
+        </label>
 
         <label class="route-row">
           <span>Результат</span>
@@ -358,10 +397,10 @@
                  inputmode="numeric" value="1" required>
         </label>
 
-       <div class="route-row route-row--notes">
-  <textarea name="route-notes" rows="2" maxlength="2000"
-            aria-label="Заметки" placeholder="Заметки"></textarea>
-</div>
+        <div class="route-row route-row--notes">
+          <textarea name="route-notes" rows="2" maxlength="2000"
+                    aria-label="Заметки" placeholder="Заметки"></textarea>
+        </div>
       </fieldset>
 
       <p class="status" id="status" role="status"></p>
@@ -424,24 +463,67 @@
     const form = document.getElementById('session');
     const routeTitle = document.getElementById('route-title');
     const status = document.getElementById('status');
+    const dateLabel = document.getElementById('training-date-label');
     const customGradeRow = document.getElementById('custom-grade-row');
     const field = (name) => form.elements.namedItem(name);
+
     const date = field('date');
+    const gym = field('gym');
     const grade = field('grade');
     const customGrade = field('custom-grade');
+
     const storageKey = 'umc-diary:boulder-sessions';
     const routes = [];
 
-    function setToday() {
+    // valueAsDate для поля type="date" возвращает дату в UTC.
+    const dateFormatter = new Intl.DateTimeFormat('ru-RU', {
+      day: 'numeric',
+      month: 'long',
+      timeZone: 'UTC'
+    });
+
+    function todayValue() {
       const now = new Date();
       const month = String(now.getMonth() + 1).padStart(2, '0');
       const day = String(now.getDate()).padStart(2, '0');
-      date.value = `${now.getFullYear()}-${month}-${day}`;
+      return `${now.getFullYear()}-${month}-${day}`;
     }
+
+    function updateDateLabel() {
+      const selected = date.valueAsDate;
+
+      if (!selected) {
+        dateLabel.textContent = 'Выбрать дату';
+        return;
+      }
+
+      const formatted = dateFormatter.format(selected);
+      dateLabel.textContent = date.value === todayValue()
+        ? `сегодня, ${formatted}`
+        : formatted;
+    }
+
+    function setToday() {
+      date.value = todayValue();
+      updateDateLabel();
+    }
+
+    date.addEventListener('input', updateDateLabel);
+    date.addEventListener('change', updateDateLabel);
+
+    date.addEventListener('click', (event) => {
+      if (typeof date.showPicker !== 'function') return;
+
+      try {
+        date.showPicker();
+        event.preventDefault();
+      } catch {
+        // Если showPicker недоступен, остаётся нативное действие поля.
+      }
+    });
 
     function syncCustomGrade(focus = false) {
       const show = grade.value === 'custom';
-
       customGradeRow.hidden = !show;
       customGrade.disabled = !show;
       customGrade.required = show;
@@ -481,14 +563,13 @@
         return showError('Выбери категорию трассы.', grade);
       }
 
-      const routeGrade =
-        grade.value === 'custom' ? customGrade.value.trim() : grade.value;
+      const routeGrade = grade.value === 'custom'
+        ? customGrade.value.trim()
+        : grade.value;
 
       if (!routeGrade) {
         return showError('Введи категорию вручную.', customGrade);
       }
-
-      const name = field('problem').value.trim();
 
       const attempts = field('attempts').valueAsNumber;
 
@@ -500,7 +581,7 @@
       }
 
       return {
-        name,
+        name: field('problem').value.trim(),
         grade: routeGrade,
         result: field('result').value,
         attempts,
@@ -517,9 +598,12 @@
       if (!route) return;
 
       routes.push(route);
+      gym.disabled = true;
       resetRoute();
       status.textContent = `Трасса добавлена. Всего трасс: ${routes.length}.`;
-      grade.focus();
+
+      // Фокус на заголовке, а не на выпадающем списке.
+      routeTitle.focus();
     });
 
     document.getElementById('finish').addEventListener('click', () => {
@@ -539,7 +623,7 @@
       const session = {
         type: 'boulder',
         date: date.value,
-        gym: field('gym').value.trim(),
+        gym: gym.value.trim(),
         routes: sessionRoutes,
         savedAt: new Date().toISOString()
       };
@@ -556,6 +640,7 @@
 
       routes.length = 0;
       form.reset();
+      gym.disabled = false;
       setToday();
       resetRoute();
       status.textContent =
