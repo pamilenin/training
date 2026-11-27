@@ -212,7 +212,7 @@
 @media (display-mode: standalone) {
   html,
   body {
-    overflow-x: hidden;
-    overscroll-behavior: none;
+    overflow-x: clip;
+    overscroll-behavior-x: none;
   }
 }
