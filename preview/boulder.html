@@ -187,18 +187,19 @@
     }
 
     function updateDateLabel() {
-      const selected = date.valueAsDate;
+  const selected = date.valueAsDate;
+  const isToday = selected !== null && date.value === todayValue();
 
-      if (!selected) {
-        dateLabel.textContent = 'Выбрать дату';
-        return;
-      }
+  dateLabel.classList.toggle('is-today', isToday);
 
-      const formatted = dateFormatter.format(selected);
-      dateLabel.textContent = date.value === todayValue()
-        ? `сегодня, ${formatted}`
-        : formatted;
-    }
+  if (!selected) {
+    dateLabel.textContent = 'Выбрать дату';
+    return;
+  }
+
+  const formatted = dateFormatter.format(selected);
+  dateLabel.textContent = isToday ? `сегодня, ${formatted}` : formatted;
+}
 
     function setToday() {
       date.value = todayValue();
