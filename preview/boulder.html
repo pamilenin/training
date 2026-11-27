@@ -9,6 +9,7 @@
 
   <style>
     * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
 
     body {
       margin: 0;
@@ -17,254 +18,445 @@
       font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
     }
 
-    main {
-      max-width: 460px;
-      min-height: 100vh;
-      margin-inline: auto;
-      padding: calc(16px + env(safe-area-inset-top, 0px)) 18px
-               calc(20px + env(safe-area-inset-bottom, 0px));
-      background: #eef8fd;
-    }
-
-    .back {
-      display: inline-flex;
-      align-items: center;
-      min-height: 44px;
-      color: #07539b;
-      font-weight: 750;
-      text-decoration: none;
-    }
-
-    .heading {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 6px 0 18px;
-    }
-
-    .heading img {
-      width: 96px;
-      height: 64px;
-      object-fit: contain;
-    }
-
-    h1, h2, p { margin: 0; }
-    h1 { font-size: 34px; }
-    h2 { margin: 6px 0 12px; font-size: 23px; }
-
-    form, #problems {
-      display: grid;
-      gap: 12px;
-    }
-
-    fieldset {
-      min-width: 0;
-      margin: 0;
-      padding: 12px;
-      border: 1px solid #b0daf5;
-      border-radius: 14px;
-      background: #f7fcff;
-    }
-
-    legend { padding-inline: 5px; font-weight: 800; }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .full { grid-column: 1 / -1; }
-
-    label {
-      display: grid;
-      align-content: start;
-      gap: 5px;
-      font-weight: 650;
-    }
-
-    input, select, textarea, button {
-      width: 100%;
-      min-width: 0;
-      min-height: 44px;
-      border: 1px solid #92c5e5;
-      border-radius: 10px;
-      padding: 8px 10px;
-      background: #fff;
+    button, input, select, textarea {
       color: inherit;
       font: inherit;
     }
 
-    textarea { resize: vertical; }
-
-    button {
-      background: #e4f3ff;
-      font-weight: 750;
-      cursor: pointer;
-    }
-
-    button[type="submit"] {
-      border-color: #07539b;
-      background: #07539b;
-      color: #fff;
-    }
+    button, summary { cursor: pointer; }
 
     :focus-visible {
       outline: 3px solid #0064e8;
-      outline-offset: 2px;
+      outline-offset: 3px;
     }
 
-    #status { font-size: 14px; }
-    #status:empty { display: none; }
+    .app {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 460px;
+      min-height: 100vh;
+      min-height: 100lvh;
+      margin-inline: auto;
+      background: #eef8fd;
+    }
+
+    /* Тот же фон и пропорции шапки, что на главной. */
+    .hero {
+      position: relative;
+      flex: none;
+      aspect-ratio: 900 / 500;
+      background: url("./assets/reference-v3/home-hero-ice-final.png")
+        center top / 100% auto no-repeat;
+    }
+
+    .back {
+      position: absolute;
+      top: max(28%, calc(env(safe-area-inset-top, 0px) + 4px));
+      left: 7%;
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #eef8fd;
+      color: #07539b;
+      text-decoration: none;
+    }
+
+    .hero-title {
+      position: absolute;
+      inset: 48% 9% auto 9%;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      color: #fff;
+      font-size: clamp(29px, 9vw, 42px);
+      font-weight: 850;
+      line-height: 1;
+      text-shadow: 0 2px 4px #082456, 0 1px 8px #082456;
+    }
+
+    .hero-title img {
+      display: block;
+      width: clamp(76px, 23vw, 104px);
+      height: auto;
+    }
+
+    .session {
+      display: grid;
+      flex: 1 0 auto;
+      align-content: start;
+      width: 100%;
+      max-width: 390px;
+      margin-inline: auto;
+      padding: 4px 18px 16px;
+    }
+
+    .route {
+      min-width: 0;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    .route legend {
+      margin-bottom: 6px;
+      padding: 0;
+      font-size: clamp(23px, 6vw, 29px);
+      font-weight: 850;
+    }
+
+    .route-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+      align-items: center;
+      gap: 10px;
+      min-height: 61px;
+      padding-block: 7px;
+      border-bottom: 1px solid #b0daf5;
+      font-weight: 750;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      min-width: 0;
+      min-height: 44px;
+      padding: 8px;
+      border: 1px solid #368be2;
+      border-radius: 10px;
+      background: #f7fcff;
+      font-size: 16px;
+    }
+
+    textarea { resize: vertical; }
+
+    .session-details {
+      margin-block: 10px 0;
+    }
+
+    .session-details summary {
+      width: fit-content;
+      padding-block: 10px;
+      color: #07539b;
+      font-weight: 750;
+    }
+
+    .session-details label {
+      display: grid;
+      gap: 5px;
+      margin-block: 4px 10px;
+    }
+
+    .status {
+      margin: 8px 0 0;
+      font-size: 14px;
+    }
+
+    .status:empty { margin: 0; }
+
+    .actions {
+      display: grid;
+      justify-items: center;
+      width: 100%;
+      max-width: 390px;
+      margin-inline: auto;
+      padding: 0 18px;
+    }
+
+    .finish {
+      min-height: 44px;
+      padding: 0 10px;
+      border: 0;
+      background: transparent;
+      color: #07539b;
+      font-weight: 750;
+    }
+
+    .next {
+      width: 100%;
+      min-height: 66px;
+      padding: 10px 14px;
+      border: 0;
+      background: url("./assets/reference-v3/home-start-brush.png")
+        center / contain no-repeat;
+      color: #fff;
+      font-size: clamp(17px, 5vw, 22px);
+      font-weight: 800;
+      text-shadow: 0 1px 3px #082456;
+    }
+
+    /* Горы и нижнее меню — как на главной. */
+    .reference-ridge {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .dock {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      padding: 5px 8px env(safe-area-inset-bottom, 0px);
+      background: #edf8ff;
+    }
+
+    .dock a, .dock button {
+      display: grid;
+      justify-items: center;
+      align-content: center;
+      gap: 3px;
+      min-height: 44px;
+      padding: 4px 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font-size: clamp(11px, 3.2vw, 14px);
+      text-decoration: none;
+    }
+
+    .dock .home-tab {
+      color: #005de8;
+      font-weight: 750;
+    }
+
+    .icon {
+      width: 25px;
+      height: 25px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .toast {
+      position: fixed;
+      z-index: 1;
+      right: 16px;
+      bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+      left: 16px;
+      width: fit-content;
+      max-width: calc(100% - 32px);
+      margin: 0 auto;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: #0c2358;
+      color: #fff;
+      font-size: 14px;
+      pointer-events: none;
+    }
   </style>
 </head>
-<body>
-  <main>
-    <a class="back" href="./reference-top-test.html">← На главную</a>
 
-    <header class="heading">
-      <img src="./assets/reference-v3/training-boulder.png" alt="">
-      <h1>Болдер</h1>
+<body>
+  <main class="app">
+    <header class="hero">
+      <a class="back" href="./reference-top-test.html" aria-label="На главную">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m15 5-7 7 7 7"/>
+        </svg>
+      </a>
+
+      <h1 class="hero-title">
+        <img src="./assets/reference-v3/training-boulder.png" alt="">
+        <span>Болдер</span>
+      </h1>
     </header>
 
-    <form id="session">
-      <label>
-        Дата
-        <input type="date" name="date" required>
-      </label>
+    <form class="session" id="session">
+      <fieldset class="route" id="route">
+        <legend id="route-title">Трасса 1</legend>
 
-      <label>
-        Зал
-        <input name="gym" placeholder="Название зала" maxlength="100">
-      </label>
-
-      <section aria-labelledby="problems-title">
-        <h2 id="problems-title">Трассы</h2>
-        <div id="problems"></div>
-      </section>
-
-      <button type="button" id="add-problem">＋ Добавить трассу</button>
-
-      <label>
-        Заметка о тренировке
-        <textarea name="notes" rows="3" maxlength="2000"
-                  placeholder="Что получилось? Над чем поработать?"></textarea>
-      </label>
-
-      <button type="submit">Сохранить тренировку</button>
-      <p id="status" role="status"></p>
-    </form>
-  </main>
-
-  <template id="problem-template">
-    <fieldset>
-      <legend></legend>
-      <div class="grid">
-        <label class="full">
-          Название, номер или цвет
-          <input name="problem" placeholder="Например, синяя № 12" maxlength="100"
-                 required>
+        <label class="route-row">
+          Название или цвет
+          <input name="problem" maxlength="100" placeholder="Синяя № 12">
         </label>
 
-        <label>
+        <label class="route-row">
           Категория
-          <input name="grade" placeholder="6B+ или V4" maxlength="20">
+          <input name="grade" maxlength="20" placeholder="6B+">
         </label>
 
-        <label>
+        <label class="route-row">
           Попытки
-          <input name="attempts" type="number" min="1" step="1" value="1" required>
+          <input name="attempts" type="number" min="1" step="1"
+                 inputmode="numeric" value="1">
         </label>
 
-        <label class="full">
+        <label class="route-row">
           Результат
           <select name="result">
             <option value="project">В работе</option>
             <option value="sent">Пролез</option>
           </select>
         </label>
+      </fieldset>
 
-        <button class="full remove-problem" type="button">Удалить трассу</button>
+      <details class="session-details" id="details">
+        <summary>Детали тренировки</summary>
+
+        <label>
+          Дата
+          <input type="date" name="date" required>
+        </label>
+
+        <label>
+          Зал
+          <input name="gym" maxlength="100" placeholder="Название зала">
+        </label>
+
+        <label>
+          Заметка
+          <textarea name="notes" rows="2" maxlength="2000"></textarea>
+        </label>
+      </details>
+
+      <p class="status" id="status" role="status"></p>
+    </form>
+
+    <footer>
+      <div class="actions">
+        <button class="finish" id="finish" type="button">
+          Завершить и сохранить
+        </button>
+        <button class="next" type="submit" form="session">
+          Следующая трасса
+        </button>
       </div>
-    </fieldset>
-  </template>
+
+      <img class="reference-ridge"
+           src="./assets/reference-v3/home-ridge.png"
+           width="412" height="86" alt="">
+
+      <nav class="dock" aria-label="Основное меню">
+        <a class="home-tab" href="./reference-top-test.html">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m2 11 10-8 10 8h-3v10h-5v-6h-4v6H5V11z"
+                  fill="currentColor"/>
+          </svg>
+          Главная
+        </a>
+
+        <button type="button" data-message="Дневник доступен в основном превью.">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="16" rx="2"/>
+            <path d="M7 3v4m10-4v4M3 10h18m-13 4h3m-3 3h6"/>
+          </svg>
+          Дневник
+        </button>
+
+        <button type="button"
+                data-message="Статистика в этом превью не подключена.">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 20v-5m5 5v-8m5 8V8m5 12V4" stroke-width="3"/>
+          </svg>
+          Статистика
+        </button>
+
+        <button type="button" data-message="Профиль в этом превью не подключён.">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="7" r="4"/>
+            <path d="M4 21v-2a8 5 0 0 1 16 0v2z"/>
+          </svg>
+          Профиль
+        </button>
+      </nav>
+    </footer>
+  </main>
+
+  <p class="toast" id="toast" role="status" hidden></p>
 
   <script>
     const form = document.getElementById('session');
-    const problems = document.getElementById('problems');
-    const template = document.getElementById('problem-template');
+    const routeTitle = document.getElementById('route-title');
+    const details = document.getElementById('details');
     const status = document.getElementById('status');
+    const field = (name) => form.elements.namedItem(name);
     const storageKey = 'umc-diary:boulder-sessions';
+    const routes = [];
 
     function setToday() {
       const now = new Date();
       const month = String(now.getMonth() + 1).padStart(2, '0');
       const day = String(now.getDate()).padStart(2, '0');
-      form.elements.namedItem('date').value = `${now.getFullYear()}-${month}-${day}`;
+      field('date').value = `${now.getFullYear()}-${month}-${day}`;
     }
 
-    function updateProblemLabels() {
-      const cards = [...problems.children];
-
-      cards.forEach((card, index) => {
-        const number = index + 1;
-        const remove = card.querySelector('.remove-problem');
-
-        card.querySelector('legend').textContent = `Трасса ${number}`;
-        remove.hidden = cards.length === 1;
-        remove.setAttribute('aria-label', `Удалить трассу ${number}`);
-      });
+    function resetRoute() {
+      field('problem').value = '';
+      field('grade').value = '';
+      field('attempts').value = '1';
+      field('result').value = 'project';
+      routeTitle.textContent = `Трасса ${routes.length + 1}`;
     }
 
-    function addProblem(focus = false) {
-      const card = template.content.firstElementChild.cloneNode(true);
-
-      card.querySelector('.remove-problem').addEventListener('click', () => {
-        if (problems.children.length <= 1) return;
-
-        card.remove();
-        updateProblemLabels();
-        document.getElementById('add-problem').focus();
-      });
-
-      problems.append(card);
-      updateProblemLabels();
-
-      if (focus) card.querySelector('input').focus();
+    function routeHasInput() {
+      return Boolean(
+        field('problem').value.trim() ||
+        field('grade').value.trim() ||
+        field('attempts').value !== '1' ||
+        field('result').value !== 'project'
+      );
     }
 
-    document.getElementById('add-problem').addEventListener('click', () => {
-      addProblem(true);
-    });
+    function readRoute() {
+      const name = field('problem').value.trim();
+
+      if (!name) {
+        status.textContent = 'Укажи название, номер или цвет трассы.';
+        field('problem').focus();
+        return null;
+      }
+
+      const attempts = field('attempts').valueAsNumber;
+
+      if (!Number.isInteger(attempts) || attempts < 1) {
+        status.textContent = 'Укажи число попыток: 1 или больше.';
+        field('attempts').focus();
+        return null;
+      }
+
+      return {
+        name,
+        grade: field('grade').value.trim(),
+        attempts,
+        result: field('result').value
+      };
+    }
+
+    form.addEventListener('invalid', (event) => {
+      if (details.contains(event.target)) details.open = true;
+    }, true);
 
     form.addEventListener('submit', (event) => {
       event.preventDefault();
+      const route = readRoute();
+      if (!route) return;
 
-      const field = (name) => form.elements.namedItem(name).value.trim();
-      const routes = [...problems.children].map((card) => {
-        const value = (name) => card.querySelector(`[name="${name}"]`).value.trim();
+      routes.push(route);
+      resetRoute();
+      status.textContent = `Трасса записана. Заполнено трасс: ${routes.length}.`;
+      field('problem').focus();
+    });
 
-        return {
-          name: value('problem'),
-          grade: value('grade'),
-          attempts: Number(value('attempts')),
-          result: value('result')
-        };
-      });
+    document.getElementById('finish').addEventListener('click', () => {
+      if (!form.reportValidity()) return;
 
-      const emptyName = routes.findIndex((route) => !route.name);
-      if (emptyName !== -1) {
-        status.textContent = 'Укажи название, номер или цвет трассы.';
-        problems.children[emptyName].querySelector('input').focus();
-        return;
+      const sessionRoutes = [...routes];
+
+      if (routeHasInput() || sessionRoutes.length === 0) {
+        const current = readRoute();
+        if (!current) return;
+        sessionRoutes.push(current);
       }
 
       const session = {
         type: 'boulder',
-        date: field('date'),
-        gym: field('gym'),
-        notes: field('notes'),
-        routes,
+        date: field('date').value,
+        gym: field('gym').value.trim(),
+        notes: field('notes').value.trim(),
+        routes: sessionRoutes,
         savedAt: new Date().toISOString()
       };
 
@@ -273,19 +465,31 @@
         sessions.unshift(session);
         localStorage.setItem(storageKey, JSON.stringify(sessions));
       } catch {
-        status.textContent = 'Не удалось сохранить тренировку. Введённые данные остались в форме.';
+        status.textContent = 'Не удалось сохранить тренировку. Данные остались на странице.';
         return;
       }
 
+      routes.length = 0;
       form.reset();
-      problems.replaceChildren();
       setToday();
-      addProblem();
-      status.textContent = 'Тренировка сохранена на этом устройстве.';
+      resetRoute();
+      details.open = false;
+      status.textContent = `Тренировка сохранена на этом устройстве. Трасс: ${sessionRoutes.length}.`;
+    });
+
+    const toast = document.getElementById('toast');
+    let toastTimer;
+
+    document.querySelectorAll('.dock [data-message]').forEach((button) => {
+      button.addEventListener('click', () => {
+        clearTimeout(toastTimer);
+        toast.textContent = button.dataset.message;
+        toast.hidden = false;
+        toastTimer = setTimeout(() => { toast.hidden = true; }, 2500);
+      });
     });
 
     setToday();
-    addProblem();
   </script>
 </body>
 </html>
