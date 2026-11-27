@@ -9,303 +9,15 @@
   <meta name="apple-mobile-web-app-status-bar-style"
         content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="UMC diary">
+
+  <title>UMC diary</title>
+
   <link rel="apple-touch-icon" sizes="180x180"
         href="./assets/reference-v3/home-icon.png">
-  <title>UMC diary</title>
-<link rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap">
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      background: #e6f5ff;
-      color: #0c2358;
-      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-    }
-
-    button {
-      font: inherit;
-      color: inherit;
-    }
-
-    button:focus-visible {
-      outline: 3px solid #0064e8;
-      outline-offset: 3px;
-    }
-
-    .app {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      max-width: 460px;
-      min-height: 100vh;
-      min-height: 100lvh;
-      margin-inline: auto;
-      background: #eef8fd;
-      container-type: inline-size;
-    }
-
-    .content {
-      display: flex;
-      flex: 1 0 auto;
-      flex-direction: column;
-      padding: 0 18px;
-    }
-
-    .hero {
-      position: relative;
-      width: calc(100% + 36px);
-      margin-inline: -18px;
-      aspect-ratio: 900 / 500;
-      background: url("./assets/reference-v3/home-hero-ice-final.png")
-        center top / 100% auto no-repeat;
-    }
-
-    .greeting {
-      position: absolute;
-      top: 49%;
-      left: 12%;
-    }
-
-    .greeting h1 {
-      margin: 0;
-      color: #fff;
-      font-size: clamp(30px, 10vw, 50px);
-      font-size: 11cqw;
-      font-style: italic;
-      font-weight: 850;
-      line-height: .96;
-      letter-spacing: -.045em;
-      transform: rotate(-13deg);
-      transform-origin: left center;
-    }
-
-    .settings {
-      position: absolute;
-      top: max(28%, calc(env(safe-area-inset-top, 0px) + 4px));
-      right: calc(12.5% - 21px);
-      display: grid;
-      place-items: center;
-      width: 44px;
-      height: 44px;
-      padding: 0;
-      border: 0;
-      background: transparent;
-      cursor: pointer;
-    }
-
-    .training-types {
-      width: min(100%, 340px);
-      min-inline-size: 0;
-      margin: auto;
-      padding: 0 0 10px;
-      border: 0;
-    }
-
-    .training-types legend {
-      margin: 0 auto 10px;
-      padding: 8px 0 0;
-      font-size: clamp(24px, 6.5vw, 32px);
-      font-weight: 850;
-      line-height: 1.12;
-      text-align: center;
-      transform: translateY(-10px);
-    }
-
-    .training-types__list {
-      --badge-width: clamp(88px, 25vw, 112px);
-      display: grid;
-      gap: 12px;
-    }
-
-    .training-option {
-      position: relative;
-      display: block;
-      cursor: pointer;
-    }
-
-    .training-option input {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      opacity: 0;
-    }
-
-    .training-option__row {
-      display: grid;
-      grid-template-columns: var(--badge-width) minmax(0, 1fr);
-      align-items: center;
-      gap: 12px;
-      min-height: 64px;
-      padding-inline: 6px;
-      border-radius: 12px;
-      font-size: clamp(22px, 6vw, 30px);
-      font-weight: 800;
-      line-height: 1.12;
-    }
-
-    .training-option__badge {
-      display: block;
-      width: 100%;
-      height: clamp(60px, 17vw, 76px);
-      object-fit: contain;
-    }
-
-    .training-option input:checked + .training-option__row {
-      background: rgb(7 83 155 / 8%);
-    }
-
-    .training-option input:focus-visible + .training-option__row {
-      outline: 3px solid #0064e8;
-      outline-offset: 1px;
-    }
-
-    .home-bottom {
-      margin-top: auto;
-    }
-
-    .reference-ridge {
-      display: block;
-      width: 100%;
-      height: auto;
-    }
-
-    .dock {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      padding: 5px 8px env(safe-area-inset-bottom, 0px);
-      background: #edf8ff;
-    }
-
-    .dock button {
-      display: grid;
-      justify-items: center;
-      align-content: center;
-      gap: 3px;
-      min-height: 44px;
-      padding: 4px 0;
-      border: 0;
-      background: transparent;
-      font-size: clamp(11px, 3.2vw, 14px);
-      cursor: pointer;
-    }
-
-    .dock [aria-current="page"] {
-      color: #005de8;
-      font-weight: 750;
-    }
-
-    .icon {
-      width: 25px;
-      height: 25px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      flex-shrink: 0;
-    }
-
-    .settings .icon {
-      width: 34px;
-      height: 34px;
-      color: #255ba8;
-      filter:
-        drop-shadow(1px 0 0 #fff)
-        drop-shadow(-1px 0 0 #fff)
-        drop-shadow(0 1px 0 #fff)
-        drop-shadow(0 -1px 0 #fff);
-    }
-
-    .toast {
-      position: fixed;
-      z-index: 1;
-      right: 16px;
-      bottom: calc(18px + env(safe-area-inset-bottom, 0px));
-      left: 16px;
-      width: fit-content;
-      max-width: calc(100% - 32px);
-      margin: 0 auto;
-      padding: 10px 14px;
-      border-radius: 10px;
-      background: #0c2358;
-      color: #fff;
-      font-size: 14px;
-      pointer-events: none;
-    }
-
-    .launch-screen {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      display: grid;
-      place-items: center;
-      background: #000;
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transition: opacity 800ms ease-in-out, visibility 0s linear 800ms;
-    }
-
-    .show-launch-screen .launch-screen {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-      transition: none;
-    }
-
-    .launch-screen__badge {
-      display: grid;
-      place-items: center;
-      width: min(52vw, 210px);
-      aspect-ratio: 1;
-      overflow: hidden;
-      border-radius: 50%;
-      background: #fff;
-      opacity: 0;
-      transition: opacity 650ms ease-in-out;
-    }
-
-    .launch-logo-ready .launch-screen__badge {
-      opacity: 1;
-    }
-
-    .launch-screen__logo {
-      display: block;
-      width: 86%;
-      height: auto;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .launch-screen,
-      .launch-screen__badge {
-        transition: none;
-      }
-    }
-.home-motto {
-  margin: 8px 0 16px;
-  text-align: right;
-  text-transform: uppercase;
-  font-family: "Caveat", cursive;
-  font-size: clamp(22px, 6vw, 28px);
-  font-weight: 700;
-  line-height: 1.2;
-  transform: translateY(-8px);
-}
-    .training-option--link {
-  color: inherit;
-  text-decoration: none;
-}
-
-.training-option--link:focus-visible {
-  outline: 3px solid #0064e8;
-  outline-offset: 1px;
-  border-radius: 12px;
-}
-  </style>
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap">
+  <link rel="stylesheet" href="./css/common.css">
+  <link rel="stylesheet" href="./css/home.css">
 
   <script>
     (() => {
@@ -363,34 +75,37 @@
   </div>
 
   <main class="app">
-    <div class="content">
-      <header class="hero">
-        <div class="greeting">
-          <h1>Привет,<br>Денис</h1>
-        </div>
+    <header class="hero">
+      <h1 class="hero__heading">
+        <span class="hero__title">Привет,</span>
+        <span class="hero__subtitle">Денис</span>
+      </h1>
 
-        <button class="settings" type="button" aria-label="Настройки"
-                data-message="Настройки в этом превью не подключены.">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="m10 3-.6 2.4-2 .9-2.2-1-2 3.4 1.9 1.6v2.4l-1.9 1.6 2 3.4 2.2-1 2 .9L10 20h4l.6-2.4 2-.9 2.2 1 2-3.4-1.9-1.6v-2.4l1.9-1.6-2-3.4-2.2 1-2-.9L14 3z"/>
-            <circle cx="12" cy="11.5" r="2.8"/>
-          </svg>
-        </button>
-      </header>
+      <button class="hero__action" type="button" aria-label="Настройки"
+              data-message="Настройки в этом превью не подключены.">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m10 3-.6 2.4-2 .9-2.2-1-2 3.4 1.9 1.6v2.4l-1.9 1.6 2 3.4 2.2-1 2 .9L10 20h4l.6-2.4 2-.9 2.2 1 2-3.4-1.9-1.6v-2.4l1.9-1.6-2-3.4-2.2 1-2-.9L14 3z"/>
+          <circle cx="12" cy="11.5" r="2.8"/>
+        </svg>
+      </button>
+    </header>
 
+    <div class="home-content">
       <p class="home-motto">я иду к своей мечте</p>
-      
+
       <fieldset class="training-types">
         <legend>Выбери тренировку</legend>
 
         <div class="training-types__list">
-         <a class="training-option training-option--link" href="./boulder.html">
-  <span class="training-option__row">
-    <img class="training-option__badge"
-         src="./assets/reference-v3/training-boulder.png" alt="">
-    <span>Болдер</span>
-  </span>
-</a>
+          <a class="training-option training-option--link"
+             href="./boulder.html">
+            <span class="training-option__row">
+              <img class="training-option__badge"
+                   src="./assets/reference-v3/training-boulder.png" alt="">
+              <span>Болдер</span>
+            </span>
+          </a>
+
           <label class="training-option">
             <input type="radio" name="training-type" value="Трудность">
             <span class="training-option__row">
@@ -421,7 +136,7 @@
       </fieldset>
     </div>
 
-    <div class="home-bottom">
+    <footer class="home-bottom">
       <img class="reference-ridge"
            src="./assets/reference-v3/home-ridge.png"
            width="412" height="86" alt="">
@@ -459,7 +174,7 @@
           Профиль
         </button>
       </nav>
-    </div>
+    </footer>
   </main>
 
   <p class="toast" id="toast" role="status" hidden></p>

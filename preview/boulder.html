@@ -5,336 +5,30 @@
   <meta name="viewport"
         content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#07539b">
+
   <title>Болдер — UMC diary</title>
 
-  <style>
-    * { box-sizing: border-box; }
-    [hidden] { display: none !important; }
-
-    body {
-      margin: 0;
-      background: #e6f5ff;
-      color: #0c2358;
-      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-    }
-
-    button { font: inherit; cursor: pointer; }
-
-    :focus-visible {
-      outline: 3px solid #0064e8;
-      outline-offset: 3px;
-    }
-
-    .app {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      max-width: 460px;
-      min-height: 100vh;
-      min-height: 100lvh;
-      margin-inline: auto;
-      background: #eef8fd;
-    }
-
-    .hero {
-      position: relative;
-      flex: none;
-      aspect-ratio: 900 / 500;
-      background: url("./assets/reference-v3/home-hero-ice-final.png")
-        center top / 100% auto no-repeat;
-    }
-
-    .back, .boulder-calendar {
-      position: absolute;
-      top: max(20%, calc(env(safe-area-inset-top, 0px) + 4px));
-      display: grid;
-      place-items: center;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: #eef8fd;
-      color: #07539b;
-    }
-
-    .back {
-      left: 7%;
-      text-decoration: none;
-    }
-
-    .boulder-calendar { right: 7%; }
-
-    .boulder-calendar:focus-within {
-      outline: 3px solid #0064e8;
-      outline-offset: 3px;
-    }
-
-    .boulder-calendar .icon { pointer-events: none; }
-
-    /* Прозрачное нативное поле даты занимает всю кнопку календаря. */
-    .boulder-calendar__input {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      border: 0;
-      opacity: 0;
-      font: inherit;
-      cursor: pointer;
-    }
-
-    .boulder-calendar__input::-webkit-calendar-picker-indicator {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      cursor: pointer;
-    }
-
-    .boulder-heading {
-      position: absolute;
-      top: max(46%, calc(env(safe-area-inset-top, 0px) + 52px));
-      left: 9%;
-      right: 9%;
-      display: grid;
-      justify-items: start;
-      gap: 3px;
-    }
-
-    .boulder-heading__title {
-      display: grid;
-      place-items: center;
-      width: min(66%, 220px);
-      min-height: clamp(46px, 14vw, 57px);
-      margin: 0;
-      padding: 6px 14px;
-      background: url("./assets/reference-v3/home-start-brush.png")
-        center / 100% 100% no-repeat;
-      color: #fff;
-      font-size: clamp(26px, 7.5vw, 38px);
-      font-weight: 850;
-      line-height: 1;
-      text-shadow: 0 1px 3px #082456;
-    }
-
-    .boulder-heading__date {
-      margin: 0 0 0 10px;
-      color: #0c2358;
-      font-size: clamp(16px, 4.5vw, 22px);
-      font-weight: 800;
-      line-height: 1.2;
-    }
-
-    .session {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      flex: 1 0 auto;
-      align-content: start;
-      width: 100%;
-      max-width: 390px;
-      margin-inline: auto;
-      padding: 4px 18px 16px;
-    }
-
-    .session-meta {
-      display: grid;
-      justify-items: center;
-      margin: 4px 0 12px;
-    }
-
-    .route {
-      min-inline-size: 0;
-      margin: 0;
-      padding: 0;
-      border: 0;
-    }
-
-    .route legend {
-      margin-bottom: 6px;
-      padding: 0;
-      font-size: clamp(23px, 6vw, 29px);
-      font-weight: 850;
-    }
-
-    .route-row {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
-      align-items: center;
-      gap: 10px;
-      min-height: 61px;
-      padding-block: 7px;
-      border-bottom: 1px solid #b0daf5;
-    }
-
-    .route-row > span { font-weight: 750; }
-
-    .session :is(input, select, textarea) {
-      display: block;
-      width: 100%;
-      min-width: 0;
-      min-height: 44px;
-      padding: 8px;
-      border: 1px solid #368be2;
-      border-radius: 10px;
-      background: #f7fcff;
-      color: inherit;
-      font-family: inherit;
-      font-size: 16px;
-      font-weight: 400;
-    }
-
-    .session :is(input, textarea)::placeholder {
-      color: #526585;
-      font-weight: 750;
-      opacity: 1;
-    }
-
-    .session select:invalid {
-      color: #526585;
-      font-weight: 750;
-    }
-
-    .session select option {
-      color: #0c2358;
-      font-weight: 400;
-    }
-
-    .session .session-gym {
-      width: min(100%, 240px);
-      text-align: center;
-    }
-
-    .session .session-gym:disabled {
-      opacity: 1;
-      background: #e9f2fa;
-      color: #0c2358;
-      -webkit-text-fill-color: #0c2358;
-    }
-
-    .route-row--notes {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
-    .route-row--notes textarea { resize: vertical; }
-
-    .status {
-      margin: 8px 0 0;
-      font-size: 14px;
-    }
-
-    .status:empty { margin: 0; }
-
-    .actions {
-      display: grid;
-      justify-items: center;
-      width: 100%;
-      max-width: 390px;
-      margin-inline: auto;
-      padding: 0 18px;
-    }
-
-    .finish {
-      min-height: 44px;
-      padding: 0 10px;
-      border: 0;
-      background: transparent;
-      color: #07539b;
-      font-weight: 750;
-    }
-
-    .next {
-      width: 100%;
-      min-height: 66px;
-      padding: 10px 14px;
-      border: 0;
-      background: url("./assets/reference-v3/home-start-brush.png")
-        center / contain no-repeat;
-      color: #fff;
-      font-size: clamp(17px, 5vw, 22px);
-      font-weight: 800;
-      text-shadow: 0 1px 3px #082456;
-    }
-
-    .reference-ridge {
-      display: block;
-      width: 100%;
-      height: auto;
-    }
-
-    .dock {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      padding: 5px 8px env(safe-area-inset-bottom, 0px);
-      background: #edf8ff;
-    }
-
-    .dock a, .dock button {
-      display: grid;
-      justify-items: center;
-      align-content: center;
-      gap: 3px;
-      min-height: 44px;
-      padding: 4px 0;
-      border: 0;
-      background: transparent;
-      color: inherit;
-      font-size: clamp(11px, 3.2vw, 14px);
-      text-decoration: none;
-    }
-
-    .dock .home-tab {
-      color: #005de8;
-      font-weight: 750;
-    }
-
-    .icon {
-      width: 25px;
-      height: 25px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .toast {
-      position: fixed;
-      z-index: 1;
-      right: 16px;
-      bottom: calc(18px + env(safe-area-inset-bottom, 0px));
-      left: 16px;
-      width: fit-content;
-      max-width: calc(100% - 32px);
-      margin: 0 auto;
-      padding: 10px 14px;
-      border-radius: 10px;
-      background: #0c2358;
-      color: #fff;
-      font-size: 14px;
-      pointer-events: none;
-    }
-  </style>
+  <link rel="stylesheet" href="./css/common.css">
+  <link rel="stylesheet" href="./css/boulder.css">
 </head>
 
 <body>
-  <main class="app">
+  <main class="app boulder">
     <header class="hero">
-      <a class="back" href="./reference-top-test.html" aria-label="На главную">
+      <a class="hero__action hero__back"
+         href="./reference-top-test.html" aria-label="На главную">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
           <path d="m15 5-7 7 7 7"/>
         </svg>
       </a>
 
-      <div class="boulder-heading">
-        <h1 class="boulder-heading__title">Болдер</h1>
-        <p class="boulder-heading__date" id="training-date-label"
-           aria-live="polite"></p>
-      </div>
+      <h1 class="hero__heading">
+        <span class="hero__title">Болдер</span>
+        <span class="hero__subtitle" id="training-date-label"
+              aria-live="polite"></span>
+      </h1>
 
-      <div class="boulder-calendar">
+      <div class="hero__action boulder-calendar">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
           <rect x="3" y="5" width="18" height="16" rx="2"/>
           <path d="M7 3v4m10-4v4M3 10h18m-13 4h2m4 0h2m-8 3h2m4 0h2"/>
@@ -379,8 +73,8 @@
 
         <label class="route-row">
           <span>Название / Цвет</span>
-          <input type="text" name="problem" maxlength="100"
-                 placeholder="Синяя № 12">
+          <input type="text" name="problem" placeholder="Синяя № 12"
+                 maxlength="100">
         </label>
 
         <label class="route-row">
@@ -393,7 +87,7 @@
 
         <label class="route-row">
           <span>Попытки</span>
-          <input name="attempts" type="number" min="1" step="1"
+          <input type="number" name="attempts" min="1" step="1"
                  inputmode="numeric" value="1" required>
         </label>
 
@@ -421,7 +115,7 @@
            width="412" height="86" alt="">
 
       <nav class="dock" aria-label="Основное меню">
-        <a class="home-tab" href="./reference-top-test.html">
+        <a class="dock__active" href="./reference-top-test.html">
           <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
             <path d="m2 11 10-8 10 8h-3v10h-5v-6h-4v6H5V11z"
                   fill="currentColor"/>
@@ -445,8 +139,7 @@
           Статистика
         </button>
 
-        <button type="button"
-                data-message="Профиль в этом превью не подключён.">
+        <button type="button" data-message="Профиль в этом превью не подключён.">
           <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="12" cy="7" r="4"/>
             <path d="M4 21v-2a8 5 0 0 1 16 0v2z"/>
@@ -462,7 +155,7 @@
   <script>
     const form = document.getElementById('session');
     const routeTitle = document.getElementById('route-title');
-    const status = document.getElementById('status');
+    const statusMessage = document.getElementById('status');
     const dateLabel = document.getElementById('training-date-label');
     const customGradeRow = document.getElementById('custom-grade-row');
     const field = (name) => form.elements.namedItem(name);
@@ -471,11 +164,15 @@
     const gym = field('gym');
     const grade = field('grade');
     const customGrade = field('custom-grade');
+    const problem = field('problem');
+    const result = field('result');
+    const attempts = field('attempts');
+    const notes = field('route-notes');
 
     const storageKey = 'umc-diary:boulder-sessions';
     const routes = [];
 
-    // valueAsDate для поля type="date" возвращает дату в UTC.
+    // valueAsDate возвращает календарную дату в UTC.
     const dateFormatter = new Intl.DateTimeFormat('ru-RU', {
       day: 'numeric',
       month: 'long',
@@ -511,49 +208,48 @@
     date.addEventListener('input', updateDateLabel);
     date.addEventListener('change', updateDateLabel);
 
-    date.addEventListener('click', (event) => {
+    date.addEventListener('click', () => {
       if (typeof date.showPicker !== 'function') return;
 
       try {
         date.showPicker();
-        event.preventDefault();
       } catch {
-        // Если showPicker недоступен, остаётся нативное действие поля.
+        // Не отменяем стандартное действие нативного поля.
       }
     });
 
-    function syncCustomGrade(focus = false) {
+    function syncCustomGrade(moveFocus = false) {
       const show = grade.value === 'custom';
       customGradeRow.hidden = !show;
       customGrade.disabled = !show;
       customGrade.required = show;
 
       if (!show) customGrade.value = '';
-      if (show && focus) customGrade.focus();
+      if (show && moveFocus) customGrade.focus();
     }
 
     function resetRoute() {
       grade.value = '';
       syncCustomGrade();
-      field('problem').value = '';
-      field('result').value = 'project';
-      field('attempts').value = '1';
-      field('route-notes').value = '';
+      problem.value = '';
+      result.value = 'project';
+      attempts.value = '1';
+      notes.value = '';
       routeTitle.textContent = `Трасса ${routes.length + 1}`;
     }
 
     function routeHasInput() {
       return Boolean(
         grade.value ||
-        field('problem').value.trim() ||
-        field('result').value !== 'project' ||
-        field('attempts').value !== '1' ||
-        field('route-notes').value.trim()
+        problem.value.trim() ||
+        result.value !== 'project' ||
+        attempts.value !== '1' ||
+        notes.value.trim()
       );
     }
 
     function showError(message, control) {
-      status.textContent = message;
+      statusMessage.textContent = message;
       control.focus();
       return null;
     }
@@ -571,21 +267,18 @@
         return showError('Введи категорию вручную.', customGrade);
       }
 
-      const attempts = field('attempts').valueAsNumber;
+      const attemptCount = attempts.valueAsNumber;
 
-      if (!Number.isInteger(attempts) || attempts < 1) {
-        return showError(
-          'Укажи целое число попыток: 1 или больше.',
-          field('attempts')
-        );
+      if (!Number.isInteger(attemptCount) || attemptCount < 1) {
+        return showError('Укажи целое число попыток: 1 или больше.', attempts);
       }
 
       return {
-        name: field('problem').value.trim(),
+        name: problem.value.trim(),
         grade: routeGrade,
-        result: field('result').value,
-        attempts,
-        notes: field('route-notes').value.trim()
+        result: result.value,
+        attempts: attemptCount,
+        notes: notes.value.trim()
       };
     }
 
@@ -600,9 +293,10 @@
       routes.push(route);
       gym.disabled = true;
       resetRoute();
-      status.textContent = `Трасса добавлена. Всего трасс: ${routes.length}.`;
+      statusMessage.textContent =
+        `Трасса добавлена. Всего трасс: ${routes.length}.`;
 
-      // Фокус на заголовке, а не на выпадающем списке.
+      // Переходим на заголовок, не открывая список категорий.
       routeTitle.focus();
     });
 
@@ -614,6 +308,7 @@
 
       const sessionRoutes = [...routes];
 
+      // Если новая трасса пуста, сохраняем только уже добавленные.
       if (routeHasInput() || sessionRoutes.length === 0) {
         const current = readRoute();
         if (!current) return;
@@ -633,7 +328,7 @@
         sessions.unshift(session);
         localStorage.setItem(storageKey, JSON.stringify(sessions));
       } catch {
-        status.textContent =
+        statusMessage.textContent =
           'Не удалось сохранить тренировку. Данные остались на странице.';
         return;
       }
@@ -643,24 +338,26 @@
       gym.disabled = false;
       setToday();
       resetRoute();
-      status.textContent =
+      statusMessage.textContent =
         `Тренировка сохранена на этом устройстве. Трасс: ${sessionRoutes.length}.`;
     });
 
     const toast = document.getElementById('toast');
     let toastTimer;
 
-    document.querySelectorAll('.dock [data-message]').forEach((button) => {
+    document.querySelectorAll('[data-message]').forEach((button) => {
       button.addEventListener('click', () => {
         clearTimeout(toastTimer);
         toast.textContent = button.dataset.message;
         toast.hidden = false;
+
         toastTimer = setTimeout(() => {
           toast.hidden = true;
         }, 2500);
       });
     });
 
+    gym.disabled = false;
     setToday();
     syncCustomGrade();
   </script>
