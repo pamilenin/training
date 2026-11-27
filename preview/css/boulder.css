@@ -209,3 +209,10 @@
   font-weight: 700;
   opacity: 1;
 }
+@media (display-mode: standalone) {
+  html,
+  body {
+    overflow-x: hidden;
+    overscroll-behavior: none;
+  }
+}
