@@ -10,7 +10,7 @@
         content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="UMC diary">
   <link rel="apple-touch-icon" sizes="180x180"
-      href="./assets/reference-v3/home-icon.png">
+        href="./assets/reference-v3/home-icon.png">
   <title>UMC diary</title>
 
   <style>
@@ -51,14 +51,10 @@
       padding: 0 18px;
     }
 
-    /* Один фон от верхнего края, без отдельной полосы под часами. */
     .hero {
       position: relative;
       width: calc(100% + 36px);
       margin-inline: -18px;
-      height: auto;
-      min-height: 0;
-      max-height: none;
       aspect-ratio: 900 / 500;
       background: url("./assets/reference-v3/home-hero-ice-final.png")
         center top / 100% auto no-repeat;
@@ -98,108 +94,71 @@
     }
 
     .tagline {
-      margin: 0 0 22px 4%;
+      margin: 0 0 12px 4%;
       font-size: clamp(17px, 4.8vw, 21px);
       font-weight: 750;
     }
 
-    .goal {
-      padding: 13px 18px 14px;
-      border: 1px solid #fff;
-      border-radius: 16px;
-      background: linear-gradient(120deg, #d8effd, #c9e8fb);
+    .training-types {
+      min-inline-size: 0;
+      margin: 0 0 0 4%;
+      padding: 0;
+      border: 0;
     }
 
-    .goal h2 {
-      margin: 0 0 5px;
-      font-size: 19px;
-      font-weight: 650;
+    .training-types legend {
+      margin: 0 0 6px;
+      padding: 0;
+      font-size: clamp(22px, 6vw, 28px);
+      font-weight: 850;
+      line-height: 1.12;
     }
 
-    .goal-title {
-      display: flex;
-      justify-content: space-between;
+    .training-types__list {
+      display: grid;
+      gap: 3px;
+    }
+
+    .training-option {
+      position: relative;
+      display: block;
+      cursor: pointer;
+    }
+
+    .training-option input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+
+    .training-option__row {
+      display: grid;
+      grid-template-columns: 74px minmax(0, 1fr);
       align-items: center;
-      gap: 8px;
-      margin: 0;
-      font-size: clamp(18px, 5.2vw, 24px);
+      gap: 12px;
+      min-height: 52px;
+      padding-inline: 8px;
+      border-radius: 10px;
+      font-size: clamp(18px, 5vw, 24px);
       font-weight: 800;
       line-height: 1.15;
     }
 
-    .progress {
-      height: 14px;
-      margin-top: 12px;
-      overflow: hidden;
-      border: 1px solid #fff;
-      border-radius: 99px;
-      background: #a8dcfb;
-    }
-
-    .progress span {
+    .training-option__badge {
       display: block;
-      width: 75%;
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, #008cfc, #0061e9);
+      width: 74px;
+      height: 50px;
+      object-fit: contain;
     }
 
-    .goal-note {
-      margin: 7px 0 0;
-      font-size: 16px;
+    .training-option input:checked + .training-option__row {
+      background: rgb(7 83 155 / 8%);
     }
 
-    .today h2 {
-      margin: 14px 0 8px;
-      font-size: 28px;
-      line-height: 1.15;
-    }
-
-    .workout {
-      display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
-      align-items: center;
-      gap: 12px;
-      width: 100%;
-      padding: 11px;
-      border: 1px solid #b0daf5;
-      border-radius: 15px;
-      background: #f7fcff;
-      text-align: left;
-      cursor: pointer;
-    }
-
-    .badge {
-      display: grid;
-      place-items: center;
-      width: clamp(46px, 16vw, 64px);
-      aspect-ratio: 1;
-      border-radius: 50%;
-      color: #0060e8;
-      background: #c7eafd;
-    }
-
-    .workout-text {
-      display: grid;
-      gap: 2px;
-    }
-
-    .workout-text strong {
-      font-size: 21px;
-      line-height: 1.1;
-    }
-
-    .workout-label,
-    .workout-meta {
-      color: #17447d;
-    }
-
-    .workout-label {
-      font-size: 14px;
-    }
-
-    .workout-meta {
-      font-size: 13px;
+    .training-option input:focus-visible + .training-option__row {
+      outline: 3px solid #0064e8;
+      outline-offset: 1px;
     }
 
     /* Свободное место остаётся над кнопкой, а не под меню. */
@@ -279,11 +238,6 @@
         drop-shadow(0 -1px 0 #fff);
     }
 
-    .badge .icon {
-      width: 38px;
-      height: 38px;
-    }
-
     .toast {
       position: fixed;
       z-index: 1;
@@ -301,7 +255,6 @@
       pointer-events: none;
     }
 
-    /* Заставка поверх страницы: места в раскладке не занимает. */
     .launch-screen {
       position: fixed;
       inset: 0;
@@ -350,121 +303,6 @@
         transition: none;
       }
     }
-
-.training-types legend {
-  margin-bottom: 10px;
-  padding: 0;
-  font-size: 24px;
-  font-weight: 800;
-}
-
-.training-types label span {
-  display: grid;
-  place-items: center;
-  min-height: 56px;
-  padding: 8px;
-  border: 2px solid #b0daf5;
-  border-radius: 14px;
-  background: #f7fcff;
-  font-weight: 750;
-  text-align: center;
-}
-
-.training-types input:checked + span {
-  border-color: #07539b;
-  background: #07539b;
-  color: #fff;
-}
-
-.training-types input:focus-visible + span {
-  outline: 3px solid #0064e8;
-  outline-offset: 3px;
-}
-    .training-types {
-  min-inline-size: 0;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-
-.training-types legend {
-  margin: 0 0 6px;
-  padding: 0;
-  font-size: clamp(22px, 6vw, 28px);
-  font-weight: 850;
-  line-height: 1.12;
-}
-
-.training-types__list {
-  display: grid;
-  gap: 3px;
-}
-
-.training-option {
-  position: relative;
-  display: block;
-  cursor: pointer;
-}
-
-.training-option input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-}
-
-.training-option__row {
-  display: grid;
-  grid-template-columns: 74px minmax(0, 1fr);
-  align-items: center;
-  gap: 12px;
-  min-height: 52px;
-  padding-inline: 8px;
-  border-radius: 10px;
-  font-size: clamp(18px, 5vw, 24px);
-  font-weight: 800;
-  line-height: 1.15;
-}
-
-.training-option__badge {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 74px;
-  height: 50px;
-  color: #fff;
-}
-
-.training-option__badge::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: url("./assets/reference-v3/home-start-brush.png")
-    center / 100% 100% no-repeat;
-  transform: rotate(-7deg);
-}
-
-.training-option__badge svg {
-  position: relative;
-  width: 33px;
-  height: 33px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 3.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.training-option input:checked + .training-option__row
-  .training-option__badge::before {
-  filter: brightness(.67) saturate(.85);
-}
-
-.training-option input:focus-visible + .training-option__row {
-  outline: 3px solid #0064e8;
-  outline-offset: 1px;
-}
-    
   </style>
 
   <script>
@@ -479,8 +317,6 @@
       const hide = () => root.classList.remove('show-launch-screen');
 
       root.classList.add('show-launch-screen');
-
-      // Не оставляем чёрный экран, если картинка не загрузилась.
       const fallback = window.setTimeout(hide, 8000);
 
       document.addEventListener('DOMContentLoaded', async () => {
@@ -506,7 +342,7 @@
             window.clearTimeout(fallback);
             root.classList.add('launch-logo-ready');
 
-            // Пять секунд полностью видимого логотипа, не считая появления.
+            // Три секунды полной видимости, не считая появления.
             window.setTimeout(hide, 3000 + (reducedMotion ? 0 : 650));
           });
         });
@@ -544,77 +380,52 @@
         <p class="tagline">Двигайся к своим целям!</p>
       </header>
 
-  <fieldset class="training-types">
-  <legend>Тип тренировки</legend>
+      <fieldset class="training-types">
+        <legend>Тип тренировки</legend>
 
-  <div class="training-types__list">
-    <label class="training-option">
-      <input type="radio" name="training-type" value="Болдер" checked>
-      <span class="training-option__row">
-        <span class="training-option__badge" aria-hidden="true">
-          <svg viewBox="0 0 48 48">
-            <path d="m31 5 11 3 2 11-4 9 1 13-10 3 2-10-4-9 4-8z"
-                  fill="currentColor" stroke="none"/>
-            <circle cx="14" cy="13" r="4" fill="currentColor" stroke="none"/>
-            <path d="m13 21 7-3 6-10m-13 13-1 9 9 6 4 8m-12-23 9 7 7-4 5 7"/>
-          </svg>
-        </span>
-        <span>Болдер</span>
-      </span>
-    </label>
+        <div class="training-types__list">
+          <label class="training-option">
+            <input type="radio" name="training-type" value="Болдер" checked>
+            <span class="training-option__row">
+              <img class="training-option__badge"
+                   src="./assets/reference-v3/training-boulder.png" alt="">
+              <span>Болдер</span>
+            </span>
+          </label>
 
-    <label class="training-option">
-      <input type="radio" name="training-type" value="Трудность">
-      <span class="training-option__row">
-        <span class="training-option__badge" aria-hidden="true">
-          <svg viewBox="0 0 48 48">
-            <circle cx="21" cy="12" r="4" fill="currentColor" stroke="none"/>
-            <path d="m17 21 9-1 9-11m-18 12-4 13-6 9m9-15 11 1-2 10"/>
-            <path d="M37 5c-1 15-5 28-11 39" stroke-width="2"/>
-          </svg>
-        </span>
-        <span>Трудность</span>
-      </span>
-    </label>
+          <label class="training-option">
+            <input type="radio" name="training-type" value="Трудность">
+            <span class="training-option__row">
+              <img class="training-option__badge"
+                   src="./assets/reference-v3/training-lead.png" alt="">
+              <span>Трудность</span>
+            </span>
+          </label>
 
-    <label class="training-option">
-      <input type="radio" name="training-type" value="Скалы">
-      <span class="training-option__row">
-        <span class="training-option__badge" aria-hidden="true">
-          <svg viewBox="0 0 48 48">
-            <path d="M2 41 14 22l3 4L26 6l10 17 3-4 8 22h-7l-5-10-3 3-6-15-5 14-4-4-8 12z"
-                  fill="currentColor" stroke="none"/>
-            <path d="m18 41 8-11 6 11z" fill="currentColor" stroke="none"/>
-          </svg>
-        </span>
-        <span>Скалы</span>
-      </span>
-    </label>
+          <label class="training-option">
+            <input type="radio" name="training-type" value="Скалы">
+            <span class="training-option__row">
+              <img class="training-option__badge"
+                   src="./assets/reference-v3/training-crag.png" alt="">
+              <span>Скалы</span>
+            </span>
+          </label>
 
-    <label class="training-option">
-      <input type="radio" name="training-type" value="ОФП">
-      <span class="training-option__row">
-        <span class="training-option__badge" aria-hidden="true">
-          <svg viewBox="0 0 48 48">
-            <path d="M6 6v11m6-12v13m24-13v13m6-12v11M12 11h24"/>
-            <circle cx="24" cy="24" r="5" fill="currentColor" stroke="none"/>
-            <path d="m12 17 5 11 7 5 7-5 5-11"/>
-            <path d="m16 29 8 4 8-4-2 15H18z"
-                  fill="currentColor" stroke="none"/>
-          </svg>
-        </span>
-        <span>ОФП</span>
-      </span>
-    </label>
-  </div>
-</fieldset>
-
+          <label class="training-option">
+            <input type="radio" name="training-type" value="ОФП">
+            <span class="training-option__row">
+              <img class="training-option__badge"
+                   src="./assets/reference-v3/training-ofp.png" alt="">
+              <span>ОФП</span>
+            </span>
+          </label>
+        </div>
+      </fieldset>
     </div>
 
     <div class="home-bottom">
       <div class="home-start-wrap">
-        <button class="start" type="button"
-                data-message="Запуск тренировки в этом превью пока не подключён.">
+        <button class="start" type="button" id="start-training">
           Начать тренировку
         </button>
       </div>
@@ -626,7 +437,8 @@
       <nav class="dock" aria-label="Основное меню">
         <button type="button" aria-current="page" id="home-tab">
           <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="m2 11 10-8 10 8h-3v10h-5v-6h-4v6H5V11z" fill="currentColor"/>
+            <path d="m2 11 10-8 10 8h-3v10h-5v-6h-4v6H5V11z"
+                  fill="currentColor"/>
           </svg>
           Главная
         </button>
@@ -663,24 +475,32 @@
   <script>
     const toast = document.getElementById('toast');
     let toastTimer;
-const startButton = document.querySelector('.start');
 
-startButton.addEventListener('click', () => {
-  const selected = document.querySelector('input[name="training-type"]:checked');
-  startButton.dataset.message =
-    `Выбрано: ${selected.value}. Экран тренировки пока не подключён.`;
-});
-    
+    function showToast(message) {
+      clearTimeout(toastTimer);
+      toast.textContent = message;
+      toast.hidden = false;
+
+      toastTimer = setTimeout(() => {
+        toast.hidden = true;
+      }, 2500);
+    }
+
     document.querySelectorAll('[data-message]').forEach((button) => {
       button.addEventListener('click', () => {
-        clearTimeout(toastTimer);
-        toast.textContent = button.dataset.message;
-        toast.hidden = false;
-
-        toastTimer = setTimeout(() => {
-          toast.hidden = true;
-        }, 2500);
+        showToast(button.dataset.message);
       });
+    });
+
+    document.getElementById('start-training').addEventListener('click', () => {
+      const selected = document.querySelector('input[name="training-type"]:checked');
+
+      if (!selected) {
+        showToast('Выбери тип тренировки.');
+        return;
+      }
+
+      showToast(`Выбрано: ${selected.value}. Экран тренировки пока не подключён.`);
     });
 
     document.getElementById('home-tab').addEventListener('click', () => {
